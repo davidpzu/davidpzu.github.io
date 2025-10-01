@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!-- Template Favicon & Icons Start -->
+    <!-- Favicon & Icons Start -->
     <link rel="icon" href="img/favicon/favicon.ico" sizes="any">
     <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png">
@@ -44,12 +44,6 @@
         <nav id="menu" class="menu">
           <ul class="menu__list d-flex justify-content-start">
             <li class="menu__item">
-              <a class="menu__link btn" href="#home">
-                <span class="menu__caption">Home</span>
-                <i class="ph-bold ph-house-simple"></i>
-              </a>
-            </li>
-            <li class="menu__item">
               <a class="menu__link btn" href="#portfolio">
                 <span class="menu__caption">Portfolio</span>
                 <i class="ph-bold ph-squares-four"></i>
@@ -79,12 +73,18 @@
       <!-- Navigation Menu End -->
 
       <!-- Header Controls Start -->
-      <div class="header__controls d-flex justify-content-end">
-        <button id="color-switcher" class="color-switcher header__switcher btn" type="button" role="switch" aria-label="light/dark mode" aria-checked="true"></button>
-        <a id="notify-trigger" class="header__trigger btn" href="mailto:davidprietozurita@gmail.com?subject=Message%20from%20your%20site">
-          <span class="trigger__caption">Let's Talk</span>
-          <i class="ph-bold ph-chat-dots"></i>
-        </a>
+     <div class="header__controls d-flex justify-content-end">
+        <!-- Dark/Light mode -->
+          <button id="color-switcher" class="color-switcher header__switcher btn" type="button" role="switch" aria-label="light/dark mode" aria-checked="true"></button>
+        <!-- Language Switcher -->
+          <button id="lang-switcher" class="header__switcher btn" type="button" aria-label="Change language">
+            EN
+          </button>
+        <!-- botón Lets talk-->
+          <a id="notify-trigger" class="header__trigger btn" href="mailto:davidprietozurita@gmail.com?subject=Message%20from%20your%20site">
+             <span class="trigger__caption" data-translate="talk">Let's Talk</span>
+            <i class="ph-bold ph-chat-dots"></i>
+          </a>
       </div>
       <!-- Header Controls End -->
 
@@ -1113,6 +1113,7 @@
     </script>
     <script src="js/app.js"></script>
     <script src="js/gallery-init.js"></script>
+    <script src="js/translations.js"></script>
     <!-- Load Scripts End -->
     
   </body>
