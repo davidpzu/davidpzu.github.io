@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
       contact_phone: "Phone number*",
       contact_message: "What's on your mind? I'm all ears*",
       contact_send: "Send message",
-      goodbye: "Want to know more about me, tell me about your project or just to say hello? Drop me a line and I'll get back as soon as possible."
+      goodbye: "Want to know more about me, tell me about your project or just to say hello? Drop me a line and I'll get back as soon as possible.",
     },
 
     es: {
@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
       contact_phone: "Número de teléfono*",
       contact_message: "Cuéntame tu inquietud*",
       contact_send: "Enviar mensaje",
-      goodbye: "¿Quieres saber más sobre mí, contarme tu proyecto o simplemente saludar? Déjame un mensaje y te responderé lo antes posible."
+      goodbye: "¿Quieres saber más sobre mí, contarme tu proyecto o simplemente saludar? Déjame un mensaje y te responderé lo antes posible.",
       }
   };
 
