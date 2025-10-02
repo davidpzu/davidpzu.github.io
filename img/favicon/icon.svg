@@ -1,13 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-	<style type="text/css">
-		.icon {
-			fill: #7059e2;
-		}
-		@media (prefers-color-scheme: dark) {
-			.icon {
-				fill: #CEC4EF;
-			}
-		}
-	</style>
-	<circle class="icon" cx="8" cy="8" r="6"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="264" height="216" viewBox="0 0 264 216"><image width="264" height="216" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQgAAADYCAYAAAAXv31kAAAACXBIWXMAAC4jAAAuIwF4pT92AAAFJ0lEQVR4nO3d0U1cVxSF4b0j3kMJdODpwKQDd2BcQZwKIBWYdGBXEHcA7oB0QCoIVHDyYJAcwrITc+8cGL7vDYxmlgzzay5I93RVHVTVUQH/x2VVfRxjXM0esqauqsOqOpu8A56q36rqZFdD8cPsAfDE/VxVl939avaQNQgEPNyPVfV7d5/MHrI0gYDlHHf3+9kjliQQsKzX3f129oilCAQs7113H84esQSBgHWczB6wBIGAdbzs7v3ZIx5KIGA9m9kDHkoggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggGhvjHFen+9uvaqb+/Udr/DQf1TV4a7eVZh1rfhzuRN24R3Ezp9NALPsQiCAlQgEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEAkEEO3NHrBN3b2pqv3ZO1jfzYFQs226Vz+T6iGuxhgXX/uCZxWIqjqtqpezR7AVj+GV+W72gG/p7k9VdZKC6hIDnreXVXV2cwThvwgEUFV13N3v735SIIBbr+9GQiCAL73u7re3HwgEcNe77j6oEgjgfidVAgHc73WVQABfIRBAJBBAJBBAJBBAJBBAJBBAJBBAJBBAJBBAJBBAJBBAJBBAJBBA9Nzuav22vv+296dV9WLBLbf+qM+72D0/beE5NrXi3bOfVSC+dQbA13T31ZJbvnD1SM5wYGHb+L6ufe6GSwwgEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgjgXt29EQgg2RcIIBIIIBIIIBIIINpmIDYrPe6r7v7ew3D+k+7e1Hr74dHa6+7DqjqbPeQBXlTVX2sfILKil909Zo+A+7jEACKBACKBACKBACKBACKBACKBACKBACKBACKBACKBACKBACKBACKBACKBgHV8mD1gCQIBy7uuqrezRyxBIGB5R2OMq9kjliAQsKw3Y4yPs0csRSBgOW/GGO9nj1jS3uwBsAOu6/Nlxc68c7jlHQR8v+v6/NeKg12MQ1XV3hjjvKqe7C2ht+HmtvfnVfXjCg//aYxxuMLjwoN5B/EfjDEuqupi9g7YNoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAIoEAoq0dvdfd+1W12dbzrWB/9oDuPqiqg7kreGRWfU1t82zOTVWdbfH5dtFRVR3PHsHz4RIDiAQCiAQCiAQCiAQCiAQCiAQCiAQCiAQCiAQCiAQCiAQCiAQCiAQCSC4EArjPhzHGlUAAd11X1UmVSwzg307GGJdVAgH804cxxuntBwIB3Powxjj68hMCAVRV/XY3DlXbvWkt8Pj8WVVHY4zz+/5xm4G4rKpfqupii8+5pNOqejF5w/uqOp+8gd1xNcb46utxa4G4+a3o6be+7rHq7qvZG27+Dy8nz+AZ8TsIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIBIIIOoxxuwND9Ldh1V1NnvHE/BTOl4NEu8ggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggEgggGhv9oAFXFbVr7NHPAGXswfw9PwN+RqwsTOWyHAAAAAASUVORK5CYII="></image><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>
