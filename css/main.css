@@ -1,13 +1,3 @@
-/*! ------------------------------------------------
- * Project Name: Name: Braxton - Personal Portfolio & Resume HTML Template
- * Project Description: Show yourself brightly with Braxton - unique and creative portfolio and resume template!
- * Tags: mix_design, resume, portfolio, personal page, cv, template, one page, responsive, html5, css3, creative, clean 
- * Version: 1.0.1
- * Build Date: March 2024
- * Last Update: April 2025
- * This product is available exclusively on Themeforest
- * Author: mix_design
- * Author URI: https://themeforest.net/user/mix_design */
 /*! File name: main.css
  * ------------------------------------------------
  *
@@ -48,16 +38,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap");
 /* ------------------------------------------------*/
 /* Fonts End */
-/* ------------------------------------------------*/
-/* ------------------------------------------------*/
-/* Template Backgrounds Start */
-/* ------------------------------------------------*/
-.image-background {
-  background-image: url("https://dummyimage.com/2560x1440/4d4d4d/636363");
-}
-
-/* ------------------------------------------------*/
-/* Template Backgrounds End */
 /* ------------------------------------------------*/
 /* ------------------------------------------------*/
 /* Variables Start */
@@ -4279,3 +4259,142 @@ form textarea:required:valid {
 /* ------------------------------------------------*/
 /* Features Socials End */
 /* ------------------------------------------------*/
+
+
+/* ------------------------------------------------*/
+/* New modal section portfolio item */
+/* ------------------------------------------------*/
+.project-extended-content {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.project-section {
+  margin-bottom: 3rem;
+}
+
+.project-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.subsection-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.section-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+}
+
+.section-image {
+  margin: 1.5rem 0;
+}
+
+.section-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.image-caption {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 0.5rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.section-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.process-list {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: process-counter;
+}
+
+.process-list li {
+  position: relative;
+  padding-left: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  counter-increment: process-counter;
+}
+
+.process-list li::before {
+  content: counter(process-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.process-list li strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #fff;
+}
+
+.results-list,
+.impact-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.results-list li,
+.impact-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+}
+
+.results-list li::before,
+.impact-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .section-images {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+  }
+  
+  .subsection-title {
+    font-size: 1.1rem;
+  }
+}
