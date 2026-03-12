@@ -1,0 +1,129 @@
+/* css/base.css */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── SVG Background ─── */
+.svg-background {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.background__svg01 {
+  position: absolute;
+  top: -15vh;
+  right: -10vw;
+  width: 465px; height: 465px;
+}
+.background__svg01 svg {
+  width: 100%; height: 100%;
+  opacity: 0;
+  transform: translate3d(50px, -50px, 0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.svg-background.loaded .background__svg01 svg {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.background__svg02 {
+  position: absolute;
+  top: 60vh;
+  left: -8vw;
+  width: 320px; height: 320px;
+}
+.background__svg02 svg {
+  width: 100%; height: 100%;
+  opacity: 0;
+  transform: translate3d(-50px, 50px, 0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.svg-background.loaded .background__svg02 svg {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (min-width: 1200px) {
+  .background__svg01 { top: -25vh; right: -6vw; width: 580px; height: 580px; }
+  .background__svg02 { top: 60vh; left: -8vw; width: 425px; height: 425px; }
+}
+@media (min-width: 1600px) {
+  .background__svg01 { top: -45vh; right: -5vw; width: 880px; height: 880px; }
+}
+
+/* Reusable wrappers */
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 5vw; }
+.section   { padding: 6rem 0; }
+
+/* Shared text utilities */
+.section-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent); display: block;
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  line-height: 1.1; margin-bottom: 1rem;
+
+  font-weight: 700;
+}
+
+/* Shared buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.7rem 1.5rem; border-radius: 50px;
+  font-size: 0.88rem; font-weight: 600; cursor: pointer;
+  text-decoration: none; transition: all 0.2s; border: 2px solid transparent;
+}
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-primary:hover { background: var(--accent); }
+.btn-outline  { border-color: var(--border); color: var(--ink); }
+.btn-outline:hover { border-color: var(--ink); }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero load animations */
+.hero-text .section-label { animation: fadeUp 0.6s 0.1s both ease-out; }
+.hero-title                { animation: fadeUp 0.6s 0.2s both ease-out; }
+.hero-desc                 { animation: fadeUp 0.6s 0.3s both ease-out; }
+.hero-actions              { animation: fadeUp 0.6s 0.4s both ease-out; }
+.hero-image                { animation: fadeUp 0.8s 0.25s both ease-out; }
+
+/* Scroll reveals */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.revealed { opacity: 1; transform: translateY(0); }
+
+/* Staggered children */
+.reveal-stagger > * { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.reveal-stagger.revealed > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.05s; }
+.reveal-stagger.revealed > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.15s; }
+.reveal-stagger.revealed > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.25s; }
+
+/* ─── Footer ─── */
+.site-footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+}
+.footer-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 0.5rem;
+  font-size: 0.78rem; color: var(--ink-soft);
+}
+.footer-inner a { color: var(--ink-soft); text-decoration: none; transition: color 0.2s; }
+.footer-inner a:hover { color: var(--ink); }

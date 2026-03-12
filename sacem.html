@@ -2,308 +2,398 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>Project Name - David Prieto Zurita</title>
-  <meta name="description" content="Detailed case study of Project Name">
-  <meta name="keywords" content="ux design, ui design, case study, portfolio, david prieto zurita">
+  <title>SACEM — David Prieto Zurita</title>
+  <meta name="description" content="SACEM messaging redesign — a UX case study by David Prieto Zurita">
   <meta name="author" content="Davidpzu">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <!-- Favicon & Icons -->
+  <!-- Favicon -->
   <link rel="icon" href="img/favicon/favicon.ico" sizes="any">
   <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png">
-  <link rel="manifest" href="img/favicon/manifest.webmanifest">
 
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/loaders/loader.css">
-  <link rel="stylesheet" href="css/plugins.css">
-  <link rel="stylesheet" href="css/main.css">
+  <!-- Google Fonts  -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap" rel="stylesheet">
 
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#dcdce7">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111111">
-  <meta name="msapplication-navbutton-color" content="#111111">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Shared styles -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/projects.css">
 </head>
 
 <body>
-  <!-- SVG Background Start -->
+  <!-- SVG Background -->
   <div id="svgBackground" class="svg-background">
-    <div class="background__svg01" data-speed="0.8">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-        width="1000px" height="1000px" viewBox="0 0 1000 1000" style="enable-background:new 0 0 1000 1000;" xml:space="preserve">
-        <style type="text/css">.bg01{fill:url(#color-gradient);}</style>
-        <radialGradient id="color-gradient" cx="418.5665" cy="225.9685" r="499.9326" fx="866.8251" fy="4.6162" gradientTransform="matrix(-0.6935 0.7207 -0.7207 -0.6935 953.1126 355.0528)" gradientUnits="userSpaceOnUse">
-          <stop offset="0" style="stop-color:#CEC4EF"/>
-          <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
-        </radialGradient>
-        <circle class="bg01" cx="500" cy="500" r="500"/>
-      </svg>
-    </div>
-    <div class="background__svg02" data-speed="0.4">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="429.6px" height="429.6px"
-        viewBox="0 0 429.6 429.6" style="enable-background:new 0 0 429.6 429.6;" xml:space="preserve">
-        <style type="text/css">.bg02{fill:url(#color-gradient-2);}</style>
-        <g id="Layer_1-2">
-          <radialGradient id="color-gradient-2" cx="2213.9312" cy="-11537.4219" r="214.85" fx="2393.6191" fy="-11419.6494" gradientTransform="matrix(1.902285e-02 0.9998 0.9998 -1.954636e-02 11706.5303 -2223.4016)" gradientUnits="userSpaceOnUse">
+    <div class="background__svg01">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+        width="1000px" height="1000px" viewBox="0 0 1000 1000">
+        <defs>
+          <radialGradient id="color-gradient" cx="418.5665" cy="225.9685" r="499.9326"
+            fx="866.8251" fy="4.6162"
+            gradientTransform="matrix(-0.6935 0.7207 -0.7207 -0.6935 953.1126 355.0528)"
+            gradientUnits="userSpaceOnUse">
             <stop offset="0" style="stop-color:#CEC4EF"/>
             <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
           </radialGradient>
-          <path class="bg02" d="M63,63C146.9-21,282.9-21,366.8,62.9s83.8,219.9-0.1,303.8s-219.9,83.9-303.8,0.1S-20.9,146.9,63,63z"/>
-        </g>
+        </defs>
+        <circle fill="url(#color-gradient)" cx="500" cy="500" r="500"/>
+      </svg>
+    </div>
+    <div class="background__svg02">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+        width="429.6px" height="429.6px" viewBox="0 0 429.6 429.6">
+        <defs>
+          <radialGradient id="color-gradient-2" cx="2213.9312" cy="-11537.4219" r="214.85"
+            fx="2393.6191" fy="-11419.6494"
+            gradientTransform="matrix(1.902285e-02 0.9998 0.9998 -1.954636e-02 11706.5303 -2223.4016)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:#CEC4EF"/>
+            <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+        <path fill="url(#color-gradient-2)" d="M63,63C146.9-21,282.9-21,366.8,62.9s83.8,219.9-0.1,303.8s-219.9,83.9-303.8,0.1S-20.9,146.9,63,63z"/>
       </svg>
     </div>
   </div>
-  <!-- SVG Background End -->
+  
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress"></div>
+
+  <!-- ─── MAIN NAV ─── -->
+<nav id="main-nav">
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+  <!-- ─── SECTION NAV (fixed right side) ─── -->
+  <nav id="section-nav" aria-label="Page sections">
+    <a href="#overview"  class="snav-item"><span class="snav-label">Overview</span><span class="snav-dot"></span></a>
+    <a href="#context"   class="snav-item"><span class="snav-label">Context</span><span class="snav-dot"></span></a>
+    <a href="#challenge" class="snav-item"><span class="snav-label">Challenge</span><span class="snav-dot"></span></a>
+    <a href="#research"  class="snav-item"><span class="snav-label">Research</span><span class="snav-dot"></span></a>
+    <a href="#what-i-did" class="snav-item"><span class="snav-label">What I Did</span><span class="snav-dot"></span></a>
+    <a href="#process"   class="snav-item"><span class="snav-label">Process</span><span class="snav-dot"></span></a>
+    <a href="#outcome"   class="snav-item"><span class="snav-label">Outcome</span><span class="snav-dot"></span></a>
+    <a href="#results"   class="snav-item"><span class="snav-label">Results</span><span class="snav-dot"></span></a>
+  </nav>
 
   <div class="project-page">
-    <!-- Navigation -->
-    <nav class="project-nav">
-      <div class="project-nav-container">
-        <a href="index.html" class="back-button">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m12 19-7-7 7-7"></path>
-            <path d="M19 12H5"></path>
-          </svg>
-          <span>Back to Portfolio</span>
-        </a>
-        <span class="case-study-label">Case Study</span>
+
+    <!-- ─── 1. HERO IMAGE ─── -->
+    <div class="project-hero-image">
+      <img src="https://dummyimage.com/1400x600/1a1a2e/444466&text=SACEM+Hero+Image" alt="SACEM Project Hero"/>
+    </div>
+
+    <!-- ─── 2. PROJECT HEADER ─── -->
+    <header class="project-header" id="overview">
+      <div class="container">
+        <span class="project-badge">Case Study</span>
+        <h1 class="project-main-title">SACEM — Messaging</h1>
+        <p class="project-subtitle">
+          Redesigned the legacy messaging system to improve user experience and increase engagement,
+          while introducing modern messaging functionalities for music rights creators across France.
+        </p>
+        <div class="project-tags">
+          <span class="tag">SaaS Platform</span>
+          <span class="tag">UI Design</span>
+          <span class="tag">UX Research</span>
+          <span class="tag">Figma</span>
+          <span class="tag">Product Design</span>
+        </div>
       </div>
-    </nav>
+    </header>
 
-    <!-- Main Content -->
-    <section class="project-content">
-      <div class="project-container">
-        
-        <!-- Project Header -->
-        <div class="project-header">
-          <span class="project-badge">SACEM</span>
-          <h1 class="project-title">Sacem - Messaging</h1>
-          <p class="project-subtitle">Redesigned old messaging to improve user experience and potentially increase user engagement and feedback, while also introducing new functionalities common in modern messaging apps.</p>
-          
-          <!-- Project Meta -->
-          <div class="project-meta">
-            <div class="meta-item">
-              <span class="meta-label">Company</span>
-              <p class="meta-value">Sacem</p>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Industry</span>
-              <p class="meta-value">SaaS platform</p>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Role</span>
-              <p class="meta-value">Product designer</p>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Impact</span>
-              <p class="meta-value highlight">Achieved user positive feedback and increased usage</p>
+    <!-- ─── 3. OVERVIEW GRID (role / timeline / team / tools) ─── -->
+    <section class="project-overview">
+      <div class="container">
+        <div class="overview-grid">
+
+          <div class="overview-cell">
+            <span class="overview-label">My Role</span>
+            <div class="overview-value">
+              <strong>Product Designer</strong>
+              UX Research, UI Design, Prototyping, Design Handoff
             </div>
           </div>
 
-          <!-- Tags -->
-          <div class="project-tags">
-            <span class="tag">SaaS platform</span>
-            <span class="tag">UI Design</span>
-            <span class="tag">UX Research</span>
-            <span class="tag">Figma</span>
-          </div>
-        </div>
-
-        <!-- Hero Image -->
-        <div class="project-hero">
-          <img src="https://dummyimage.com/1200x700/aa70e0/ffffff&text=Hero+Image" alt="Project Hero Image">
-        </div>
-
-        <!-- Context & Role Section -->
-        <div class="project-section">
-          <h3 class="project-section-title">Context & Role</h3>
-          <p class="project-text">
-            Describe the project background, your role, the team composition, and the timeline. Explain what the project was about and what your specific responsibilities were. Who were you working with? What was the scope of the project?
-          </p>
-        </div>
-
-        <!-- Challenge Section -->
-        <div class="project-section">
-          <h3 class="project-section-title">The Challenge & Goal</h3>
-          <p class="project-text">
-            Describe the main challenge you faced and the goals you aimed to achieve. What problems were you trying to solve? What were the key objectives? What made this project difficult or interesting?
-          </p>
-          
-          <!-- Optional: Single Image -->
-          <!-- <div class="project-image-wrapper">
-            <img src="path/to/challenge-image.jpg" alt="Challenge visualization" class="project-image">
-            <p class="project-image-caption">Caption describing what this image shows</p>
-          </div> -->
-        </div>
-
-        <!-- Research & Insights Section -->
-        <div class="project-section">
-          <h3 class="project-section-title">Research & Insights</h3>
-          <p class="project-text">Detail the research methods you employed and key findings. Who were the primary users?</p>
-          
-          <ol class="project-list">
-            <li><strong>User Group 1</strong> - Description of this user group and their needs</li>
-            <li><strong>User Group 2</strong> - Description of this user group and their needs</li>
-            <li><strong>User Group 3</strong> - Description of this user group and their needs</li>
-          </ol>
-
-          <p class="project-text">
-            What did you learn from users, stakeholders, or market analysis? What were the key insights that informed your design decisions?
-          </p>
-
-          <!-- Optional: Single Image -->
-          <!-- <div class="project-image-wrapper">
-            <img src="path/to/research-image.jpg" alt="Research findings" class="project-image">
-            <p class="project-image-caption">Caption describing the research visualization</p>
-          </div> -->
-        </div>
-
-        <!-- Design Approach & Solutions Section -->
-        <div class="project-section">
-          <h3 class="project-section-title">Design Approach & Solutions</h3>
-          <p class="project-text">
-            Explain your design methodology, the solutions you developed, and why you chose specific approaches. How did you translate insights into design decisions? What were the key features or improvements you implemented?
-          </p>
-
-          <!-- Optional: Single Image -->
-          <!-- <div class="project-image-wrapper">
-            <img src="path/to/design-solution.jpg" alt="Design solution" class="project-image">
-            <p class="project-image-caption">Caption describing the design solution</p>
-          </div> -->
-
-          <!-- Optional: Multiple Images Grid -->
-          <!-- <div class="project-images-grid">
-            <div>
-              <div class="project-image-wrapper">
-                <img src="path/to/design-image-1.jpg" alt="Design detail 1" class="project-image">
-                <p class="project-image-caption">Caption for image 1</p>
-              </div>
-            </div>
-            <div>
-              <div class="project-image-wrapper">
-                <img src="path/to/design-image-2.jpg" alt="Design detail 2" class="project-image">
-                <p class="project-image-caption">Caption for image 2</p>
-              </div>
-            </div>
-          </div> -->
-        </div>
-
-        <!-- Design Process Section -->
-        <div class="project-section">
-          <h3 class="project-section-title">Design Process</h3>
-          <div class="project-process-steps">
-            <div class="project-process-step">
-              <div class="project-step-number">1</div>
-              <p class="project-step-text"><strong>User Research:</strong> Conducted interviews and surveys to understand user needs and pain points</p>
-            </div>
-            <div class="project-process-step">
-              <div class="project-step-number">2</div>
-              <p class="project-step-text"><strong>Wireframing & Stakeholder Alignment:</strong> Created low-fidelity designs and got buy-in from stakeholders</p>
-            </div>
-            <div class="project-process-step">
-              <div class="project-step-number">3</div>
-              <p class="project-step-text"><strong>Interactive Prototyping:</strong> Developed high-fidelity prototypes for user testing and validation</p>
-            </div>
-            <div class="project-process-step">
-              <div class="project-step-number">4</div>
-              <p class="project-step-text"><strong>Usability Testing:</strong> Tested with real users to validate design decisions and gather feedback</p>
-            </div>
-            <div class="project-process-step">
-              <div class="project-step-number">5</div>
-              <p class="project-step-text"><strong>Iteration & Refinement:</strong> Refined the design based on testing results and stakeholder input</p>
-            </div>
-            <div class="project-process-step">
-              <div class="project-step-number">6</div>
-              <p class="project-step-text"><strong>Design Handoff:</strong> Collaborated with developers to ensure accurate implementation</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Final Outcome Section -->
-        <div class="project-section">
-          <h3 class="project-section-title">Final Outcome</h3>
-          <p class="project-text">
-            Present the final solution and explain how it addresses the initial challenge. What was delivered and how does it work? What are the key features of the final product?
-          </p>
-
-          <!-- Optional: Single Screenshot -->
-          <!-- <div class="project-image-wrapper">
-            <img src="path/to/final-outcome.jpg" alt="Final outcome" class="project-image">
-            <p class="project-image-caption">The final product in action</p>
-          </div> -->
-
-          <!-- Optional: Multiple Screenshots -->
-          <!-- <div class="project-images-grid">
-            <div>
-              <div class="project-image-wrapper">
-                <img src="path/to/outcome-1.jpg" alt="Final outcome 1" class="project-image">
-                <p class="project-image-caption">Feature 1 of the final product</p>
-              </div>
-            </div>
-            <div>
-              <div class="project-image-wrapper">
-                <img src="path/to/outcome-2.jpg" alt="Final outcome 2" class="project-image">
-                <p class="project-image-caption">Feature 2 of the final product</p>
-              </div>
-            </div>
-          </div> -->
-        </div>
-
-        <!-- Results & Impact Section -->
-        <div class="project-section project-results">
-          <h3 class="project-section-title">Results & Impact</h3>
-          <div class="project-results-grid">
-            <div class="project-result-item">
-              <div class="project-result-bullet"></div>
-              <p class="project-result-text">Increased user engagement by X% or achieved specific metric</p>
-            </div>
-            <div class="project-result-item">
-              <div class="project-result-bullet"></div>
-              <p class="project-result-text">Reduced task completion time or improved efficiency</p>
-            </div>
-            <div class="project-result-item">
-              <div class="project-result-bullet"></div>
-              <p class="project-result-text">Improved user satisfaction scores or positive feedback</p>
-            </div>
-            <div class="project-result-item">
-              <div class="project-result-bullet"></div>
-              <p class="project-result-text">Increased self-service adoption or reduced support tickets</p>
-            </div>
-            <div class="project-result-item">
-              <div class="project-result-bullet"></div>
-              <p class="project-result-text">Business impact or cost savings achieved</p>
-            </div>
-            <div class="project-result-item">
-              <div class="project-result-bullet"></div>
-              <p class="project-result-text">Long-term impact on the product or organization</p>
+          <div class="overview-cell">
+            <span class="overview-label">Timeline</span>
+            <div class="overview-value">
+              <strong>2024</strong>
+              Approximately 3 months end-to-end
             </div>
           </div>
 
-          <!-- Bottom CTA -->
-          <div class="project-cta">
-            <a href="index.html" class="btn btn-default btn-hover btn-hover-accent">
-              <span class="btn-caption">Back to Portfolio</span>
-            </a>
+          <div class="overview-cell">
+            <span class="overview-label">Team</span>
+            <div class="overview-value">
+              <strong>Cross-functional</strong>
+              1 Product Designer (me), 1 Product Manager,
+              2 Frontend Developers, 1 Backend Developer
+            </div>
           </div>
-        </div>
 
+          <div class="overview-cell">
+            <span class="overview-label">Tools &amp; Tech</span>
+            <div class="overview-value">
+              Figma · FigJam · Maze (usability testing) · Jira
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
-  </div>
 
-  <!-- Load Scripts -->
-  <script src="js/libs.min.js"></script>
+    <!-- ─── 4. CONTEXT & ROLE ─── -->
+    <section class="project-section" id="context">
+      <div class="container">
+        <h2 class="project-section-title">Context &amp; Role</h2>
+        <p class="project-text">
+          Describe the project background, your role, the team composition, and the timeline.
+          Explain what the project was about and what your specific responsibilities were.
+          Who were you working with? What was the scope of the project?
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── 5. CHALLENGE ─── -->
+    <section class="project-section" id="challenge">
+      <div class="container">
+        <h2 class="project-section-title">The Challenge &amp; Goal</h2>
+        <p class="project-text">
+          Describe the main challenge you faced and the goals you aimed to achieve.
+          What problems were you trying to solve? What were the key objectives?
+          What made this project difficult or interesting?
+        </p>
+        <!-- Uncomment when you have an image:
+        <div class="project-image-wrapper">
+          <img src="img/sacem/challenge.jpg" alt="Challenge visualization"/>
+          <p class="project-image-caption">Caption describing what this image shows</p>
+        </div>
+        -->
+      </div>
+    </section>
+
+    <!-- ─── 6. RESEARCH ─── -->
+    <section class="project-section" id="research">
+      <div class="container">
+        <h2 class="project-section-title">Research &amp; Insights</h2>
+        <p class="project-text">
+          Detail the research methods you employed and key findings. Who were the primary users?
+        </p>
+        <ol class="project-list">
+          <li><strong>User Group 1</strong> — Description of this user group and their needs</li>
+          <li><strong>User Group 2</strong> — Description of this user group and their needs</li>
+          <li><strong>User Group 3</strong> — Description of this user group and their needs</li>
+        </ol>
+        <p class="project-text">
+          What did you learn from users, stakeholders, or market analysis?
+          What were the key insights that informed your design decisions?
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── 7. WHAT I DID ─── -->
+    <section class="project-section" id="what-i-did">
+      <div class="container">
+        <h2 class="project-section-title">What I Did</h2>
+        <p class="project-text">
+          Key contributions and design decisions made throughout this project.
+        </p>
+        <ul class="what-i-did-list">
+          <li><strong>User Research &amp; Interviews</strong> — Conducted in-depth interviews with SACEM members to map pain points in the existing messaging flow and identify unmet needs.</li>
+          <li><strong>Information Architecture</strong> — Restructured the message hierarchy and notification system to reduce cognitive load and surface the most relevant content first.</li>
+          <li><strong>UI Redesign</strong> — Designed a modern, accessible messaging interface aligned with SACEM's design system, introducing threading, rich-text replies, and attachment previews.</li>
+          <li><strong>Prototyping &amp; Testing</strong> — Built interactive Figma prototypes and ran two rounds of usability testing with real users, iterating on findings between sessions.</li>
+          <li><strong>Design Handoff</strong> — Delivered developer-ready specs, annotated edge cases, and supported the engineering team during implementation to ensure pixel-accurate delivery.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── 8. DESIGN PROCESS ─── -->
+    <section class="project-section" id="process">
+      <div class="container">
+        <h2 class="project-section-title">Design Process</h2>
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="step-num">1</span>
+            <div class="step-body">
+              <strong>User Research</strong>
+              <p>Conducted interviews and surveys to understand user needs and pain points.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">2</span>
+            <div class="step-body">
+              <strong>Wireframing &amp; Stakeholder Alignment</strong>
+              <p>Created low-fidelity designs and got buy-in from stakeholders.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">3</span>
+            <div class="step-body">
+              <strong>Interactive Prototyping</strong>
+              <p>Developed high-fidelity prototypes for user testing and validation.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">4</span>
+            <div class="step-body">
+              <strong>Usability Testing</strong>
+              <p>Tested with real users to validate design decisions and gather feedback.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">5</span>
+            <div class="step-body">
+              <strong>Iteration &amp; Refinement</strong>
+              <p>Refined the design based on testing results and stakeholder input.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">6</span>
+            <div class="step-body">
+              <strong>Design Handoff</strong>
+              <p>Collaborated with developers to ensure accurate implementation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 9. FINAL OUTCOME ─── -->
+    <section class="project-section" id="outcome">
+      <div class="container">
+        <h2 class="project-section-title">Final Outcome</h2>
+        <p class="project-text">
+          Present the final solution and explain how it addresses the initial challenge.
+          What was delivered and how does it work? What are the key features of the final product?
+        </p>
+        <!-- Uncomment and replace with your real screenshots:
+        <div class="project-images-grid">
+          <div class="project-image-wrapper">
+            <img src="img/sacem/outcome-1.jpg" alt="Final outcome screen 1"/>
+            <p class="project-image-caption">Feature 1 — New message threading view</p>
+          </div>
+          <div class="project-image-wrapper">
+            <img src="img/sacem/outcome-2.jpg" alt="Final outcome screen 2"/>
+            <p class="project-image-caption">Feature 2 — Notification centre redesign</p>
+          </div>
+        </div>
+        -->
+      </div>
+    </section>
+
+    <!-- ─── 10. RESULTS & IMPACT ─── -->
+    <section class="project-section" id="results">
+      <div class="container">
+        <h2 class="project-section-title">Results &amp; Impact</h2>
+        <div class="results-grid">
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p>Increased user engagement by X% or achieved specific metric</p>
+          </div>
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p>Reduced task completion time or improved efficiency</p>
+          </div>
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p>Improved user satisfaction scores or positive feedback</p>
+          </div>
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p>Increased self-service adoption or reduced support tickets</p>
+          </div>
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p>Business impact or cost savings achieved</p>
+          </div>
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p>Long-term impact on the product or organisation</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 11. MORE PROJECTS ─── -->
+    <section class="more-projects">
+      <div class="container">
+        <span class="section-label">More Work</span>
+        <h2 class="section-title">Other Projects</h2>
+        <div class="more-projects-grid">
+
+          <!-- Card 1 — current SACEM project (placeholder for a future one) -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/600x375/1a1a2e/444466&text=Project+Coming+Soon" alt="Coming soon project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UI Design · Web App</span>
+              <h3 class="project-card-title">Project Name</h3>
+              <p class="project-card-desc">Short description of the project. Replace with your next case study when ready.</p>
+            </div>
+          </a>
+
+          <!-- Card 2 — back to SACEM -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/600x375/1a2e1a/446644&text=Project+Coming+Soon" alt="Coming soon project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UX Research · Mobile</span>
+              <h3 class="project-card-title">Project Name</h3>
+              <p class="project-card-desc">Short description of the project. Replace with your next case study when ready.</p>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.project-page -->
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>2026 © David Prieto Zurita</span>
+      <a href="#">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- ─── JS ─── -->
+  <script src="js/main.js"></script>
   <script>
-    const content = document.querySelector('body');
-    const imgLoad = imagesLoaded(content);
-    imgLoad.on('done', instance => {
-      setTimeout(() => {
-        document.getElementById("svgBackground").classList.add("loaded");
-      }, "1000");
-    });
+    // ── Scroll progress bar ──────────────────────────────────────────
+    const progressBar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+    }, { passive: true });
+
+    // ── Section nav active state ─────────────────────────────────────
+    const snavItems = document.querySelectorAll('.snav-item');
+    const sections  = document.querySelectorAll('section[id], header[id], div[id]');
+
+    const snavObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          snavItems.forEach(item => {
+            item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(s => snavObserver.observe(s));
   </script>
-  <script src="js/app.js"></script>
+
 </body>
 </html>

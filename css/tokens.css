@@ -1,0 +1,18 @@
+:root {
+  --bg:          #e6ebf4;
+  --bg-card:     #ebf0f7;
+  --bg-elevated: #dde3ed;
+  --ink:         #22232c;
+  --ink-soft:    #666a79;
+  --accent:      #7059e2;
+  --accent-dim:  rgba(224, 123, 69, 0.12);
+  --border:      rgba(0, 0, 0, 0.08);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'Syne', sans-serif;
+
+  --nav-height: 68px;
+  --max-width:  1100px;
+  --radius:     16px;
+  --radius-sm:  10px;
+}

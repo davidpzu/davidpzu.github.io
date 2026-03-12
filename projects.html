@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Projects — David Prieto Zurita</title>
+  <meta name="description" content="A collection of UI/UX and product design projects by David Prieto Zurita">
+  <meta name="author" content="Davidpzu">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Favicon -->
+  <link rel="icon" href="img/favicon/favicon.ico" sizes="any">
+  <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/projects.css">
+
+  <style>
+    /* ─── Page-specific styles for projects.html only ─── */
+
+    .projects-page {
+      padding-top: var(--nav-height);
+      min-height: 100vh;
+    }
+
+    /* ─── Centered page header ─── */
+    .projects-header {
+      text-align: center;
+      padding: 6rem 0 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .projects-header .section-label {
+      justify-content: center;
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .projects-header .section-title {
+      margin-bottom: 1rem;
+    }
+    .projects-header-desc {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.75;
+    }
+
+    /* ─── Projects grid — two column ─── */
+    .all-projects-section {
+      padding: 5rem 0 7rem;
+    }
+    .all-projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 0;
+    }
+
+    /* ─── Card overrides for this page ─── */
+    /* Cards here are slightly taller since they're the main focus */
+    .all-projects-grid .project-card-thumb {
+      aspect-ratio: 16/9;
+    }
+
+    /* ─── Count label ─── */
+    .projects-count {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      margin-bottom: 2rem;
+      display: block;
+    }
+    .projects-count span {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 700px) {
+      .all-projects-grid {
+        grid-template-columns: 1fr;
+      }
+      .projects-header {
+        padding: 4rem 0 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG Background -->
+  <div id="svgBackground" class="svg-background">
+    <div class="background__svg01">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+        width="1000px" height="1000px" viewBox="0 0 1000 1000">
+        <defs>
+          <radialGradient id="color-gradient" cx="418.5665" cy="225.9685" r="499.9326"
+            fx="866.8251" fy="4.6162"
+            gradientTransform="matrix(-0.6935 0.7207 -0.7207 -0.6935 953.1126 355.0528)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:#CEC4EF"/>
+            <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+        <circle fill="url(#color-gradient)" cx="500" cy="500" r="500"/>
+      </svg>
+    </div>
+    <div class="background__svg02">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+        width="429.6px" height="429.6px" viewBox="0 0 429.6 429.6">
+        <defs>
+          <radialGradient id="color-gradient-2" cx="2213.9312" cy="-11537.4219" r="214.85"
+            fx="2393.6191" fy="-11419.6494"
+            gradientTransform="matrix(1.902285e-02 0.9998 0.9998 -1.954636e-02 11706.5303 -2223.4016)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:#CEC4EF"/>
+            <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+        <path fill="url(#color-gradient-2)" d="M63,63C146.9-21,282.9-21,366.8,62.9s83.8,219.9-0.1,303.8s-219.9,83.9-303.8,0.1S-20.9,146.9,63,63z"/>
+      </svg>
+    </div>
+  </div>
+  
+  <!-- ─── NAV ─── -->
+<nav id="main-nav">
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+  <div class="projects-page">
+
+    <!-- ─── PAGE HEADER ─── -->
+    <header class="projects-header">
+      <div class="container">
+        <span class="section-label">Portfolio</span>
+        <h1 class="section-title">My Projects</h1>
+        <p class="projects-header-desc">
+          A selection of UI/UX and product design work — from research and strategy
+          through to final interfaces and handoff.
+        </p>
+      </div>
+    </header>
+
+    <!-- ─── PROJECTS GRID ─── -->
+    <section class="all-projects-section">
+      <div class="container">
+        <span class="projects-count"><span>4</span> projects</span>
+        <div class="all-projects-grid reveal-stagger">
+
+          <!-- Card 1 — SACEM -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/800x450/1a1a2e/444466&text=SACEM" alt="SACEM project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UI Design · Web App</span>
+              <h3 class="project-card-title">SACEM — Messaging</h3>
+              <p class="project-card-desc">Redesigned the legacy messaging system to improve user experience and increase engagement for music rights creators across France.</p>
+            </div>
+          </a>
+
+          <!-- Card 2 — placeholder -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/800x450/1a2e1a/336633&text=Project+2" alt="Project 2"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UX Research · Mobile</span>
+              <h3 class="project-card-title">Project Name</h3>
+              <p class="project-card-desc">Short description of this project. Replace with your actual case study content when ready to publish.</p>
+            </div>
+          </a>
+
+          <!-- Card 3 — placeholder -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/800x450/2e1a1a/664433&text=Project+3" alt="Project 3"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">Product Design · SaaS</span>
+              <h3 class="project-card-title">Project Name</h3>
+              <p class="project-card-desc">Short description of this project. Replace with your actual case study content when ready to publish.</p>
+            </div>
+          </a>
+
+          <!-- Card 4 — placeholder -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/800x450/1a1a1a/555555&text=Project+4" alt="Project 4"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">Branding · UI Design</span>
+              <h3 class="project-card-title">Project Name</h3>
+              <p class="project-card-desc">Short description of this project. Replace with your actual case study content when ready to publish.</p>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>2026 © David Prieto Zurita</span>
+      <a href="#">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+
+</body>
+</html>
