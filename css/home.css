@@ -1,6 +1,6 @@
 /* css/home.css */
 .hero {
-  min-height: 100vh;
+  min-height: 50vh;
   padding-top: var(--nav-height);
   display: flex; align-items: center;
 }
