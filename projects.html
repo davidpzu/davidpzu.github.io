@@ -80,6 +80,47 @@
       font-weight: 600;
     }
 
+    /* ─── WIP card ─── */
+    .project-card--wip { cursor: default; }
+    .project-card--wip:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: var(--border);
+    }
+    .project-card-tags-row {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .project-card-tags-row .project-card-tag { margin-bottom: 0; }
+    .project-card-tag--wip {
+      background: transparent;
+      color: var(--ink-soft);
+      border: 1px solid var(--border);
+    }
+    .project-card-wip-overlay {
+      position: absolute; inset: 0;
+      background: rgba(10, 10, 16, 0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.35rem;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .project-card--wip .project-card-thumb { position: relative; }
+    .project-card--wip:hover .project-card-wip-overlay { opacity: 1; }
+    .project-card-wip-overlay span:first-child {
+      font-family: var(--font-display);
+      font-size: 1rem; font-weight: 700;
+      color: #fff;
+    }
+    .project-card-wip-overlay span:last-child {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.04em;
+    }
+
     /* ─── Mobile ─── */
     @media (max-width: 700px) {
       .all-projects-grid {
@@ -155,51 +196,60 @@
         <span class="projects-count"><span>4</span> projects</span>
         <div class="all-projects-grid reveal-stagger">
 
-          <!-- Card 1 — SACEM -->
+          <!-- Card 1 — SACEM Live (link commented until case study is ready) -->
+          <!-- <a href="sacemlive.html"> -->
+          <div class="project-card project-card--wip">
+            <div class="project-card-thumb">
+              <img src="img/projects/sacem-live/sacemlive-thumb.jpg" alt="SACEM Live+ project"/>
+              <div class="project-card-wip-overlay">
+                <span>Project on-going</span>
+                <span>Case study in progress</span>
+              </div>
+            </div>
+            <div class="project-card-body">
+              <div class="project-card-tags-row">
+                <span class="project-card-tag">Product Design · UX Research</span>
+                <span class="project-card-tag project-card-tag--wip">WIP</span>
+              </div>
+              <h3 class="project-card-title">SACEM Live+</h3>
+              <p class="project-card-desc">Case study currently being written — check back soon.</p>
+            </div>
+          </div>
+          <!-- </a> -->
+
+          <!-- Card 2 — Green Up Transaction -->
+          <a href="greenup.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="img/projects/greenup-transaction/greenup-thumb.jpg" alt="Green Up project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UX Research</span>
+              <h3 class="project-card-title">Green Up - Transaction Analysis</h3>
+              <p class="project-card-desc">Designed the interactions and entire transaction process for an internal reuse industrial material platform.</p>
+            </div>
+          </a>
+
+          <!-- Card 3 — Sacem Collab -->
+          <a href="sacemcollab.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="img/projects/sacem-collab/sacemcollab-thumb.jpg" alt="Sacem Collab project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">Product Design · SaaS</span>
+              <h3 class="project-card-title">Sacem Collab+</h3>
+              <p class="project-card-desc">TBD</p>
+            </div>
+          </a>
+
+          <!-- Card 4 — SACEM Messaging -->
           <a href="sacem.html" class="project-card">
             <div class="project-card-thumb">
-              <img src="https://dummyimage.com/800x450/1a1a2e/444466&text=SACEM" alt="SACEM project"/>
+              <img src="img/projects/sacem-mensajeria/sacem-thumb.jpg" alt="SACEM Meçssaging project"/>
             </div>
             <div class="project-card-body">
               <span class="project-card-tag">UI Design · Web App</span>
               <h3 class="project-card-title">SACEM — Messaging</h3>
-              <p class="project-card-desc">Redesigned the legacy messaging system to improve user experience and increase engagement for music rights creators across France.</p>
-            </div>
-          </a>
-
-          <!-- Card 2 — placeholder -->
-          <a href="sacem.html" class="project-card">
-            <div class="project-card-thumb">
-              <img src="https://dummyimage.com/800x450/1a2e1a/336633&text=Project+2" alt="Project 2"/>
-            </div>
-            <div class="project-card-body">
-              <span class="project-card-tag">UX Research · Mobile</span>
-              <h3 class="project-card-title">Project Name</h3>
-              <p class="project-card-desc">Short description of this project. Replace with your actual case study content when ready to publish.</p>
-            </div>
-          </a>
-
-          <!-- Card 3 — placeholder -->
-          <a href="sacem.html" class="project-card">
-            <div class="project-card-thumb">
-              <img src="https://dummyimage.com/800x450/2e1a1a/664433&text=Project+3" alt="Project 3"/>
-            </div>
-            <div class="project-card-body">
-              <span class="project-card-tag">Product Design · SaaS</span>
-              <h3 class="project-card-title">Project Name</h3>
-              <p class="project-card-desc">Short description of this project. Replace with your actual case study content when ready to publish.</p>
-            </div>
-          </a>
-
-          <!-- Card 4 — placeholder -->
-          <a href="sacem.html" class="project-card">
-            <div class="project-card-thumb">
-              <img src="https://dummyimage.com/800x450/1a1a1a/555555&text=Project+4" alt="Project 4"/>
-            </div>
-            <div class="project-card-body">
-              <span class="project-card-tag">Branding · UI Design</span>
-              <h3 class="project-card-title">Project Name</h3>
-              <p class="project-card-desc">Short description of this project. Replace with your actual case study content when ready to publish.</p>
+              <p class="project-card-desc">Redesigned the legacy messaging system to improve user experience and increase engagement.</p>
             </div>
           </a>
 

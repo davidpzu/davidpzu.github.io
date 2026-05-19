@@ -25,10 +25,24 @@ if (revealEls.length) {
   revealEls.forEach(el => observer.observe(el));
 }
 
-// 3. Contact form (paste your existing handler here, wrapped in an if-guard)
+// 3. Contact form (formspree)
 const form = document.querySelector('.contact-form');
 if (form) {
-  form.addEventListener('submit', (e) => {
-    // your existing form logic here
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = new FormData(form);
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      form.style.display = 'none';
+      document.querySelector('.form-success').style.display = 'block';
+    } else {
+      alert('Something went wrong. Please try again or email me directly.');
+    }
   });
 }

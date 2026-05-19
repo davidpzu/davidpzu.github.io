@@ -82,12 +82,12 @@
   display: block;
   border-radius: var(--radius);
 }
-.project-hero-image::after {
+/* .project-hero-image::after {
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(to bottom, transparent 60%, var(--bg) 100%);
   border-radius: var(--radius);
-}
+} */
 
 @media (max-width: 768px) {
   .project-hero-image {
@@ -113,6 +113,7 @@
   background: var(--accent-dim);
   padding: 0.3rem 0.8rem;
   border-radius: 50px;
+  border: 1px solid var(--border);
   width: fit-content;
 }
 .project-main-title {
@@ -201,38 +202,58 @@
   font-size: 0.95rem;
   color: var(--ink-soft);
   line-height: 1.8;
-  max-width: 720px;
+  max-width: 900px;
   margin-bottom: 1rem;
 }
 .project-text:last-child { margin-bottom: 0; }
 
-/* ─── What I Did — bullet list ─── */
-.what-i-did-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
+/* ─── What I Did — icon cards ─── */
+.wid-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
   margin-top: 0.5rem;
 }
-.what-i-did-list li {
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: 0.75rem;
-  align-items: start;
-  font-size: 0.92rem;
+.wid-item {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  padding: 1.75rem 2rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.wid-item:hover { background: var(--bg-elevated); }
+.wid-item:last-child { border-bottom: none; }
+.wid-icon {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--accent-dim);
+  display: flex; align-items: center; justify-content: center;
+}
+.wid-icon svg {
+  width: 20px; height: 20px;
+  color: var(--accent);
+}
+.wid-body { display: flex; flex-direction: column; gap: 0.3rem; }
+.wid-body strong {
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.wid-body p {
+  font-size: 0.85rem;
   color: var(--ink-soft);
   line-height: 1.65;
+  margin: 0;
 }
-.what-i-did-list li::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  margin-top: 0.55rem;
-  justify-self: center;
-  flex-shrink: 0;
+
+@media (max-width: 680px) {
 }
-.what-i-did-list li strong { color: var(--ink); }
 
 /* ─── Process steps ─── */
 .process-steps {
@@ -312,10 +333,36 @@
   border-top: 1px solid var(--border);
   text-align: center;
 }
+.project-image-wrapper--full {
+  max-width: 1200px;
+  margin: 2rem auto 0;
+  padding: 0 1.5rem;
+  border-radius: 0;
+  border: none;
+}
+.project-image-wrapper--full img {
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.project-image-wrapper--full .project-image-caption {
+  border-radius: 0 0 var(--radius) var(--radius);
+  border: 1px solid var(--border);
+  border-top: none;
+}
+@media (max-width: 768px) {
+  .project-image-wrapper--full { padding: 0 1rem; }
+}
 .project-images-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem; margin: 2rem 0;
+}
+.project-images-grid--full {
+  max-width: 1200px;
+  margin: 2rem auto 0;
+  padding: 0 1.5rem;
+}
+@media (max-width: 768px) {
+  .project-images-grid--full { padding: 0 1rem; }
 }
 @media (max-width: 600px) {
   .project-images-grid { grid-template-columns: 1fr; }
@@ -331,6 +378,58 @@
   font-size: 0.92rem; color: var(--ink-soft); line-height: 1.65;
 }
 .project-list li strong { color: var(--ink); }
+
+/* ─── Key Takeaways section ─── */
+.takeaways-section {
+  border-top: 1px solid var(--border);
+}
+.takeaways-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.takeaway-item {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 1rem;
+  align-items: start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  transition: border-color 0.2s;
+}
+.takeaway-item:hover { border-color: var(--accent); }
+.takeaway-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--accent-dim);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.takeaway-icon svg {
+  width: 18px; height: 18px;
+  color: var(--accent);
+}
+.takeaway-body strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.takeaway-body p {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin: 0;
+}
+@media (max-width: 700px) {
+  .takeaways-grid { grid-template-columns: 1fr; }
+}
 
 /* ─── More Projects section ─── */
 .more-projects {

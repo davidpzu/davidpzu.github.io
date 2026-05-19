@@ -113,6 +113,7 @@ body {
 .reveal-stagger.revealed > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.05s; }
 .reveal-stagger.revealed > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.15s; }
 .reveal-stagger.revealed > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.25s; }
+.reveal-stagger.revealed > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.35s; }
 
 /* ─── Footer ─── */
 .site-footer {
@@ -127,3 +128,54 @@ body {
 }
 .footer-inner a { color: var(--ink-soft); text-decoration: none; transition: color 0.2s; }
 .footer-inner a:hover { color: var(--ink); }
+/* ─── Floating social buttons (all pages) ─── */
+.floating-socials {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+.floating-socials__btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--accent);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.floating-socials__btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+.floating-socials__label {
+  position: absolute;
+  right: calc(100% + 10px);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+.floating-socials__btn:hover .floating-socials__label {
+  opacity: 1;
+  transform: translateX(0);
+}
