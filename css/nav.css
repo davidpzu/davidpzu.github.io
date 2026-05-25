@@ -1,0 +1,65 @@
+/* css/nav.css */
+#main-nav {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+
+  background: rgba(22, 25, 31, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50px;
+  padding: 0.4rem 0.5rem;
+
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+#main-nav.scrolled {
+  background: rgba(22, 25, 31, 0.95);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  text-decoration: none;
+  padding: 0.45rem 1rem;
+  border-radius: 50px;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-links a.active {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#main-nav {
+  background: rgba(240, 238, 248, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+#main-nav.scrolled {
+  background: rgba(240, 238, 248, 0.95);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+.nav-links a { color: var(--ink-soft); }
+.nav-links a:hover { color: var(--ink); background: rgba(0, 0, 0, 0.05); }
+.nav-links a.active { color: var(--ink); background: rgba(0, 0, 0, 0.07); }

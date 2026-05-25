@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>SACEM — David Prieto Zurita</title>
+  <meta name="description" content="SACEM messaging redesign — a UX case study by David Prieto Zurita">
+  <meta name="author" content="Davidpzu">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Favicon -->
+  <link rel="icon" href="img/favicon/favicon.ico" sizes="any">
+  <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png">
+
+  <!-- Google Fonts  -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap" rel="stylesheet">
+
+  <!-- Shared styles -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/projects.css">
+</head>
+
+<body>
+  <!-- SVG Background -->
+  <div id="svgBackground" class="svg-background">
+    <div class="background__svg01">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+        width="1000px" height="1000px" viewBox="0 0 1000 1000">
+        <defs>
+          <radialGradient id="color-gradient" cx="418.5665" cy="225.9685" r="499.9326"
+            fx="866.8251" fy="4.6162"
+            gradientTransform="matrix(-0.6935 0.7207 -0.7207 -0.6935 953.1126 355.0528)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:#CEC4EF"/>
+            <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+        <circle fill="url(#color-gradient)" cx="500" cy="500" r="500"/>
+      </svg>
+    </div>
+    <div class="background__svg02">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+        width="429.6px" height="429.6px" viewBox="0 0 429.6 429.6">
+        <defs>
+          <radialGradient id="color-gradient-2" cx="2213.9312" cy="-11537.4219" r="214.85"
+            fx="2393.6191" fy="-11419.6494"
+            gradientTransform="matrix(1.902285e-02 0.9998 0.9998 -1.954636e-02 11706.5303 -2223.4016)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:#CEC4EF"/>
+            <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+        <path fill="url(#color-gradient-2)" d="M63,63C146.9-21,282.9-21,366.8,62.9s83.8,219.9-0.1,303.8s-219.9,83.9-303.8,0.1S-20.9,146.9,63,63z"/>
+      </svg>
+    </div>
+  </div>
+  
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress"></div>
+
+  <!-- ─── MAIN NAV ─── -->
+<nav id="main-nav">
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+  <!-- ─── SECTION NAV (fixed right side) ─── -->
+  <nav id="section-nav" aria-label="Page sections">
+    <a href="#overview"  class="snav-item"><span class="snav-label">Overview</span><span class="snav-dot"></span></a>
+    <a href="#what-i-did" class="snav-item"><span class="snav-label">What I Did</span><span class="snav-dot"></span></a>
+    <a href="#context"   class="snav-item"><span class="snav-label">Context</span><span class="snav-dot"></span></a>
+    <a href="#challenge" class="snav-item"><span class="snav-label">Challenge</span><span class="snav-dot"></span></a>
+    <a href="#research"  class="snav-item"><span class="snav-label">Research</span><span class="snav-dot"></span></a>
+    <a href="#process"   class="snav-item"><span class="snav-label">Process</span><span class="snav-dot"></span></a>
+    <a href="#outcome"   class="snav-item"><span class="snav-label">Outcome</span><span class="snav-dot"></span></a>
+    <a href="#results"   class="snav-item"><span class="snav-label">Results</span><span class="snav-dot"></span></a>
+    <a href="#takeaways" class="snav-item"><span class="snav-label">Takeaways</span><span class="snav-dot"></span></a>
+  </nav>
+
+  <div class="project-page">
+
+    <!-- ─── 1. HERO IMAGE ─── -->
+    <div class="project-hero-image">
+      <img src="img/projects/sacem-mensajeria/sacem-hero.jpg" alt="SACEM Project Hero"/>
+    </div>
+
+    <!-- ─── 2. PROJECT HEADER ─── -->
+    <header class="project-header" id="overview">
+      <div class="container">
+        <span class="project-badge">Case Study</span>
+        <h1 class="project-main-title">SACEM — Messaging App Redesign</h1>
+        <p class="project-subtitle">
+          Redesigned the legacy messaging system to improve user experience and increase engagement while introducing modern messaging functionalities.
+        </p>
+        <div class="project-tags">
+          <span class="tag">SaaS Platform</span>
+          <span class="tag">UI Design</span>
+          <span class="tag">UX Research</span>
+          <span class="tag">Figma</span>
+          <span class="tag">Product Design</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── 3. OVERVIEW GRID (role / timeline / team / tools) ─── -->
+    <section class="project-overview">
+      <div class="container">
+        <div class="overview-grid">
+
+          <div class="overview-cell">
+            <span class="overview-label">My Role</span>
+            <div class="overview-value">
+              <strong>Product Designer</strong>
+              UX Research, UI Design, Prototyping, Design Handoff
+            </div>
+          </div>
+
+          <div class="overview-cell">
+            <span class="overview-label">Timeline</span>
+            <div class="overview-value">
+              <strong>2025</strong>
+              Approximately 2 months end-to-end, from the first draft session with the client to final staging test
+            </div>
+          </div>
+
+          <div class="overview-cell">
+            <span class="overview-label">Team</span>
+            <div class="overview-value">
+              <strong>Cross-functional</strong>
+              Product Designer (me)<br> French Client Manager<br> x2 Front End Developers
+            </div>
+          </div>
+
+          <div class="overview-cell">
+            <span class="overview-label">Tools &amp; Tech</span>
+            <div class="overview-value">
+              Figma · Miro · Google Docs · My notebook for wireframes
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 4. WHAT I DID ─── -->
+    <section class="project-section" id="what-i-did">
+      <div class="container">
+        <h2 class="project-section-title">What I Did</h2>
+        <div class="wid-grid">
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="5" cy="12" r="2"/>
+                <path d="M7 12h8"/>
+                <path d="M17 9l3 3-3 3"/>
+                <circle cx="19" cy="12" r="0" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>End-to-End Design Lead</strong>
+              <p>Led the full design process from ideation to implementation, strategy and execution while aligning cross-functional teams towards the same goal. </p>
+            </div>
+          </div>
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/>
+                <path d="M21 21l-4.35-4.35"/>
+                <path d="M11 8v6M8 11h6"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>User Research</strong>
+              <p>Conducted user research, user flows and competitive analysis to map pain points in the existing messaging flow.</p>
+            </div>
+          </div>
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>Information Architecture</strong>
+              <p>Restructured the message hierarchy to reduce cognitive load and quickly set the most relevant content first.</p>
+            </div>
+          </div>
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>Prototyping &amp; Usability Testing</strong>
+              <p>Built interactive Figma low-fi prototypes and ran two rounds of usability testing with non-users and team members iterating on findings between each session.</p>
+            </div>
+          </div>
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>UI Redesign</strong>
+              <p>Designed a modern, accessible messaging interface aligned with SACEM's design system, introducing new functionalities such as rich-text replies, attachments and improved message organization tools.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 5. CONTEXT & ROLE ─── -->
+    <section class="project-section" id="context">
+      <div class="container">
+        <h2 class="project-section-title">Context &amp; Role</h2>
+        <p class="project-text">
+          SACEM is the French society responsible for collecting and managing the royalties for music creators and publishers. We have been their product partner since 2020,
+          providing them with a dedicated platform with perks ranging from music industry discounts and event agendas to member profiles, networking, second-hand equipment marketplace...
+        <br> <br>
+          Ahead of a major event that required using the platform messaging system, the client sat with us to share their requests which led to us redesigning the whole messaging system to
+          a much more modern one. As the lead and only designer for this project, I took part in the very first calls with our client manager and SACEM's team to understand their needs before any brief existed. All client
+          communication ran though our account manager, which meant translating business needs carefully and sharing them with the IT team quite early to define the whole project.
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── 6. CHALLENGE ─── -->
+    <section class="project-section" id="challenge">
+      <div class="container">
+        <h2 class="project-section-title">Problems &amp; Goals</h2>
+        <h3>Problems</h3>
+        <p class="project-text">
+          The project came with a tight deadline: a full messaging redesign had to ship before a major client event, roughly two months from kick-off. This forced early and difficult scope decisions, with several features cut before a single wireframe was drawn.
+        </p>
+        <p class="project-text">
+          The platform itself added a difficult task. SACEM ran on a CakePHP version that was nearly a decade old, which put several modern messaging such as real-time updates, inline media previews, threaded replies, impossible to accomplish. We had to find alternative approaches that delivered equivalent user value that our technology could actually support.
+        </p>
+        <p class="project-text">
+          Scheduling was also a problem we encountered. The project ran through August to October, overlapping with summer holidays on both the team and client side. Feedback sessions were hard to coordinate, and at times we had to move forward on key decisions without direct client validation therefore relying on our research in order to advance.
+        </p>
+        <p class="project-text">
+          Usage data from the existing system set the current status of the messaging very clear: the average conversation contained just 2.8 messages. Users weren't continuing threads for two main reasons, they were quite limited with what they could do or share within the legacy system, and perhaps because they had quietly switched to more convenient channels like email, whatsapp or other messaging tools.
+        </p>
+        <h3>Goals</h3>
+        <p class="project-text">
+          With those key pain points mapped, the objectives were clear. The redesign needed to make conversations more likely to continue by enhancing the legacy system to a more up-to-date one.
+        </p>
+        <p class="project-text">
+          That meant introducing message organisation tools: such as being able to mark messages as read or unread, archive threads, and/or flag important ones as favourites, so users could manage their inbox as one would expect. We also prioritised having a modern reply experience: formatted text and attachment support and reworked the visual hierarchy so unread and high-priority messages were immediately scannable in a quick look.
+        </p>
+        <p class="project-text">
+          Every design decision was filtered through two lenses: does it work within the existing technology, and can it ship within the expected timeline.
+        </p>
+      </div>
+      <div class="project-image-wrapper project-image-wrapper--full">
+        <img src="img/projects/sacem-mensajeria/sacem-challenge.jpg" alt="Challenge visualization"/>
+        <p class="project-image-caption">Screenshots of the old messaging system</p>
+      </div>
+    </section>
+
+    <!-- ─── 7. RESEARCH ─── -->
+    <section class="project-section" id="research">
+      <div class="container">
+        <h2 class="project-section-title">Research &amp; Insights</h2>
+
+        <h3>Competitive Benchmarking</h3>
+        <p class="project-text">
+          Before defining the feature, I spent time auditing existing messaging systems, in both user apps and enterprise tools to stress-test our requirements list. The goal was to confirm that every feature we were proposing was something realistic, and that we weren't accidentally inventing something that would feel unfamiliar or require users to re-learn basic behaviours.
+        </p>
+        <p class="project-text">
+          The new system needed to feel immediately recognisable, close to what people already used in their daily lives so that the learning curve was would be zero for most.
+        </p>
+
+        <h3>Target Users</h3>
+        <ol class="project-list">
+          <li>
+            <strong>The occasional user</strong> — Logs in occasionally, particularly not tech-savvy, but has a profile and receives messages from time to time. This user must never feel lost or forced to adapt to something new. The redesign had to respect existing mental models and avoiding new problems for someone who isn't there often enough to build new habits.
+          </li>
+          <li>
+            <strong>The active user</strong> — Logs in daily, has an inbox that accumulates quickly, and would genuinely benefit from organisational tools. Features like marking messages as unread, archive messages, or having a favourites to set important conversations are aimed directly at this profile, hence giving them control over a busy inbox without overwhelming the interface for other target users.
+          </li>
+          <li>
+            <strong>The event user</strong> — The primary target for this redesign. This user receives a high volume of messages in a short period, all of them related to a same topic, therefore needs the inbox to stay clean and manageable under pressure. For this only profile we introduced a new message navigation: the ability to move directly from one message to the next without returning to the inbox each time. Average users won't rely on this feature since their conversations tend to cover different topics and rarely arrive in bulk, but for someone handling hundreds of similar messages in a single day, it removes the most repetitive action in the flow.
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ─── 8. DESIGN PROCESS ─── -->
+    <section class="project-section" id="process">
+      <div class="container">
+        <h2 class="project-section-title">Design Process</h2>
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="step-num">1</span>
+            <div class="step-body">
+              <strong>User Research</strong>
+              <p>Conducted interviews and surveys to understand user needs and pain points.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">2</span>
+            <div class="step-body">
+              <strong>Wireframing &amp; Stakeholder Alignment</strong>
+              <p>Created low-fidelity designs and got buy-in from stakeholders.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">3</span>
+            <div class="step-body">
+              <strong>Interactive Prototyping</strong>
+              <p>Developed high-fidelity prototypes for user testing and validation.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">4</span>
+            <div class="step-body">
+              <strong>Usability Testing</strong>
+              <p>Tested with real users to validate design decisions and gather feedback.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">5</span>
+            <div class="step-body">
+              <strong>Iteration &amp; Refinement</strong>
+              <p>Refined the design based on testing results and stakeholder input.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">6</span>
+            <div class="step-body">
+              <strong>Design Handoff</strong>
+              <p>Collaborated with developers to ensure accurate implementation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 9. FINAL OUTCOME ─── -->
+    <section class="project-section" id="outcome">
+      <div class="container">
+        <h2 class="project-section-title">Final Outcome</h2>
+        <p class="project-text">
+          The final design looked quite different from where we started. Early concepts had to be revisited and some ideas were cut due to technical issues or impossibility, others evolved through feedback from the client and testing. Both the client and our side agreed it hit the right balance: a modern, usable messaging experience that fit within the platform's existing architecture.
+        </p>
+      </div>
+      <div class="project-image-wrapper project-image-wrapper--full">
+        <img src="img/sacem/outcome-1.jpg" alt="Final outcome screen 1"/>
+        <p class="project-image-caption">Feature 1 — New message threading view</p>
+      </div>
+      <div class="project-image-wrapper project-image-wrapper--full">
+        <img src="img/sacem/outcome-2.jpg" alt="Final outcome screen 2"/>
+        <p class="project-image-caption">Feature 2 — Notification centre redesign</p>
+      </div>
+    </section>
+
+    <!-- ─── 10. RESULTS & IMPACT ─── -->
+    <section class="project-section" id="results">
+      <div class="container">
+        <h2 class="project-section-title">Results &amp; Impact</h2>
+        <div class="results-grid">
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p><strong>+130% monthly messages</strong> — launched ahead of a major platform event, monthly messages grew from ~3k to ~7k in the first quarter post-launch.</p>
+          </div>
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p><strong>Event success drove platform growth</strong> — the music collaboration event, co-led by the client and <a href="https://www.createursediteurs.sacem.fr/actualites-agenda/actualites/vos-services-et-demarches/collaborez-avec-joachim-garraud-pour-creer-de-nouveaux-titres" target="_blank" rel="noopener noreferrer">a well-known producer (Joachim Garraud)</a>, was a success. The redesigned messaging played a role in that experience, earning trust from the organiser and participants, bringing new users to the platform and generating positive word-of-mouth.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 11. KEY TAKEAWAYS ─── -->
+    <section class="project-section takeaways-section" id="takeaways">
+      <div class="container">
+        <span class="section-label">Reflection</span>
+        <h2 class="project-section-title">Key Takeaways</h2>
+        <div class="takeaways-grid">
+
+          <div class="takeaway-item">
+            <div class="takeaway-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </div>
+            <div class="takeaway-body">
+              <strong>Involve IT ASAP, not at handoff</strong>
+              <p>Sharing early concepts with the IT team before actually investing time in even low-fi design consistently saved a lot of work. The sooner that possibility is discussed, the fewer decisions that have to be undone.</p>
+            </div>
+          </div>
+
+          <div class="takeaway-item">
+            <div class="takeaway-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div class="takeaway-body">
+              <strong>Design within what's actually possible</strong>
+              <p>We encountered real issues mid-project since legacy technology couldn't support certain interactions we had designed and early discussed. It was a good reminder that good design needs to keep in mind what's achievable, both in time and in code.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 12. MORE PROJECTS ─── -->
+    <section class="more-projects">
+      <div class="container">
+        <span class="section-label">More Work</span>
+        <h2 class="section-title">Other Projects</h2>
+        <div class="more-projects-grid">
+
+          <!-- Card 1 — current SACEM project (placeholder for a future one) -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/600x375/1a1a2e/444466&text=Project+Coming+Soon" alt="Coming soon project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UI Design · Web App</span>
+              <h3 class="project-card-title">Project Name</h3>
+              <p class="project-card-desc">Short description of the project. Replace with your next case study when ready.</p>
+            </div>
+          </a>
+
+          <!-- Card 2 — back to SACEM -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/600x375/1a2e1a/446644&text=Project+Coming+Soon" alt="Coming soon project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UX Research · Mobile</span>
+              <h3 class="project-card-title">Project Name</h3>
+              <p class="project-card-desc">Short description of the project. Replace with your next case study when ready.</p>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.project-page -->
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>2026 © David Prieto Zurita</span>
+      <a href="#">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- ─── JS ─── -->
+  <script src="js/main.js"></script>
+  <script>
+    // ── Scroll progress bar ──────────────────────────────────────────
+    const progressBar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+    }, { passive: true });
+
+    // ── Section nav active state ─────────────────────────────────────
+    const snavItems = document.querySelectorAll('.snav-item');
+    const sections  = document.querySelectorAll('section[id], header[id], div[id]');
+
+    const snavObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          snavItems.forEach(item => {
+            item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(s => snavObserver.observe(s));
+  </script>
+
+</body>
+</html>
