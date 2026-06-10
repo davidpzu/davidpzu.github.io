@@ -484,3 +484,4 @@
 .project-card-desc {
   font-size: 0.85rem; color: var(--ink-soft); line-height: 1.6;
 }
+.kw { font-weight: 600; }

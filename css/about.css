@@ -17,11 +17,29 @@
 
 /* ─── About Hero ─── */
 .about-hero { padding-top: 7rem; }
+.about-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4rem; align-items: center;
+}
+.about-hero-image {
+  width: clamp(220px, 22vw, 320px);
+  aspect-ratio: 3/4;
+  border-radius: var(--radius) var(--radius) 100px var(--radius);
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+}
+.about-hero-image img { width: 100%; height: 100%; object-fit: cover; }
 .about-intro {
   font-size: 1.05rem; color: var(--ink-soft);
   max-width: 560px; margin-bottom: 2rem; line-height: 1.8;
 }
 .about-hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+@media (max-width: 700px) {
+  .about-hero-inner { grid-template-columns: 1fr; }
+  .about-hero-image { width: 100%; max-width: 260px; margin: 0 auto; }
+}
 
 /* ─── Bio ─── */
 .bio-text p {
