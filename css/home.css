@@ -22,15 +22,11 @@
   margin-bottom: 1.5rem;
 }
 .hero-name {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-style: italic;
+  font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.25em;
   color: var(--accent);
 }
-.hero-role {
-  white-space: nowrap;
-}
+
 .hero-desc {
   font-size: 1.15rem; color: var(--ink-soft);
   max-width: 560px; margin: 0 auto 2rem;
