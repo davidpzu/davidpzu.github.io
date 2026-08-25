@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Green Up - David Prieto Zurita</title>
+  <meta name="description" content="Green Up onboarding and transaction analysis - a UX case study by David Prieto Zurita">
+  <meta name="author" content="Davidpzu">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Favicon -->
+  <link rel="icon" href="img/favicon/favicon.ico" sizes="any">
+  <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png">
+
+  <!-- Google Fonts  -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap" rel="stylesheet">
+
+  <!-- Shared styles -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/projects.css">
+</head>
+
+<body>
+  <!-- SVG Background -->
+  <div id="svgBackground" class="svg-background">
+    <div class="background__svg01">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+        width="1000px" height="1000px" viewBox="0 0 1000 1000">
+        <defs>
+          <radialGradient id="color-gradient" cx="418.5665" cy="225.9685" r="499.9326"
+            fx="866.8251" fy="4.6162"
+            gradientTransform="matrix(-0.6935 0.7207 -0.7207 -0.6935 953.1126 355.0528)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:#CEC4EF"/>
+            <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+        <circle fill="url(#color-gradient)" cx="500" cy="500" r="500"/>
+      </svg>
+    </div>
+    <div class="background__svg02">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+        width="429.6px" height="429.6px" viewBox="0 0 429.6 429.6">
+        <defs>
+          <radialGradient id="color-gradient-2" cx="2213.9312" cy="-11537.4219" r="214.85"
+            fx="2393.6191" fy="-11419.6494"
+            gradientTransform="matrix(1.902285e-02 0.9998 0.9998 -1.954636e-02 11706.5303 -2223.4016)"
+            gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:#CEC4EF"/>
+            <stop offset="1" style="stop-color:#CEC4EF;stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+        <path fill="url(#color-gradient-2)" d="M63,63C146.9-21,282.9-21,366.8,62.9s83.8,219.9-0.1,303.8s-219.9,83.9-303.8,0.1S-20.9,146.9,63,63z"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress"></div>
+
+  <!-- ─── MAIN NAV ─── -->
+<nav id="main-nav">
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+  <!-- ─── SECTION NAV (fixed right side) ─── -->
+  <nav id="section-nav" aria-label="Page sections">
+    <a href="#overview"  class="snav-item"><span class="snav-label">Overview</span><span class="snav-dot"></span></a>
+    <a href="#what-i-did" class="snav-item"><span class="snav-label">What I Did</span><span class="snav-dot"></span></a>
+    <a href="#context"   class="snav-item"><span class="snav-label">Context</span><span class="snav-dot"></span></a>
+    <a href="#challenge" class="snav-item"><span class="snav-label">Challenge</span><span class="snav-dot"></span></a>
+    <a href="#research"  class="snav-item"><span class="snav-label">Research</span><span class="snav-dot"></span></a>
+    <a href="#process"   class="snav-item"><span class="snav-label">Process</span><span class="snav-dot"></span></a>
+    <a href="#outcome"   class="snav-item"><span class="snav-label">Outcome</span><span class="snav-dot"></span></a>
+    <a href="#results"   class="snav-item"><span class="snav-label">Results</span><span class="snav-dot"></span></a>
+    <a href="#takeaways" class="snav-item"><span class="snav-label">Takeaways</span><span class="snav-dot"></span></a>
+  </nav>
+
+  <div class="project-page">
+
+    <!-- ─── 1. HERO IMAGE ─── -->
+    <div class="project-hero-image">
+      <img src="img/projects/greenup-transaction/greenup-hero.jpg" alt="Green Up Project Hero"/>
+    </div>
+
+    <!-- ─── 2. PROJECT HEADER ─── -->
+    <header class="project-header" id="overview">
+      <div class="container">
+        <span class="project-badge">Case Study</span>
+        <h1 class="project-main-title">Green Up - Onboarding &amp; Transaction Analysis</h1>
+        <p class="project-subtitle">
+          Designed the interactions and entire transaction process for an internal reuse industrial material platform.
+        </p>
+        <div class="project-tags">
+          <span class="tag">SaaS Platform</span>
+          <span class="tag">UX Research</span>
+          <span class="tag">UI Design</span>
+          <span class="tag">Figma</span>
+          <span class="tag">Product Design</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── 3. OVERVIEW GRID (role / timeline / team / tools) ─── -->
+    <section class="project-overview">
+      <div class="container">
+        <div class="overview-grid">
+
+          <div class="overview-cell">
+            <span class="overview-label">My Role</span>
+            <div class="overview-value">
+              <strong>Product Designer</strong>
+              UX Research, UI Design, Prototyping, Design Handoff
+            </div>
+          </div>
+
+          <div class="overview-cell">
+            <span class="overview-label">Timeline</span>
+            <div class="overview-value">
+              <strong>TBD</strong>
+              Placeholder - add duration and the kick-off to delivery span here.
+            </div>
+          </div>
+
+          <div class="overview-cell">
+            <span class="overview-label">Team</span>
+            <div class="overview-value">
+              <strong>Cross-functional</strong>
+              Product Designer (me)<br> Placeholder role<br> Placeholder role
+            </div>
+          </div>
+
+          <div class="overview-cell">
+            <span class="overview-label">Tools &amp; Tech</span>
+            <div class="overview-value">
+              Figma · Miro · Google Docs · Placeholder
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 4. WHAT I DID ─── -->
+    <section class="project-section" id="what-i-did">
+      <div class="container">
+        <h2 class="project-section-title">What I Did</h2>
+        <div class="wid-grid">
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="5" cy="12" r="2"/>
+                <path d="M7 12h8"/>
+                <path d="M17 9l3 3-3 3"/>
+                <circle cx="19" cy="12" r="0" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>Placeholder - contribution 1</strong>
+              <p>Placeholder description of the first main contribution to the Green Up onboarding and transaction work.</p>
+            </div>
+          </div>
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/>
+                <path d="M21 21l-4.35-4.35"/>
+                <path d="M11 8v6M8 11h6"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>Placeholder - contribution 2</strong>
+              <p>Placeholder description of the research work done to map the existing transaction flow.</p>
+            </div>
+          </div>
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>Placeholder - contribution 3</strong>
+              <p>Placeholder description of the information architecture or flow restructuring work.</p>
+            </div>
+          </div>
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>Placeholder - contribution 4</strong>
+              <p>Placeholder description of prototyping and testing work.</p>
+            </div>
+          </div>
+
+          <div class="wid-item">
+            <div class="wid-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+              </svg>
+            </div>
+            <div class="wid-body">
+              <strong>Placeholder - contribution 5</strong>
+              <p>Placeholder description of the UI design work delivered.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 5. CONTEXT & ROLE ─── -->
+    <section class="project-section" id="context">
+      <div class="container">
+        <h2 class="project-section-title">Context &amp; Role</h2>
+        <p class="project-text">
+          Placeholder - introduce Green Up: what the platform is, who it serves, and why an internal reuse industrial
+          material marketplace needed a dedicated onboarding and transaction flow.
+        <br> <br>
+          Placeholder - describe your role, who you worked with, how the project reached you and how decisions were
+          communicated between client, product and engineering.
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── 6. CHALLENGE ─── -->
+    <section class="project-section" id="challenge">
+      <div class="container">
+        <h2 class="project-section-title">Problems &amp; Goals</h2>
+        <h3>Problems</h3>
+        <p class="project-text">
+          Placeholder - first problem. Use <span class="kw">this span</span> to highlight the key phrases the way the SACEM case study does.
+        </p>
+        <p class="project-text">
+          Placeholder - second problem, e.g. friction in the onboarding funnel or drop-off inside the transaction steps.
+        </p>
+        <p class="project-text">
+          Placeholder - third problem, e.g. constraints coming from the platform, the timeline or the stakeholders.
+        </p>
+        <p class="project-text">
+          Placeholder - supporting data point that framed the problem.
+        </p>
+        <h3>Goals</h3>
+        <p class="project-text">
+          Placeholder - what the redesign needed to achieve once the pain points were mapped.
+        </p>
+        <p class="project-text">
+          Placeholder - the concrete objectives, with <span class="kw">highlighted phrases</span> for the important ones.
+        </p>
+        <p class="project-text">
+          Placeholder - the lens every design decision was filtered through.
+        </p>
+      </div>
+      <div class="project-image-wrapper project-image-wrapper--full">
+        <img src="img/projects/greenup-transaction/greenup-challenge.jpg" alt="Challenge visualization"/>
+        <p class="project-image-caption">Placeholder caption - screenshots of the existing flow</p>
+      </div>
+    </section>
+
+    <!-- ─── 7. RESEARCH ─── -->
+    <section class="project-section" id="research">
+      <div class="container">
+        <h2 class="project-section-title">Research &amp; Insights</h2>
+
+        <h3>Placeholder - research method</h3>
+        <p class="project-text">
+          Placeholder - what you audited or benchmarked before defining the feature, and what you were trying to confirm.
+        </p>
+        <p class="project-text">
+          Placeholder - the insight that came out of it.
+        </p>
+
+        <h3>Target Users</h3>
+        <ol class="project-list">
+          <li>
+            <strong>Placeholder - user type 1</strong> - Placeholder description of this profile, their behaviour on the platform and what the design had to respect for them.
+          </li>
+          <li>
+            <strong>Placeholder - user type 2</strong> - Placeholder description of this profile and the features aimed directly at them.
+          </li>
+          <li>
+            <strong>Placeholder - user type 3</strong> - Placeholder description of the primary target for this project and the specific need that drove the main design decision.
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ─── 8. DESIGN PROCESS ─── -->
+    <section class="project-section" id="process">
+      <div class="container">
+        <h2 class="project-section-title">Design Process</h2>
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="step-num">1</span>
+            <div class="step-body">
+              <strong>User Research</strong>
+              <p>Placeholder - what the research step involved on this project.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">2</span>
+            <div class="step-body">
+              <strong>Wireframing &amp; Stakeholder Alignment</strong>
+              <p>Placeholder - low-fidelity work and how buy-in was reached.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">3</span>
+            <div class="step-body">
+              <strong>Interactive Prototyping</strong>
+              <p>Placeholder - prototypes built for testing and validation.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">4</span>
+            <div class="step-body">
+              <strong>Usability Testing</strong>
+              <p>Placeholder - who you tested with and what you validated.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">5</span>
+            <div class="step-body">
+              <strong>Iteration &amp; Refinement</strong>
+              <p>Placeholder - what changed between rounds.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">6</span>
+            <div class="step-body">
+              <strong>Design Handoff</strong>
+              <p>Placeholder - how the design was handed to the developers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 9. FINAL OUTCOME ─── -->
+    <section class="project-section" id="outcome">
+      <div class="container">
+        <h2 class="project-section-title">Final Outcome</h2>
+        <p class="project-text">
+          Placeholder - describe where the final design landed, what changed along the way and why both sides agreed it
+          was the right balance.
+        </p>
+      </div>
+      <div class="project-image-wrapper project-image-wrapper--full">
+        <img src="img/projects/greenup-transaction/greenup-outcome-1.jpg" alt="Final outcome screen 1"/>
+        <p class="project-image-caption">Placeholder caption - feature 1</p>
+      </div>
+      <div class="project-image-wrapper project-image-wrapper--full">
+        <img src="img/projects/greenup-transaction/greenup-outcome-2.jpg" alt="Final outcome screen 2"/>
+        <p class="project-image-caption">Placeholder caption - feature 2</p>
+      </div>
+    </section>
+
+    <!-- ─── 10. RESULTS & IMPACT ─── -->
+    <section class="project-section" id="results">
+      <div class="container">
+        <h2 class="project-section-title">Results &amp; Impact</h2>
+        <div class="results-grid">
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p><strong>Placeholder metric</strong> - placeholder description of the measurable result.</p>
+          </div>
+          <div class="result-item">
+            <span class="result-bullet"></span>
+            <p><strong>Placeholder outcome</strong> - placeholder description of the qualitative impact.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 11. KEY TAKEAWAYS ─── -->
+    <section class="project-section takeaways-section" id="takeaways">
+      <div class="container">
+        <span class="section-label">Reflection</span>
+        <h2 class="project-section-title">Key Takeaways</h2>
+        <div class="takeaways-grid">
+
+          <div class="takeaway-item">
+            <div class="takeaway-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </div>
+            <div class="takeaway-body">
+              <strong>Placeholder - takeaway 1</strong>
+              <p>Placeholder - what you learned and how it changed the way you work.</p>
+            </div>
+          </div>
+
+          <div class="takeaway-item">
+            <div class="takeaway-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div class="takeaway-body">
+              <strong>Placeholder - takeaway 2</strong>
+              <p>Placeholder - second reflection on the project.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 12. MORE PROJECTS ─── -->
+    <section class="more-projects">
+      <div class="container">
+        <span class="section-label">More Work</span>
+        <h2 class="section-title">Other Projects</h2>
+        <div class="more-projects-grid">
+
+          <!-- Card 1 - SACEM Messaging -->
+          <a href="sacem.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="img/projects/sacem-mensajeria/sacem-thumb.jpg" alt="SACEM Messaging project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UI Design · Web App</span>
+              <h3 class="project-card-title">SACEM - Messaging</h3>
+              <p class="project-card-desc">Redesigned the legacy messaging system to improve user experience and increase engagement.</p>
+            </div>
+          </a>
+
+          <!-- Card 2 - placeholder for a future case study -->
+          <a href="projects.html" class="project-card">
+            <div class="project-card-thumb">
+              <img src="https://dummyimage.com/600x375/1a2e1a/446644&text=Project+Coming+Soon" alt="Coming soon project"/>
+            </div>
+            <div class="project-card-body">
+              <span class="project-card-tag">UX Research · Mobile</span>
+              <h3 class="project-card-title">Project Name</h3>
+              <p class="project-card-desc">Short description of the project. Replace with your next case study when ready.</p>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.project-page -->
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>2026 © David Prieto Zurita</span>
+      <a href="#">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- ─── JS ─── -->
+  <script src="js/main.js"></script>
+  <script>
+    // ── Scroll progress bar ──────────────────────────────────────────
+    const progressBar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+    }, { passive: true });
+
+    // ── Section nav active state ─────────────────────────────────────
+    const snavItems = document.querySelectorAll('.snav-item');
+    const sections  = document.querySelectorAll('section[id], header[id], div[id]');
+
+    const snavObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          snavItems.forEach(item => {
+            item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(s => snavObserver.observe(s));
+  </script>
+
+</body>
+</html>
