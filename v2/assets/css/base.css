@@ -1,0 +1,212 @@
+/* base.css — @font-face, reset, typography, focus. Loaded after tokens.css. */
+
+/* ---------------------------------------------------------------- fonts */
+/* Self-hosted, latin subset, swap. Five files, no others. design.md §0/§1.3 */
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../fonts/geist-mono-v6-latin-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../fonts/geist-mono-v6-latin-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Tight";
+  src: url("../fonts/inter-tight-v9-latin-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Tight";
+  src: url("../fonts/inter-tight-v9-latin-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Syne";
+  src: url("../fonts/syne-v24-latin-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------- reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body,
+h1, h2, h3, h4, h5, h6,
+p, figure, blockquote, dl, dd {
+  margin: 0;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Only faces we actually ship are 400/500/600/700 upright. Never let the
+   browser fake a weight or a slant we do not have a file for. */
+body {
+  font-synthesis: none;
+}
+
+/* ----------------------------------------------------------- typography */
+/* Sizes, tracking and weights are design.md §1.3, verbatim.
+   Line heights are not specified there — chosen here, tight on display. */
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+
+/* Hero name */
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+/* Section title */
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* Chapter lead */
+h3 {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+p {
+  max-width: var(--measure);
+}
+
+/* Metric numeral */
+.figure {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--accent);
+}
+
+/* Chapter year */
+.year {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--ink-muted);
+}
+
+/* Eyebrow / nav */
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* Caption / meta */
+.meta {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+/* Wordmark only. */
+.wordmark {
+  font-family: var(--font-mark);
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- links */
+/* Accent is reserved. Links carry ink and an underline at rest; the accent
+   arrives on hover and on focus only. design.md §1.2 */
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color 200ms ease;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------------- focus */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Reduced motion is handled per component, at the component's own rule
+   (design.md §3.2, §3.3, §3.4, §3.5). No blanket override here — that
+   would need !important, which means the selector is wrong. */

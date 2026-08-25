@@ -1,0 +1,24 @@
+/* tokens.css — custom properties only. Loaded first. No selectors beyond :root. */
+
+:root {
+  /* Color — design.md §1.2 */
+  --paper:      #FCFCFA;  /* page background — barely warm, not cream */
+  --paper-alt:  #F4F4F0;  /* alternating section band */
+  --ink:        #14150F;  /* primary text */
+  --ink-muted:  #6E6E68;  /* captions, meta, mono labels */
+  --rule:       #E2E2DC;  /* hairlines, card borders */
+  --accent:     #1F3BFF;  /* cobalt — links, focus ring, caret, metric numerals */
+  --accent-dim: #E8EBFF;  /* accent wash, metric box hover, footer gradient stop */
+
+  /* Type — design.md §1.3 */
+  --font-display: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-body:    "Inter Tight", system-ui, -apple-system, sans-serif;
+  --font-mark:    "Syne", var(--font-display);   /* wordmark only */
+
+  /* Space and layout — design.md §1.4 */
+  --s-1: 0.5rem;  --s-2: 1rem;   --s-3: 1.5rem;  --s-4: 2rem;
+  --s-5: 3rem;    --s-6: 4.5rem; --s-7: 7rem;    --s-8: 10rem;
+  --measure: 62ch;
+  --shell:   min(1140px, 92vw);
+  --radius:  10px;   /* cards and metric boxes only — everything else square */
+}

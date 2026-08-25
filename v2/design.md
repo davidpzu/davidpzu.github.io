@@ -1,0 +1,370 @@
+# design.md — davidpzu.github.io redesign (v2)
+
+**Owner:** David Prieto Zurita — Senior Product Designer, Madrid
+**Goal:** Rebuild the portfolio so it reads as senior-level evidence, not a growth story.
+**Working directory:** `/v2` only. **Do not modify, move, or delete anything outside `/v2`.** The site at the repo root is live and linked from an active CV.
+**Preview URL:** `davidpzu.github.io/v2/`
+**Final URL after promotion:** `davidpzu.github.io` (no custom domain, no CNAME file).
+
+---
+
+## 0. Hard constraints
+
+Non-negotiable. Do not propose alternatives.
+
+- **No framework.** Vanilla HTML, CSS, JavaScript in separate files. No React, Next, Vue, Svelte.
+- **No build step.** No npm, no bundler, no PostCSS, no Tailwind. What's in the repo is what ships.
+- **No CSS framework.** Hand-written CSS with custom properties.
+- **Relative paths everywhere.** `assets/css/tokens.css`, `../../assets/js/rotator.js`. Never root-relative (`/assets/…`) — those break the moment `/v2` is promoted to root.
+- **Fonts self-hosted** as `.woff2` in `v2/assets/fonts/`. No external requests of any kind.
+- **`<meta name="robots" content="noindex">`** on every `/v2` page until promotion. Remove at promotion.
+- **JS is progressive enhancement.** Every section readable and navigable with JavaScript disabled. JS adds motion, never content.
+- **Accessibility floor:** visible keyboard focus, `prefers-reduced-motion` respected, semantic landmarks, AA contrast minimum, no hover-only content.
+
+---
+
+## 1. Design direction
+
+### 1.1 Thesis
+
+**"Engineering notebook."** Near-white space, monospace as the display face, content chaptered rather than dumped. Justified by the subject: a product designer who works close to code and builds his own tooling. The mono isn't decoration — it's accurate.
+
+### 1.2 Color tokens
+
+```css
+:root {
+  --paper:      #FCFCFA;  /* page background — barely warm, not cream */
+  --paper-alt:  #F4F4F0;  /* alternating section band */
+  --ink:        #14150F;  /* primary text */
+  --ink-muted:  #6E6E68;  /* captions, meta, mono labels */
+  --rule:       #E2E2DC;  /* hairlines, card borders */
+  --accent:     #1F3BFF;  /* cobalt — links, focus ring, caret, metric numerals */
+  --accent-dim: #E8EBFF;  /* accent wash, metric box hover, footer gradient stop */
+}
+```
+
+Accent appears in **five places only**: link hover, focus ring, the hero caret, metric numerals, footer gradient. Nowhere else. Electric cobalt reads engineered against near-white and stays clear of the warm-cream palette that every templated portfolio lands on.
+
+### 1.3 Type tokens
+
+```css
+:root {
+  --font-display: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-body:    "Inter Tight", system-ui, -apple-system, sans-serif;
+  --font-mark:    "Syne", var(--font-display);   /* wordmark only */
+}
+```
+
+Weights to load: Geist Mono 400/500, Inter Tight 400/600, Syne 700. All `latin`, all `font-display: swap`. Nothing else.
+
+Mono is the display face — headlines, section titles, nav, metrics, eyebrows. Inter Tight carries body copy so the About chapters are readable at length. Syne is demoted to the wordmark; it doesn't hold up as a body face and isn't what the direction is doing.
+
+| Role | Size | Face | Tracking | Weight |
+|---|---|---|---|---|
+| Hero name | `clamp(2.5rem, 7vw, 5rem)` | display | `-0.03em` | 500 |
+| Section title | `clamp(1.75rem, 3.5vw, 2.75rem)` | display | `-0.02em` | 500 |
+| Metric numeral | `clamp(2rem, 4.5vw, 3.5rem)` | display | `-0.04em` | 500 |
+| Chapter year | `clamp(1.5rem, 3vw, 2.25rem)` | display | `-0.02em` | 400 |
+| Chapter lead | `1.25rem` | body | `-0.01em` | 600 |
+| Body | `1.0625rem / 1.65` | body | `0` | 400 |
+| Eyebrow / nav | `0.75rem` | display | `0.12em`, uppercase | 500 |
+| Caption / meta | `0.8125rem` | display | `0.02em` | 400 |
+
+### 1.4 Space and layout
+
+Whitespace is the mechanism, not an afterthought. Strict scale, used consistently.
+
+```css
+:root {
+  --s-1: 0.5rem;  --s-2: 1rem;   --s-3: 1.5rem;  --s-4: 2rem;
+  --s-5: 3rem;    --s-6: 4.5rem; --s-7: 7rem;    --s-8: 10rem;
+  --measure: 62ch;
+  --shell:   min(1140px, 92vw);
+  --radius:  10px;   /* cards and metric boxes only — everything else square */
+}
+```
+
+- Section rhythm: `--s-8` desktop, `--s-6` mobile. **One rule, no exceptions.**
+- 12-column grid, `--s-3` gutter, `--shell` container.
+- Hairline `1px solid var(--rule)` between major sections. No shadows except card hover.
+
+### 1.5 Signature element
+
+**The hero terminal line.** One bold idea, carrying both the rotating subtitle and the monospace personality. Fixed stem, rotating slot, blinking cobalt caret.
+
+```
+currently > designing benefits platforms for 250k+ users ▮
+currently > learning Mandarin and Cantonese, trying not to butcher the tones ▮
+currently > cutting transaction time from 4.2 to 2.5 minutes ▮
+currently > running a Chinese hip-hop blog nobody asked for ▮
+currently > building and designing with AI tooling, when it helps ▮
+```
+
+Order is fixed as written: work, personal, work, personal, work. Don't shuffle — the alternation is the point.
+
+Everything else on the page stays quiet.
+
+---
+
+## 2. Information architecture
+
+| # | Section | Job |
+|---|---|---|
+| 1 | Hero | Positioning + the signature rotator |
+| 2 | Selected work | 3 cards: 1 live, 2 in progress |
+| 3 | Impact | 4 metric boxes in a rising staircase, hover/focus discloses context |
+| 4 | About — chapters | Scrolled timeline, replaces the wall of text |
+| 5 | Get in touch | Gradient footer, contact details, Formspree |
+
+---
+
+## 3. Section specs
+
+### 3.1 Navigation
+
+Floating pill nav, same three items, same behaviour. The only change is the mono treatment.
+
+```
+              ╭─────────────────────────────╮
+              │  [HOME]   PROJECTS   ABOUT  │
+              ╰─────────────────────────────╯
+```
+
+- **Brackets encode state, they don't decorate.** Active item renders `[HOME]`; inactive items render `HOME` with no brackets. On hover/focus, brackets fade in at 40% opacity as a preview of the active state.
+- Brackets are real characters in the DOM (`<span class="bracket">[</span>`), not `::before`/`::after` content, so screen readers and copy-paste behave.
+- Mono, `0.75rem`, `0.12em` tracking, uppercase.
+- Do not add items. Do not change the pill's position, blur, or scroll behaviour.
+
+### 3.2 Hero
+
+```
+┌──────────────────────────────────────────────┐
+│  [floating pill nav]                         │
+│                                              │
+│  DAVID PRIETO ZURITA                         │  display, tight
+│  Senior Product Designer · Madrid            │  mono, muted
+│                                              │
+│  currently > [rotating line] ▮               │  the signature
+│                                              │
+│  See the work →                              │  single text link
+│                                              │
+│  ─────────────────────────────────────────   │
+│  ● AVAILABLE FOR SENIOR PRODUCT ROLES        │  eyebrow, accent dot
+└──────────────────────────────────────────────┘
+```
+
+- **No CV download link in the hero.** It lives in the About section only.
+- Content constrained to `--shell`. Not `100vh` — let the work peek above the fold.
+- Rotator: 4s hold, 400ms crossfade, `aria-live="off"` so it doesn't spam screen readers.
+- `<noscript>`: line one renders statically. Also the default state in HTML, so it's visible before JS runs.
+- Caret: CSS `@keyframes` blink, 1s `step-end`.
+- Under `prefers-reduced-motion`: rotation stops on line one, caret stops blinking (stays solid).
+
+### 3.3 Selected work
+
+```
+┌───────────────────────┐  ┌───────────────────────┐
+│ [16:10 media slot]    │  │ [16:10 placeholder]   │
+│ 01 · SACEM            │  │ 02 · Sacem Collab+    │
+│ Rights management     │  │ Analytics platform    │
+│ ───────────────────── │  │ ───────────────────── │
+│ Read case study →     │  │ IN PROGRESS           │
+└───────────────────────┘  └───────────────────────┘
+```
+
+- **Three cards: SACEM (live), Sacem Collab+ (WIP), Sanofi Connect (WIP).** The two WIP case study pages get built after v2 ships.
+- **No metrics on the cards.** The numbers live in section 3.4 only, so they aren't diluted across two places.
+- **Media slot must work empty today.** Build a fixed 16:10 container with `--paper-alt` fill and a mono placeholder label. Thumbnails and Cursorful navigation videos arrive later, so the container must accept, without any layout change:
+  - `<img>` (webp + jpg fallback), or
+  - `<video autoplay muted loop playsinline>` with a `poster`.
+  - Under `prefers-reduced-motion`, video must not autoplay — show the poster.
+- WIP cards: `--ink-muted` text, `IN PROGRESS` eyebrow, `cursor: default`, **not** an `<a>`, `aria-disabled="true"`. A dead link is worse than an honest label.
+- Live card: entire card is one `<a>`, no nested interactive elements. Hover: media scales `1.02`, border → `--accent`, 200ms ease.
+- 2-up desktop (third card starts a second row, left-aligned — do not stretch it), 1-up below 768px.
+- Numbering `01 / 02 / 03` is earned: the order is by significance and the reader uses it.
+
+### 3.4 Impact — the staircase
+
+Four boxes, offset vertically to form a rising staircase left to right. Rising encodes the content; don't invert it.
+
+```
+                                          ┌──────────┐
+                             ┌──────────┐ │  +130%   │
+                ┌──────────┐ │  41→59%  │ │          │
+   ┌──────────┐ │   18%    │ │          │ └──────────┘
+   │  €3.7M   │ │          │ └──────────┘
+   │          │ └──────────┘
+   └──────────┘
+```
+
+| Box | Figure | Label (always visible) | Disclosure (hover/focus) |
+|---|---|---|---|
+| 1 | €3.7M | avoided spend | Design decisions that removed cost before it was committed |
+| 2 | 18% | drop-off reduction | Fewer people abandoning the transaction flow mid-way |
+| 3 | 41% → 59% | weekly active users | Measured over the platform's core employee base |
+| 4 | +130% | in-platform messaging | People actually talking to each other inside the product |
+
+- The 4.2 → 2.5 min figure is deliberately **not** here — it already carries a rotator line. Don't duplicate it.
+- Numerals `--font-display`, `--accent`. Labels `--ink-muted`, mono, small.
+- **Disclosure must not be hover-only.** Each box is a `<button type="button">` with `aria-expanded`. Reveal on `:hover`, `:focus-visible`, and click/tap. Below 768px the disclosure text is **always visible** and the staircase flattens to a stacked 1-up list with no offset.
+- Staircase offsets via `transform: translateY()` on `nth-child`, in `--s-3` steps: box 1 = `+4.5rem`, box 2 = `+3rem`, box 3 = `+1.5rem`, box 4 = `0`. Parent needs matching bottom padding so the offset doesn't collide with the next section.
+- Count-up on first intersect, 900ms `ease-out`. Under reduced motion, render the final value immediately.
+- Section sits on `--paper-alt`.
+- Every figure must match the CV exactly. If the CV changes, this section changes.
+
+### 3.5 About — chapters
+
+Sticky year column left, chapter content right, revealed on scroll. Replaces the current single long paragraph.
+
+```
+┌────────────┬─────────────────────────────────┐
+│            │  [portrait photo]                │
+│   1997     │  My origins                      │
+│  (sticky)  │  Marbella, futsal, music,        │
+│            │  Photoshop CS6 on forums         │
+│            ├─────────────────────────────────┤
+│ 2018–2020  │  Where it all started            │
+│            │  Málaga, then Madrid, then the   │
+│            │  promotion to product design     │
+│            ├─────────────────────────────────┤
+│  2024 —    │  Where I am now                  │
+│            │  China remote, back in Madrid,   │
+│            │  AI tooling, design events       │
+└────────────┴─────────────────────────────────┘
+```
+
+**Section title:** "Design and tooling for B2B platforms, with AI where it truly helps"
+
+Three named chapters. The titles carry the narrative; the year column carries the timeline. Together they close the 1997 → 2018 gap without needing a fourth entry — "My origins" reads as a deliberate framing device rather than a missing chapter.
+
+#### Final copy
+
+**`1997` — My origins**
+
+> Born in 1997 in Marbella, on Spain's Mediterranean coast. Futsal took most of my afternoons; music took the rest — I've been chasing a good song since before I could talk. Design found me on internet forums, where I made signatures in Photoshop CS6 between long stretches of videogames. That was the hook.
+
+**`2018–2020` — Where it all started**
+
+> After graduating I learned graphic design, then UI, in Málaga — a coast kid finally in a real city. Madrid came next, and with it my first job, as a visual designer. In 2020 I was promoted to product designer and took two new client platforms from the first discovery call to launch, working with PMs and engineers.
+
+**`2024 —` — Where I am now**
+
+> Half a year working remotely from China taught me how design reads in a mobile-first, gamified, pro-AI culture. Back in Madrid — eight years and counting — I'm still leading those same two platforms six years on, studying the Google UX Design certificate, building AI tooling, and turning up at design events to meet people whose work I admire.
+
+Word counts: 52 / 57 / 56. All inside the cap. Do not pad them.
+
+#### Build rules
+
+- Each chapter renders in this order: year marker (mono, large, muted, sticky) / chapter title (Inter Tight 600, `1.25rem`) / one paragraph (Inter Tight 400, capped at `--measure`).
+- Chapter titles are `<h3>`. The section heading is the `<h2>`. Don't skip levels.
+- Year markers are typed exactly as above, including the en dash in `2018–2020` and the trailing em dash in `2024 —`. They are text, not generated.
+- **"My origins" carries a portrait photo.** Square or 4:5, `--radius`, max 320px wide; above the title on mobile, beside the text on desktop. The image is not ready yet, so build the container at a fixed aspect ratio filled with `--paper-alt` and a mono placeholder label. No layout shift when the real photo lands. Real `alt` text required at that point.
+- **CV download link sits at the end of "Where I am now"**, not in the hero. Mono, accent on hover, with file type and size in the label.
+- Reveal: `IntersectionObserver`, `threshold: 0.25`, adds `.is-visible` → opacity `0→1`, `translateY(16px)→0`, 500ms. Each chapter animates on its own entry, no stagger.
+- **Fallback:** `.is-visible` is applied by default in CSS; JS removes it on load before observing. Fully readable without JS.
+- Sticky year collapses to an inline label below 768px.
+
+### 3.6 Get in touch — footer
+
+```css
+footer {
+  background: linear-gradient(180deg,
+    var(--paper) 0%,
+    var(--accent-dim) 55%,
+    var(--accent) 100%);
+}
+```
+
+- Oversized mono headline sitting in the gradient: **"Let's talk."**
+- Contact block: email, LinkedIn, GitHub, Madrid, current status. Mono, one per line, generous leading.
+- **Formspree form stays — do not rebuild it.** Restyle only: bottom-border inputs, no boxes, mono labels, accent focus ring. Preserve the existing action URL and field names exactly.
+- Text over the accent end must be `--paper`, never `--ink`. Verify `#FCFCFA` on `#1F3BFF` clears AA.
+- Bottom bar: `© 2026 · Built by hand · Madrid`, caption size.
+
+---
+
+## 4. File structure
+
+```
+v2/
+├── index.html
+├── work/
+│   └── sacem/index.html
+├── assets/
+│   ├── css/
+│   │   ├── tokens.css        ← custom properties, loaded first
+│   │   ├── base.css          ← reset, @font-face, typography, focus styles
+│   │   ├── layout.css        ← grid, shell, section rhythm
+│   │   └── components.css    ← nav, hero, cards, staircase, chapters, footer
+│   ├── js/
+│   │   ├── rotator.js
+│   │   ├── reveal.js
+│   │   └── counters.js
+│   ├── fonts/                ← geist-mono 400/500, inter-tight 400/600, syne 700
+│   └── img/
+└── design.md
+```
+
+- Four `<link>` tags in order. No `@import` — it blocks rendering.
+- JS with `defer`. Each file a plain IIFE — no ES modules, so local `file://` preview works.
+
+---
+
+## 5. Build order
+
+Each step independently reviewable. Stop after each and wait for review.
+
+1. `tokens.css` + `base.css` — `@font-face` blocks, type scale, color, focus styles. Verify on a throwaway page.
+2. `index.html` semantic skeleton — all five sections, real structure, zero styling. Confirm it reads top to bottom as a document with CSS disabled.
+3. `layout.css` — grid, shell, section rhythm.
+4. Nav bracket states.
+5. Hero, static (no rotation).
+6. `rotator.js` + caret.
+7. Work cards, including empty media containers and WIP states.
+8. Impact staircase, static values, disclosure working on hover **and** focus **and** tap.
+9. `counters.js`.
+10. About chapters, static, with photo slot.
+11. `reveal.js`.
+12. Footer gradient + Formspree restyle.
+13. Responsive pass: 375 / 768 / 1024 / 1440.
+14. Accessibility pass: tab order, focus visibility, contrast, reduced motion, `noscript`.
+15. Performance pass: font subsetting, image compression, Lighthouse.
+
+---
+
+## 6. Acceptance criteria
+
+- [ ] Renders complete and usable with JavaScript disabled.
+- [ ] `prefers-reduced-motion: reduce` kills rotation, caret blink, count-up, reveals, and video autoplay. All content still visible.
+- [ ] Every metric box disclosure reachable by keyboard and by tap, not hover alone.
+- [ ] Visible focus state on every interactive element, using `--accent`.
+- [ ] No paragraph exceeds `--measure`.
+- [ ] No About chapter exceeds 60 words.
+- [ ] Every metric matches the CV exactly.
+- [ ] Work card media containers hold their 16:10 box while empty — no layout shift when assets arrive.
+- [ ] Zero external network requests.
+- [ ] Lighthouse: performance ≥ 95, accessibility 100.
+- [ ] Total page weight under 800KB.
+- [ ] Verified on the deployed `davidpzu.github.io/v2/` URL, not just locally.
+
+---
+
+## 7. Explicit non-goals
+
+- No dark mode in v1.
+- No page transition or scroll library. No Lenis, Locomotive, GSAP, Framer Motion.
+- No cursor follower, no magnetic buttons, no scroll-jacking.
+- No blog section.
+- No CMS.
+- No "Beyond the screen" or interests section — the rotator already carries the personal register, and a second pass at it would dilute both.
+
+---
+
+## 8. Notes for Claude Code
+
+- **Stay inside `/v2`.** Never touch the repo root.
+- Ask before deleting anything. The SACEM case study and the Formspree config are load-bearing.
+- **Assets pending, containers built now:** the "My origins" portrait and all three work card thumbnails. Build fixed-ratio placeholders so nothing shifts when the real files arrive. Do not source, generate, or substitute images.
+- When a behaviour is ambiguous, build the simpler version and flag it. Don't guess at complexity.
+- If a CSS rule seems to need `!important`, the specificity is wrong. Fix the selector.
+- Promotion is a manual step done by David, not by you: `rm index.html && rm -rf assets work && mv v2/* . && rmdir v2`, then remove the `noindex` tags. Rollback point is the `v1-live` tag.
