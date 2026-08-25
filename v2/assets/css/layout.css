@@ -1,0 +1,60 @@
+/* layout.css — shell, grid, section rhythm. Structure only, no component
+   styling. Loaded after base.css. */
+
+/* ---------------------------------------------------------------- shell */
+/* Sections run full width so a band or a gradient can bleed edge to edge.
+   The shell inside them holds the content to --shell. design.md §1.4 */
+
+.shell {
+  width: var(--shell);
+  margin-inline: auto;
+}
+
+/* -------------------------------------------------------------- rhythm */
+/* --s-8 desktop, --s-6 mobile. One rule, every section, no exceptions.
+   Symmetric, so the hairline between two sections sits centred in the
+   whitespace rather than crowded against one side. design.md §1.4 */
+
+main > section,
+.site-footer {
+  padding-block: var(--s-6);
+}
+
+@media (min-width: 768px) {
+  main > section,
+  .site-footer {
+    padding-block: var(--s-8);
+  }
+}
+
+/* Hairline between major sections. Full bleed, because it sits on the
+   section rather than inside the shell. */
+main > section + section {
+  border-top: 1px solid var(--rule);
+}
+
+/* ---------------------------------------------------------------- grid */
+/* 12 columns, --s-3 gutter. Children opt in by spanning; nothing is
+   placed here. design.md §1.4 */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--s-3);
+}
+
+/* Below the breakpoint the 12-column field collapses. Anything sitting on
+   the grid stacks in source order unless a component says otherwise. */
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------- bands */
+/* Section grounds. Impact sits on --paper-alt (§3.4); the footer gradient
+   is the footer's own business and lives in components.css. */
+
+.band-alt {
+  background: var(--paper-alt);
+}

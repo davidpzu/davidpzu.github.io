@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+
+  <title>David Prieto Zurita — Senior Product Designer</title>
+  <meta name="description" content="Design and tooling for B2B platforms, with AI where it truly helps. Senior product designer in Madrid.">
+
+  <!-- Reusing the v1 icon set. site.webmanifest is deliberately not linked:
+       its icon paths are root-relative and would break §0. -->
+  <link rel="icon" href="assets/img/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon/favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/favicon/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+  <!-- ============================================================ nav
+       §3.1 — brackets are real characters in the DOM, present on every
+       item. Which one is lit is a CSS state; aria-current carries the
+       same fact for assistive tech. -->
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <ul class="nav-list">
+        <li>
+          <a class="nav-link eyebrow is-active" href="index.html" aria-current="page"><span class="bracket">[</span>Home<span class="bracket">]</span></a>
+        </li>
+        <li>
+          <a class="nav-link eyebrow" href="#work"><span class="bracket">[</span>Projects<span class="bracket">]</span></a>
+        </li>
+        <li>
+          <a class="nav-link eyebrow" href="#about"><span class="bracket">[</span>About<span class="bracket">]</span></a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ======================================================== hero
+         §3.2 — the five rotator lines are content, so they live in the
+         HTML, not in rotator.js. Line one is the default state; CSS
+         hides the rest until JS starts cycling them. -->
+    <section class="hero" aria-labelledby="hero-name">
+      <div class="shell">
+        <h1 id="hero-name">David Prieto Zurita</h1>
+        <p class="hero-role meta">Senior Product Designer · Madrid</p>
+
+        <p class="rotator">
+          <span class="rotator-stem">currently &gt;</span>
+          <span class="rotator-slot" aria-live="off">
+            <span class="rotator-line is-current">designing benefits platforms for 250k+ users</span>
+            <span class="rotator-line">learning Mandarin and Cantonese, trying not to butcher the tones</span>
+            <span class="rotator-line">cutting transaction time from 4.2 to 2.5 minutes</span>
+            <span class="rotator-line">running a Chinese hip-hop blog nobody asked for</span>
+            <span class="rotator-line">building and designing with AI tooling, when it helps</span>
+          </span>
+          <span class="caret" aria-hidden="true">▮</span>
+        </p>
+
+        <p class="hero-cta"><a href="#work">See the work →</a></p>
+
+        <hr class="hero-rule">
+
+        <p class="hero-status eyebrow"><span class="status-dot" aria-hidden="true">●</span> Available for senior product roles</p>
+      </div>
+    </section>
+
+    <!-- ================================================ selected work
+         §3.3 — card 01 is one <a> wrapping the whole card. Cards 02 and
+         03 are not links at all: honest label, no dead href. Media slots
+         are empty containers today, sized to hold their 16:10 box. -->
+    <section id="work" class="work" aria-labelledby="work-title">
+      <div class="shell">
+        <h2 id="work-title">Selected work</h2>
+
+        <ul class="card-grid">
+
+          <li class="card">
+            <a class="card-link" href="work/sacem/index.html">
+              <span class="card-media">
+                <span class="card-media-label meta">Media pending</span>
+              </span>
+              <span class="card-index meta">01</span>
+              <h3 class="card-title">SACEM</h3>
+              <p class="card-desc">Rights management</p>
+              <span class="card-rule"></span>
+              <span class="card-cta">Read case study →</span>
+            </a>
+          </li>
+
+          <li class="card card-wip" aria-disabled="true">
+            <span class="card-media">
+              <span class="card-media-label meta">Media pending</span>
+            </span>
+            <span class="card-index meta">02</span>
+            <h3 class="card-title">Sacem Collab+</h3>
+            <p class="card-desc">Analytics platform</p>
+            <span class="card-rule"></span>
+            <span class="card-status eyebrow">In progress</span>
+          </li>
+
+          <li class="card card-wip" aria-disabled="true">
+            <span class="card-media">
+              <span class="card-media-label meta">Media pending</span>
+            </span>
+            <span class="card-index meta">03</span>
+            <h3 class="card-title">Sanofi Connect</h3>
+            <!-- TODO copy: one-line descriptor, not written yet in design.md §3.3 -->
+            <p class="card-desc">Descriptor pending</p>
+            <span class="card-rule"></span>
+            <span class="card-status eyebrow">In progress</span>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ====================================================== impact
+         §3.4 — each figure is a button so the disclosure is reachable by
+         keyboard and tap, never hover alone. aria-expanded is toggled by
+         counters/disclosure JS in step 8; the notes are in the DOM now so
+         the section is complete without script. Band ground per §3.4. -->
+    <section id="impact" class="impact band-alt" aria-labelledby="impact-title">
+      <div class="shell">
+        <h2 id="impact-title">Impact</h2>
+
+        <ul class="staircase">
+
+          <li class="metric">
+            <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-1">
+              <span class="figure">€3.7M</span>
+              <span class="metric-label eyebrow">avoided spend</span>
+            </button>
+            <p class="metric-note meta" id="metric-note-1">Design decisions that removed cost before it was committed</p>
+          </li>
+
+          <li class="metric">
+            <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-2">
+              <span class="figure">18%</span>
+              <span class="metric-label eyebrow">drop-off reduction</span>
+            </button>
+            <p class="metric-note meta" id="metric-note-2">Fewer people abandoning the transaction flow mid-way</p>
+          </li>
+
+          <li class="metric">
+            <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-3">
+              <span class="figure">41% → 59%</span>
+              <span class="metric-label eyebrow">weekly active users</span>
+            </button>
+            <p class="metric-note meta" id="metric-note-3">Measured over the platform's core employee base</p>
+          </li>
+
+          <li class="metric">
+            <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-4">
+              <span class="figure">+130%</span>
+              <span class="metric-label eyebrow">in-platform messaging</span>
+            </button>
+            <p class="metric-note meta" id="metric-note-4">People actually talking to each other inside the product</p>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ====================================================== about
+         §3.5 — year markers are typed text, including the en dash in
+         2018–2020 and the trailing em dash in 2024 —. Chapter titles are
+         h3 under the section h2; no skipped levels. -->
+    <section id="about" class="about" aria-labelledby="about-title">
+      <div class="shell">
+        <h2 id="about-title">Design and tooling for B2B platforms, with AI where it truly helps</h2>
+
+        <article class="chapter">
+          <p class="year">1997</p>
+          <figure class="portrait">
+            <div class="portrait-slot">
+              <span class="portrait-label meta">Portrait pending</span>
+            </div>
+          </figure>
+          <h3 class="chapter-title">My origins</h3>
+          <p>Born in 1997 in Marbella, on Spain's Mediterranean coast. Futsal took most of my afternoons; music took the rest — I've been chasing a good song since before I could talk. Design found me on internet forums, where I made signatures in Photoshop CS6 between long stretches of videogames. That was the hook.</p>
+        </article>
+
+        <article class="chapter">
+          <p class="year">2018–2020</p>
+          <h3 class="chapter-title">Where it all started</h3>
+          <p>After graduating I learned graphic design, then UI, in Málaga — a coast kid finally in a real city. Madrid came next, and with it my first job, as a visual designer. In 2020 I was promoted to product designer and took two new client platforms from the first discovery call to launch, working with PMs and engineers.</p>
+        </article>
+
+        <article class="chapter">
+          <p class="year">2024 —</p>
+          <h3 class="chapter-title">Where I am now</h3>
+          <p>Half a year working remotely from China taught me how design reads in a mobile-first, gamified, pro-AI culture. Back in Madrid — eight years and counting — I'm still leading those same two platforms six years on, studying the Google UX Design certificate, building AI tooling, and turning up at design events to meet people whose work I admire.</p>
+          <p class="cv-link meta"><a href="assets/CV_DavidPrietoZurita-EN.pdf" download>Download CV — PDF, 194 KB</a></p>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================== footer
+       §3.6 — Formspree action and field names are carried over exactly
+       from about.html. v1 submitted via fetch and swapped in an inline
+       success message; that script has no v2 equivalent yet, so this
+       posts natively for now. -->
+  <footer id="contact" class="site-footer" aria-labelledby="contact-title">
+    <div class="shell">
+      <h2 id="contact-title" class="footer-headline">Let's talk.</h2>
+
+      <ul class="contact-list">
+        <li><a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a></li>
+        <li><a href="https://www.linkedin.com/in/davidprietozurita/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <!-- TODO content: no GitHub URL exists anywhere in the repo. -->
+        <li>GitHub — URL pending</li>
+        <li>Madrid, Spain</li>
+        <li>Available for senior product roles</li>
+      </ul>
+
+      <form class="contact-form" action="https://formspree.io/f/xzdypydw" method="POST">
+        <div class="form-field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit">Send message</button>
+      </form>
+
+      <p class="colophon meta">© 2026 · Built by hand · Madrid</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/rotator.js" defer></script>
+
+</body>
+</html>

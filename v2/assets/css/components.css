@@ -1,0 +1,166 @@
+/* components.css — nav, hero, cards, staircase, chapters, footer.
+   Built one section at a time, in design.md §5 order. */
+
+/* ============================================================== nav §3.1 */
+/* Geometry, blur and radius carried over from v1 css/nav.css unchanged:
+   fixed, centred, 1.25rem from the top, blur(16px), 50px radius. Only the
+   palette moves to v2 tokens and the type becomes mono. */
+
+.nav {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 50px;
+
+  background: rgba(252, 252, 250, 0.75);          /* --paper at 75% */
+  background: color-mix(in srgb, var(--paper) 75%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  transition: background 300ms ease;
+}
+
+/* v1 darkened the pill past 10px of scroll (js/main.js). Nothing toggles
+   this class in v2 yet — v2 has no nav script. The v1 rule also carried a
+   drop shadow, dropped here because §1.4 allows shadows on card hover only. */
+.nav.is-scrolled {
+  background: color-mix(in srgb, var(--paper) 95%, transparent);
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-link {
+  display: block;
+  padding: 0.45rem 1rem;
+  color: var(--ink-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--ink);
+}
+
+/* Brackets sit in the DOM on every item and always occupy their width, so
+   revealing one never nudges the label. Opacity alone carries the state:
+   0 inactive, 0.4 as a hover/focus preview, 1 on the active item. */
+.bracket {
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.nav-link:hover .bracket,
+.nav-link:focus-visible .bracket {
+  opacity: 0.4;
+}
+
+.nav-link.is-active .bracket,
+.nav-link.is-active:hover .bracket,
+.nav-link.is-active:focus-visible .bracket {
+  opacity: 1;
+}
+
+/* ============================================================= hero §3.2 */
+/* Static: no rotation, no blink. Both arrive with rotator.js in step 6.
+   No min-height — the hero is deliberately shorter than the viewport so
+   the work section peeks above the fold. */
+
+.hero-role {
+  margin-top: var(--s-2);
+}
+
+/* --------------------------------------------------- the terminal line */
+/* Only the current line is in flow, so the caret sits hard against the
+   text instead of trailing the longest line in the set. Step 6 fades the
+   slot out, swaps which line holds .is-current, and fades it back in —
+   the width change happens while the slot is invisible. */
+
+.rotator {
+  margin-top: var(--s-5);
+  font-family: var(--font-display);
+  line-height: 1.5;
+  color: var(--ink);
+  /* base.css caps every <p> at --measure, which is 62ch of the body face.
+     The longest line here is 76 mono characters and would wrap mid-phrase,
+     breaking the one thing the hero is built around. See the step 5 note. */
+  max-width: none;
+}
+
+.rotator-stem {
+  color: var(--ink-muted);
+}
+
+.rotator-slot {
+  transition: opacity 200ms ease;
+}
+
+/* Out 200ms, swap, in 200ms — the 400ms crossfade of §3.2, with the width
+   change hidden in the middle of it. */
+.rotator-slot.is-fading {
+  opacity: 0;
+}
+
+.rotator-line {
+  display: none;
+}
+
+.rotator-line.is-current {
+  display: inline;
+}
+
+.caret {
+  color: var(--accent);
+  animation: caret-blink 1s step-end infinite;
+}
+
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* Reduced motion: the caret holds solid and the slot stops fading.
+   rotator.js makes the matching promise and never advances past line one. */
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+
+  .rotator-slot {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------- link and rule */
+
+.hero-cta {
+  margin-top: var(--s-4);
+}
+
+.hero-rule {
+  margin: var(--s-5) 0 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hero-status {
+  margin-top: var(--s-2);
+  color: var(--ink-muted);
+}
+
+.status-dot {
+  color: var(--accent);
+}
