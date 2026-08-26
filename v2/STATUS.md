@@ -25,9 +25,11 @@ David asked for directly:
 | item 26 (Lighthouse) | **closed** — David runs it himself |
 | all images → AVIF | 1476 KB of PNG/JPEG became **206 KB**, 86% smaller |
 
-**Nothing is committed and nothing is pushed.** `main` is six commits ahead
-of `origin/main`, and every one of those six is authored wrong — see below.
-That is still the thing to fix before the first push.
+All of it is **committed** as `e4d47a3`, with this file following in the
+commit after it as it has each time — a file cannot name its own hash.
+**Nothing is pushed:** `main` is 7 commits ahead of `origin/main`. The
+authorship problem is fixed for those 7; see the section below, which also
+corrects the count and names the 13 pushed commits it does not cover.
 
 ### Payload, both pages
 
@@ -59,17 +61,50 @@ was 898 KB.
 lists the fifth sheet, the fourth script and the `<picture>` rule. §3.5 was
 rewritten for the per-chapter images. Read the spec, not this file.
 
-### Commit authorship is still wrong
+### Commit authorship — fixed for the unpushed commits, open for 13 others
 
-Six commits authored `David <david@MacBook-Pro-de-David.local>`. No
-`user.email` is set, so git auto-detected a hostname that is not a GitHub
-account, and none of this history will attribute to David's profile.
-**Blocked on one thing: which email address to use.** Fixing all six at
-once before the first push is far cheaper than unpicking it later.
+**Done.** `user.name` / `user.email` are now set repo-locally to
+`davidpzu <88293615+davidpzu@users.noreply.github.com>`, and the **seven
+unpushed commits were rewritten** to that identity. `my-origins.png` was
+dropped from their trees in the same pass, so the 920 KB blob is no longer
+in `main`'s history at all.
 
-`my-origins.png` is also still in history at 920 KB, and it is now
-definitively dead — David has replaced it. Nothing is pushed, so dropping
-it from history is still cheap, and it is the same rewrite.
+Two things the earlier version of this file got wrong, both found by
+actually looking:
+
+- **It was never five or six commits — it is twenty.** The broken author
+  runs from `8de1006` (2026-05-25) forward. Something wiped the git config
+  that day.
+- **The repo already had a correct identity, and it is not the gmail.**
+  Every commit up to `ac34792` (2026-05-19) is
+  `davidpzu <88293615+davidpzu@users.noreply.github.com>`. The rewrite
+  matches it, so the history reads as one contributor rather than three.
+
+**Thirteen already-pushed commits still carry the broken author**
+(`56435cf` back to `8de1006`, 2026-05-25 → 2026-08-25). They were left
+alone deliberately: fixing them rewrites public history, changes every SHA
+from May onward and needs a force-push to a repo linked from an active CV.
+They will not attribute to David's GitHub profile. If that is ever worth
+doing, it is the same mechanism used here, run over `8de1006^..origin/main`
+and force-pushed — a deliberate decision, not a drive-by.
+
+**The rewrite was done with a scratch `GIT_INDEX_FILE` rather than
+`filter-branch`**, for one reason worth recording: `filter-branch` and
+`rebase` both refuse to run with a dirty working tree, and this tree is
+permanently dirty with the root drift below — which the project rules put
+off limits. Building each tree in a temporary index and replaying with
+`git commit-tree` never touches the working tree, the index, or anything
+outside `v2/`. Verified afterwards: the root drift is byte-for-byte what it
+was, and `git diff backup-before-rewrite HEAD` is empty.
+
+**`backup-before-rewrite` still points at the pre-rewrite tip** (`ef199df`).
+It is the only thing keeping the old commits and the `my-origins.png` blob
+reachable. Delete it once the pages have been looked at in a browser:
+`git branch -D backup-before-rewrite`.
+
+**Nothing is pushed.** `main` is 7 commits ahead of `origin/main`. Pushing
+publishes the preview to `davidpzu.github.io/v2/`; the `noindex` tag is in
+place for exactly that reason.
 
 ## Needs a decision
 
