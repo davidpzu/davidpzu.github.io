@@ -1,0 +1,6 @@
+# macOS Finder metadata. Written on every folder the Finder opens, so it
+# reappears constantly and shows up as a modification to a file nobody
+# edited. Three of these were tracked before this file existed; they were
+# untracked in the same commit, which deletes them from the repo but
+# leaves them on disk.
+.DS_Store
