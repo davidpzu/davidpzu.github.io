@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+
+  <title>SACEM — Messaging App Redesign · David Prieto Zurita</title>
+  <meta name="description" content="Redesigning a legacy messaging system for SACEM's member platform: +130% monthly messages, shipped in two months on a decade-old stack.">
+
+  <!-- Two levels down, so every path is ../../ — never root-relative. §0 -->
+  <link rel="icon" href="../../assets/img/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../assets/img/favicon/favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="../../assets/img/favicon/apple-touch-icon.png">
+
+  <!-- Same three faces above the fold as the index: the h1 and eyebrows are
+       Geist Mono 500, meta is Geist Mono 400, body copy is Inter Tight 400.
+       crossorigin is required even same-origin or the font is fetched twice. -->
+  <link rel="preload" href="../../assets/fonts/geist-mono-v6-latin-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/geist-mono-v6-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/inter-tight-v9-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <!-- Fifth sheet, this page only. The index never loads it. §4 -->
+  <link rel="stylesheet" href="../../assets/css/casestudy.css">
+</head>
+<body>
+
+  <!-- Scroll progress. Presentational only — the same fact is available to
+       assistive tech from the document itself, so it is aria-hidden rather
+       than a progressbar role that would announce on every scroll tick. -->
+  <div class="cs-progress" aria-hidden="true"><span class="cs-progress-bar"></span></div>
+
+  <!-- ============================================================ nav
+       Same three bare links as the index, same bracket mechanism. Targets
+       climb two levels; Projects is the active one on every case study. -->
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <div class="shell">
+        <ul class="nav-list" role="list">
+          <li>
+            <a class="nav-link eyebrow" href="../../index.html"><span class="bracket" aria-hidden="true">[</span>Home<span class="bracket" aria-hidden="true">]</span></a>
+          </li>
+          <li>
+            <a class="nav-link eyebrow is-active" href="../../index.html#work" aria-current="page"><span class="bracket" aria-hidden="true">[</span>Projects<span class="bracket" aria-hidden="true">]</span></a>
+          </li>
+          <li>
+            <a class="nav-link eyebrow" href="../../index.html#about"><span class="bracket" aria-hidden="true">[</span>About<span class="bracket" aria-hidden="true">]</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ====================================================== hero image
+         Full-bleed, outside the shell. eager + high priority because it is
+         the one thing above the fold; every other image on the page is
+         lazy. AVIF first, JPEG fallback — 37 KB against 270 KB. -->
+    <figure class="cs-hero-media">
+      <picture>
+        <source srcset="../../assets/img/projects/sacem-mensajeria/sacem-hero.avif" type="image/avif">
+        <img src="../../assets/img/projects/sacem-mensajeria/sacem-hero.jpg"
+             width="1400" height="600" fetchpriority="high" decoding="async"
+             alt="The redesigned SACEM messaging interface, shown as a wide banner.">
+      </picture>
+    </figure>
+
+    <!-- ======================================================== overview -->
+    <section id="overview" class="cs-header">
+      <div class="cs-shell">
+        <p class="eyebrow cs-badge">Case Study</p>
+        <h1>SACEM — Messaging App Redesign</h1>
+        <p class="cs-subtitle">Redesigned the legacy messaging system to improve user experience and increase engagement while introducing modern messaging functionalities.</p>
+        <ul class="cs-tags" role="list">
+          <li>SaaS Platform</li>
+          <li>UI Design</li>
+          <li>UX Research</li>
+          <li>Figma</li>
+          <li>Product Design</li>
+        </ul>
+
+        <!-- ==================================================== section nav
+             One element, two jobs. Below 1200 it is an ordinary "Contents"
+             block sitting in the flow right after the header, which is why it
+             is placed here in the DOM and not at the end. From 1200 up it
+             becomes a fixed rail in the gutter beside the reading column.
+             casestudy.js lights the current entry; with JS off it is still a
+             complete, working table of contents. -->
+        <nav class="cs-nav" aria-label="Case study sections">
+          <p class="cs-nav-title eyebrow">Contents</p>
+          <ul role="list">
+            <li><a class="cs-nav-link" href="#overview">Overview</a></li>
+            <li><a class="cs-nav-link" href="#what-i-did">What I Did</a></li>
+            <li><a class="cs-nav-link" href="#context">Context</a></li>
+            <li><a class="cs-nav-link" href="#challenge">Challenge</a></li>
+            <li><a class="cs-nav-link" href="#research">Research</a></li>
+            <li><a class="cs-nav-link" href="#process">Process</a></li>
+            <li><a class="cs-nav-link" href="#outcome">Outcome</a></li>
+            <li><a class="cs-nav-link" href="#results">Results</a></li>
+            <li><a class="cs-nav-link" href="#takeaways">Takeaways</a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ==================================================== facts grid
+         Role / timeline / team / tools. A dl, because that is what it is:
+         four terms and their descriptions. -->
+    <section class="cs-facts" aria-label="Project details">
+      <div class="cs-shell">
+        <dl class="cs-facts-grid">
+          <div class="cs-fact">
+            <dt class="eyebrow">My Role</dt>
+            <dd>
+              <strong>Product Designer</strong>
+              UX Research, UI Design, Prototyping, Design Handoff
+            </dd>
+          </div>
+          <div class="cs-fact">
+            <dt class="eyebrow">Timeline</dt>
+            <dd>
+              <strong>2025</strong>
+              Approximately 2 months end-to-end, from the first draft session with the client to final staging test
+            </dd>
+          </div>
+          <div class="cs-fact">
+            <dt class="eyebrow">Team</dt>
+            <dd>
+              <strong>Cross-functional</strong>
+              Product Designer (me)<br>French Client Manager<br>x2 Front End Developers
+            </dd>
+          </div>
+          <div class="cs-fact">
+            <dt class="eyebrow">Tools &amp; Tech</dt>
+            <dd>Figma · Miro · Google Docs · My notebook for wireframes</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ====================================================== what i did -->
+    <section id="what-i-did" class="cs-section">
+      <div class="cs-shell">
+        <h2>What I Did</h2>
+        <ul class="cs-did-grid" role="list">
+
+          <li class="cs-did">
+            <span class="cs-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="5" cy="12" r="2"/><path d="M7 12h8"/><path d="M17 9l3 3-3 3"/>
+              </svg>
+            </span>
+            <div>
+              <h3>End-to-End Design Lead</h3>
+              <p>Led the full design process from ideation to implementation, strategy and execution while aligning cross-functional teams towards the same goal.</p>
+            </div>
+          </li>
+
+          <li class="cs-did">
+            <span class="cs-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/>
+              </svg>
+            </span>
+            <div>
+              <h3>User Research</h3>
+              <p>Conducted user research, user flows and competitive analysis to map pain points in the existing messaging flow.</p>
+            </div>
+          </li>
+
+          <li class="cs-did">
+            <span class="cs-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+            </span>
+            <div>
+              <h3>Information Architecture</h3>
+              <p>Restructured the message hierarchy to reduce cognitive load and quickly set the most relevant content first.</p>
+            </div>
+          </li>
+
+          <li class="cs-did">
+            <span class="cs-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+              </svg>
+            </span>
+            <div>
+              <h3>Prototyping &amp; Usability Testing</h3>
+              <p>Built interactive Figma low-fi prototypes and ran two rounds of usability testing with non-users and team members iterating on findings between each session.</p>
+            </div>
+          </li>
+
+          <li class="cs-did">
+            <span class="cs-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+              </svg>
+            </span>
+            <div>
+              <h3>UI Redesign</h3>
+              <p>Designed a modern, accessible messaging interface aligned with SACEM's design system, introducing new functionalities such as rich-text replies, attachments and improved message organization tools.</p>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========================================================= context -->
+    <section id="context" class="cs-section band-alt">
+      <div class="cs-shell">
+        <h2>Context &amp; Role</h2>
+        <p>SACEM is the French society responsible for collecting and managing the royalties for music creators and publishers. We have been their product partner since 2020, providing them with a dedicated platform with perks ranging from music industry discounts and event agendas to member profiles, networking, second-hand equipment marketplace…</p>
+        <p>Ahead of a major event that required using the platform messaging system, the client sat with us to share their requests which led to us redesigning the whole messaging system to a much more modern one. As the lead and only designer for this project, I took part in the very first calls with our client manager and SACEM's team to understand their needs before any brief existed. All client communication ran though our account manager, which meant translating business needs carefully and sharing them with the IT team quite early to define the whole project.</p>
+      </div>
+    </section>
+
+    <!-- ======================================================= challenge -->
+    <section id="challenge" class="cs-section">
+      <div class="cs-shell">
+        <h2>Problems &amp; Goals</h2>
+
+        <h3 class="cs-sub">Problems</h3>
+        <p>The project came with a <span class="kw">tight deadline</span>: a full messaging redesign had to ship before a major client event, <span class="kw">roughly two months from kick-off</span>. This forced early and difficult scope decisions, with <span class="kw">several features cut</span> before a single wireframe was drawn.</p>
+        <p>The platform itself added a difficult task. SACEM ran on a <span class="kw">CakePHP version nearly a decade old</span>, which put several modern messaging features such as real-time updates, inline media previews, threaded replies, <span class="kw">impossible to accomplish</span>. We had to find alternative approaches that delivered equivalent user value that our technology could actually support.</p>
+        <p>Scheduling was also a problem we encountered. The project ran through August to October, <span class="kw">overlapping with summer holidays</span> on both the team and client side. Feedback sessions were hard to coordinate, and at times we had to <span class="kw">move forward without direct client validation</span> therefore relying on our research in order to advance.</p>
+        <p>Usage data from the existing system set the current status of the messaging very clear: <span class="kw">the average conversation contained just 2.8 messages</span>. Users weren't continuing threads for two main reasons, they were quite limited with what they could do or share within the legacy system, and perhaps because they had quietly <span class="kw">switched to more convenient channels</span> like email, whatsapp or other messaging tools.</p>
+
+        <h3 class="cs-sub">Goals</h3>
+        <p>With those key pain points mapped, the objectives were clear. The redesign needed to make conversations more likely to continue by enhancing the legacy system to a more up-to-date one.</p>
+        <p>That meant introducing <span class="kw">message organisation tools</span>: such as being able to mark messages as read or unread, archive threads, and/or flag important ones as favourites, so users could manage their inbox as one would expect. We also prioritised having a <span class="kw">modern reply experience</span>: formatted text and attachment support and reworked the visual hierarchy so <span class="kw">unread and high-priority messages were immediately scannable</span> in a quick look.</p>
+        <p>Every design decision was filtered through two lenses: does it work within the existing technology, and can it ship within the expected timeline.</p>
+      </div>
+
+      <figure class="cs-figure">
+        <picture>
+          <source srcset="../../assets/img/projects/sacem-mensajeria/sacem-challenge.avif" type="image/avif">
+          <img src="../../assets/img/projects/sacem-mensajeria/sacem-challenge.jpg"
+               width="1920" height="620" loading="lazy" decoding="async"
+               alt="Two screenshots of the legacy SACEM messaging system: a plain inbox table on the left, and a single conversation with a reply box on the right.">
+        </picture>
+        <figcaption class="meta">Screenshots of the old messaging system</figcaption>
+      </figure>
+    </section>
+
+    <!-- ======================================================== research -->
+    <section id="research" class="cs-section band-alt">
+      <div class="cs-shell">
+        <h2>Research &amp; Insights</h2>
+
+        <h3 class="cs-sub">Competitive Benchmarking</h3>
+        <p>Before defining the feature, I spent time auditing existing messaging systems, in both user apps and enterprise tools to stress-test our requirements list. The goal was to confirm that every feature we were proposing was something realistic, and that we weren't accidentally inventing something that would feel unfamiliar or require users to re-learn basic behaviours.</p>
+        <p>The new system needed to feel immediately recognisable, close to what people already used in their daily lives so that the learning curve was would be zero for most.</p>
+
+        <h3 class="cs-sub">Target Users</h3>
+        <ol class="cs-users">
+          <li>
+            <h4>The occasional user</h4>
+            <p>Logs in occasionally, particularly not tech-savvy, but has a profile and receives messages from time to time. This user must never feel lost or forced to adapt to something new. The redesign had to respect existing mental models and avoiding new problems for someone who isn't there often enough to build new habits.</p>
+          </li>
+          <li>
+            <h4>The active user</h4>
+            <p>Logs in daily, has an inbox that accumulates quickly, and would genuinely benefit from organisational tools. Features like marking messages as unread, archive messages, or having a favourites to set important conversations are aimed directly at this profile, hence giving them control over a busy inbox without overwhelming the interface for other target users.</p>
+          </li>
+          <li>
+            <h4>The event user</h4>
+            <p>The primary target for this redesign. This user receives a high volume of messages in a short period, all of them related to a same topic, therefore needs the inbox to stay clean and manageable under pressure. For this only profile we introduced a new message navigation: the ability to move directly from one message to the next without returning to the inbox each time. Average users won't rely on this feature since their conversations tend to cover different topics and rarely arrive in bulk, but for someone handling hundreds of similar messages in a single day, it removes the most repetitive action in the flow.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========================================================= process -->
+    <section id="process" class="cs-section">
+      <div class="cs-shell">
+        <h2>Design Process</h2>
+        <ol class="cs-steps">
+          <li>
+            <h3>User Research</h3>
+            <p>Conducted interviews and surveys to understand user needs and pain points.</p>
+          </li>
+          <li>
+            <h3>Wireframing &amp; Stakeholder Alignment</h3>
+            <p>Created low-fidelity designs and got buy-in from stakeholders.</p>
+          </li>
+          <li>
+            <h3>Interactive Prototyping</h3>
+            <p>Developed high-fidelity prototypes for user testing and validation.</p>
+          </li>
+          <li>
+            <h3>Usability Testing</h3>
+            <p>Tested with real users to validate design decisions and gather feedback.</p>
+          </li>
+          <li>
+            <h3>Iteration &amp; Refinement</h3>
+            <p>Refined the design based on testing results and stakeholder input.</p>
+          </li>
+          <li>
+            <h3>Design Handoff</h3>
+            <p>Collaborated with developers to ensure accurate implementation.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========================================================= outcome
+         v1 pointed both outcome images at img/sacem/outcome-1.jpg and
+         outcome-2.jpg. Neither file exists anywhere in this repo — the
+         directory does not exist either — so these are placeholders, not
+         guesses, and they keep v1's captions. Drop an <img> in and delete
+         the label; the box is already the right shape. -->
+    <section id="outcome" class="cs-section band-alt">
+      <div class="cs-shell">
+        <h2>Final Outcome</h2>
+        <p>The final design looked quite different from where we started. Early concepts had to be revisited and some ideas were cut due to technical issues or impossibility, others evolved through feedback from the client and testing. Both the client and our side agreed it hit the right balance: a modern, usable messaging experience that fit within the platform's existing architecture.</p>
+      </div>
+
+      <figure class="cs-figure">
+        <div class="cs-figure-slot"><span class="meta">Image pending</span></div>
+        <figcaption class="meta">Feature 1 — New message threading view</figcaption>
+      </figure>
+
+      <figure class="cs-figure">
+        <div class="cs-figure-slot"><span class="meta">Image pending</span></div>
+        <figcaption class="meta">Feature 2 — Notification centre redesign</figcaption>
+      </figure>
+    </section>
+
+    <!-- ========================================================= results -->
+    <section id="results" class="cs-section">
+      <div class="cs-shell">
+        <h2>Results &amp; Impact</h2>
+        <ul class="cs-results" role="list">
+          <li>
+            <p><strong>+130% monthly messages</strong> — launched ahead of a major platform event, monthly messages grew from ~3k to ~7k in the first quarter post-launch.</p>
+          </li>
+          <li>
+            <p><strong>Event success drove platform growth</strong> — the music collaboration event, co-led by the client and <a href="https://www.createursediteurs.sacem.fr/actualites-agenda/actualites/vos-services-et-demarches/collaborez-avec-joachim-garraud-pour-creer-de-nouveaux-titres" target="_blank" rel="noopener noreferrer">a well-known producer (Joachim Garraud)</a>, was a success. The redesigned messaging played a role in that experience, earning trust from the organiser and participants, bringing new users to the platform and generating positive word-of-mouth.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================================================= takeaways -->
+    <section id="takeaways" class="cs-section band-alt">
+      <div class="cs-shell">
+        <p class="eyebrow cs-eyebrow">Reflection</p>
+        <h2>Key Takeaways</h2>
+        <ul class="cs-takeaways" role="list">
+
+          <li>
+            <span class="cs-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </span>
+            <div>
+              <h3>Involve IT ASAP, not at handoff</h3>
+              <p>Sharing early concepts with the IT team before actually investing time in even low-fi design consistently saved a lot of work. The sooner that possibility is discussed, the fewer decisions that have to be undone.</p>
+            </div>
+          </li>
+
+          <li>
+            <span class="cs-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </span>
+            <div>
+              <h3>Design within what's actually possible</h3>
+              <p>We encountered real issues mid-project since legacy technology couldn't support certain interactions we had designed and early discussed. It was a good reminder that good design needs to keep in mind what's achievable, both in time and in code.</p>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================================================= more work
+         v1 closed with two "Other Projects" cards. Both were placeholders
+         pointing back at this same page, with their thumbnails loaded from
+         dummyimage.com — an external host, which §0 rules out. There is
+         one other case study in v2 and it is still work in progress, so
+         this is a way back to the work section instead of a fake card. -->
+    <section class="cs-more">
+      <div class="cs-shell">
+        <p class="eyebrow cs-eyebrow">More Work</p>
+        <p class="cs-more-link"><a class="cv-button" href="../../index.html#work"><span class="cv-arrow" aria-hidden="true">←</span>All projects</a></p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================== footer
+       The index's footer, unchanged: same markup, same Formspree action
+       and field names, same gradient rules. Paths climb two levels. -->
+  <footer id="contact" class="site-footer" aria-labelledby="contact-title">
+    <div class="shell">
+      <h2 id="contact-title" class="footer-headline">Let's talk.</h2>
+
+      <div class="footer-cols">
+        <ul class="contact-list" role="list">
+          <li><a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a></li>
+          <li><a href="https://www.linkedin.com/in/davidprietozurita/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li>Madrid, Spain</li>
+          <li>Available for senior product roles</li>
+        </ul>
+
+        <form class="contact-form" action="https://formspree.io/f/xzdypydw" method="POST">
+          <div class="form-field">
+            <label class="eyebrow" for="name">Name</label>
+            <input type="text" id="name" name="name" autocomplete="name" required>
+          </div>
+          <div class="form-field">
+            <label class="eyebrow" for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+          <div class="form-field">
+            <label class="eyebrow" for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+          <button class="form-submit" type="submit">Send message</button>
+        </form>
+      </div>
+
+      <p class="colophon meta">© 2026 · Built by hand · Madrid</p>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/casestudy.js" defer></script>
+
+</body>
+</html>

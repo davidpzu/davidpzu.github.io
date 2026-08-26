@@ -109,7 +109,12 @@
           <li class="card">
             <a class="card-link" href="work/sacem/index.html">
               <span class="card-media">
-                <span class="card-media-label meta">Media pending</span>
+                <picture>
+                  <source srcset="assets/img/projects/sacem-mensajeria/sacem-thumb.avif" type="image/avif">
+                  <img src="assets/img/projects/sacem-mensajeria/sacem-thumb.jpg"
+                       width="475" height="300" loading="lazy" decoding="async"
+                       alt="">
+                </picture>
               </span>
               <div class="card-head">
                 <span class="card-index meta">01</span>
@@ -214,12 +219,20 @@
         <article class="chapter is-visible">
           <p class="year">1997</p>
           <div class="chapter-body">
-            <figure class="portrait">
-              <div class="portrait-slot">
-                <span class="portrait-label meta">Portrait pending</span>
-              </div>
+            <!-- AVIF first, PNG as the fallback: the PNG is 898 KB against
+                 the AVIF's 121 KB, and both carry the alpha the cut-out
+                 needs. Only Safari below 16.4 ever fetches the PNG.
+                 loading=lazy because About is the fourth section — this
+                 costs nothing on initial load. §3.5 -->
+            <figure class="chapter-media">
+              <picture>
+                <source srcset="assets/img/the-beginning.avif" type="image/avif">
+                <img src="assets/img/the-beginning.png" width="878" height="846"
+                     loading="lazy" decoding="async"
+                     alt="A childhood photo of me at about three, wearing oversized headphones, with cut-outs of a Sony CD Walkman, a Nike football and a PlayStation 2 arranged around it. Caption in the image: Always passionate about music.">
+              </picture>
             </figure>
-            <h3 class="chapter-title">My origins</h3>
+            <h3 class="chapter-title">The Beginning</h3>
             <p>Born in 1997 in Marbella, on Spain's Mediterranean coast. Futsal took most of my afternoons; music took the rest — I've been chasing a good song since before I could talk. Design found me on internet forums, where I made signatures in Photoshop CS6 between long stretches of videogames. That was the hook.</p>
           </div>
         </article>
@@ -227,6 +240,11 @@
         <article class="chapter is-visible">
           <p class="year">2018–2020</p>
           <div class="chapter-body">
+            <figure class="chapter-media">
+              <div class="chapter-media-slot">
+                <span class="chapter-media-label meta">Image pending</span>
+              </div>
+            </figure>
             <h3 class="chapter-title">Where it all started</h3>
             <p>After graduating I learned graphic design, then UI, in Málaga — a coast kid finally in a real city. Madrid came next, and with it my first job, as a visual designer. In 2020 I was promoted to product designer and took two new client platforms from the first discovery call to launch, working with PMs and engineers.</p>
           </div>
@@ -235,6 +253,11 @@
         <article class="chapter is-visible">
           <p class="year">2024 —</p>
           <div class="chapter-body">
+            <figure class="chapter-media">
+              <div class="chapter-media-slot">
+                <span class="chapter-media-label meta">Image pending</span>
+              </div>
+            </figure>
             <h3 class="chapter-title">Where I am now</h3>
             <p>Half a year working remotely from China taught me how design reads in a mobile-first, gamified, pro-AI culture. Back in Madrid — eight years and counting — I'm still leading those same two platforms six years on, studying the Google UX Design certificate, building AI tooling, and turning up at design events to meet people whose work I admire.</p>
             <p class="cv-link"><a class="cv-button" href="assets/CV_DavidPrietoZurita-EN.pdf" download>Download CV — PDF, 194 KB<span class="cv-arrow" aria-hidden="true">↓</span></a></p>
@@ -263,8 +286,6 @@
         <ul class="contact-list" role="list">
           <li><a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a></li>
           <li><a href="https://www.linkedin.com/in/davidprietozurita/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <!-- TODO content: no GitHub URL exists anywhere in the repo. -->
-          <li>GitHub — URL pending</li>
           <li>Madrid, Spain</li>
           <li>Available for senior product roles</li>
         </ul>

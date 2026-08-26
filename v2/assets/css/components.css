@@ -304,8 +304,18 @@
 }
 
 /* The two shapes the slot must accept without any other change:
-   <img> (webp + jpg fallback), or
-   <video autoplay muted loop playsinline poster="…">. */
+   <img> (AVIF source + JPEG fallback in a <picture>), or
+   <video autoplay muted loop playsinline poster="…">.
+
+   display:contents on the <picture> is what lets the first shape work: the
+   img is sized 100%/100% against the slot, and an inline <picture> box in
+   between would give it an auto height to resolve against instead. The
+   element carries no semantics of its own, so removing its box costs
+   nothing in the accessibility tree. */
+.card-media picture {
+  display: contents;
+}
+
 .card-media img,
 .card-media video {
   width: 100%;
@@ -592,8 +602,8 @@
 }
 
 /* ---------------------------------------------------------- the chapter */
-/* flow-root so the floated portrait is contained and the next chapter's
-   hairline starts below it rather than through it. */
+/* flow-root so the floated chapter media is contained and the next
+   chapter's hairline starts below it rather than through it. */
 
 .chapter-body {
   display: flow-root;
@@ -643,32 +653,47 @@
   color: var(--accent);
 }
 
-/* --------------------------------------------------------- the portrait */
-/* Empty today. aspect-ratio holds the 4:5 box — §3.5 allows square or 4:5
-   — so the real photo drops in with no layout shift and needs real alt
-   text at that point. --radius is §3.5's explicit instruction for this
-   container; it outranks §1.4's cards-and-metric-boxes-only scope. */
+/* ----------------------------------------------------- the chapter media */
+/* One image per chapter, not one portrait for the section. Square or 4:5,
+   supplied by David; only chapter one's has arrived.
 
-.portrait {
-  width: min(320px, 100%);
+   Two things this deliberately does NOT do, both because the-beginning.png
+   is a cut-out on a transparent ground rather than a photograph. It carries
+   no --paper-alt fill and no --radius: the Walkman, the football and the
+   PlayStation are composited so they break outside the photo's own
+   rectangle, and a filled, rounded box would paint a frame around exactly
+   the parts that are meant to escape one. And it sets no aspect-ratio and
+   never crops — the img carries width and height attributes, so the browser
+   reserves the intrinsic ratio before the file lands (no layout shift) and
+   any ratio David sends fits without object-fit choosing what to lose. The
+   4:5 box that was here cropped 183px off each side, which was the Walkman
+   and the PlayStation — the music and the videogames the copy is about. */
+
+.chapter-media {
+  width: min(360px, 100%);
   margin-bottom: var(--s-3);
 }
 
-.portrait-slot {
+.chapter-media picture,
+.chapter-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The placeholder is the one thing here that IS a box, because an empty
+   slot with no fill is an invisible slot. 1/1 matches the one asset that
+   exists; a 4:5 image will simply be taller when it arrives, since the
+   real img sizes itself and this slot is deleted with its markup. */
+.chapter-media-slot {
   position: relative;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   border-radius: var(--radius);
   background: var(--paper-alt);
   overflow: hidden;
 }
 
-.portrait-slot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.portrait-label {
+.chapter-media-label {
   position: absolute;
   inset: 0;
   display: flex;
@@ -678,15 +703,17 @@
   text-align: center;
 }
 
-/* §3.5 wants the portrait beside the text on desktop, but it does not fit
-   beside it at 768: the chapter column is 531px there, and a 320px photo
-   would leave the copy 36ch. It clears 45ch from 1024 up, so that is where
-   it moves alongside — below that it stays above the title, which is what
-   §3.5's own diagram draws anyway. Flagged in STATUS. */
+/* §3.5 wants the image beside the text on desktop, but it does not fit
+   beside it at 768: the chapter column is 531px there, and the image would
+   leave the copy well under 45ch. Measured at 1024 the body column is
+   730px, so a 38% float (277px) leaves 405px of copy — about 50ch — and at
+   1440 it leaves 510px, about 63ch. Both clear the floor, which is what
+   allows 360px here where the old portrait rule said 320. Flagged in
+   STATUS. */
 @media (min-width: 1024px) {
-  .portrait {
+  .chapter-media {
     float: left;
-    width: min(320px, 34%);
+    width: min(360px, 38%);
     margin-right: var(--s-5);
   }
 }

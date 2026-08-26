@@ -240,15 +240,17 @@ Sticky year column left, chapter content right, revealed on scroll. Replaces the
 
 ```
 ┌────────────┬─────────────────────────────────┐
-│            │  [portrait photo]                │
-│   1997     │  My origins                      │
+│            │  [chapter image]                 │
+│   1997     │  The Beginning                   │
 │  (sticky)  │  Marbella, futsal, music,        │
 │            │  Photoshop CS6 on forums         │
 │            ├─────────────────────────────────┤
+│            │  [chapter image]                 │
 │ 2018–2020  │  Where it all started            │
 │            │  Málaga, then Madrid, then the   │
 │            │  promotion to product design     │
 │            ├─────────────────────────────────┤
+│            │  [chapter image]                 │
 │  2024 —    │  Where I am now                  │
 │            │  China remote, back in Madrid,   │
 │            │  AI tooling, design events       │
@@ -257,11 +259,11 @@ Sticky year column left, chapter content right, revealed on scroll. Replaces the
 
 **Section title:** "Design and tooling for B2B platforms, with AI where it truly helps"
 
-Three named chapters. The titles carry the narrative; the year column carries the timeline. Together they close the 1997 → 2018 gap without needing a fourth entry — "My origins" reads as a deliberate framing device rather than a missing chapter.
+Three named chapters. The titles carry the narrative; the year column carries the timeline. Together they close the 1997 → 2018 gap without needing a fourth entry — "The Beginning" reads as a deliberate framing device rather than a missing chapter.
 
 #### Final copy
 
-**`1997` — My origins**
+**`1997` — The Beginning**
 
 > Born in 1997 in Marbella, on Spain's Mediterranean coast. Futsal took most of my afternoons; music took the rest — I've been chasing a good song since before I could talk. Design found me on internet forums, where I made signatures in Photoshop CS6 between long stretches of videogames. That was the hook.
 
@@ -280,7 +282,12 @@ Word counts: 52 / 57 / 56. All inside the cap. Do not pad them.
 - Each chapter renders in this order: year marker (mono, large, muted, sticky) / chapter title (Inter Tight 600, `1.25rem`) / one paragraph (Inter Tight 400, capped at `--measure`).
 - Chapter titles are `<h3>`. The section heading is the `<h2>`. Don't skip levels.
 - Year markers are typed exactly as above, including the en dash in `2018–2020` and the trailing em dash in `2024 —`. They are text, not generated.
-- **"My origins" carries a portrait photo.** Square or 4:5, `--radius`, max 320px wide; above the title on mobile, beside the text on desktop. The image is not ready yet, so build the container at a fixed aspect ratio filled with `--paper-alt` and a mono placeholder label. No layout shift when the real photo lands. Real `alt` text required at that point.
+- **Every chapter carries its own image, one each, not one portrait for the section.** Square or 4:5; above the title on mobile, beside the text from 1024 up (768 does not fit — see the note below). Max 360px wide.
+  - *This replaces the earlier single-portrait rule and the `--radius` and `--paper-alt` that came with it. Do not put them back.* The first image, `the-beginning.png`, is a **composited cut-out on a transparent ground**, not a photograph: the Sony Walkman, the football and the PlayStation deliberately break outside the photo's rectangle. A filled, rounded container frames precisely the parts that are meant to escape a frame, and a fixed `aspect-ratio` with `object-fit: cover` crops them off — at 4:5 it removed 183px from each side, which was the music and the videogames the copy is about.
+  - **No cropping, and no `aspect-ratio` on the image.** Each `<img>` carries its real `width` and `height` attributes and is sized `width: 100%; height: auto`. The browser reserves the intrinsic ratio, so there is no layout shift, and square and 4:5 both fit without anything choosing what to lose.
+  - Chapters two and three have no image yet. They keep a placeholder box — `aspect-ratio: 1 / 1`, `--paper-alt`, `--radius`, mono label — because an unfilled empty slot is an invisible one. The placeholder is deleted along with its markup when the real file lands; the real image never inherits its fill or its radius.
+  - **Format: AVIF, with the PNG as a `<picture>` fallback.** The source PNG is 898 KB — 1.2 bytes per pixel, because PNG is a lossless compressor being handed a photograph. AVIF does alpha *and* photographs: the same 878 × 846 image at quality 85 is **121 KB**, an 87% saving, visually indistinguishable including the baked-in caption. `macOS sips` writes AVIF; it cannot write WebP (read-only in its format list), which is why this is not the more obvious WebP. Safari below 16.4 is the only engine that falls back to the PNG. Chapter images are below the fold, so they also carry `loading="lazy"` and `decoding="async"` and cost nothing on initial load.
+  - Real `alt` text is required, and it must carry any text baked into the image — text in pixels is unreadable to assistive tech and cannot be resized (WCAG 1.4.5). `the-beginning.png` has *"Always passionate about music"* baked in, and its `alt` says so.
 - **CV download link sits at the end of "Where I am now"**, not in the hero. Mono, accent on hover, with file type and size in the label.
 - Reveal: `IntersectionObserver`, `threshold: 0.25`, adds `.is-visible` → opacity `0→1`, `translateY(16px)→0`, 500ms. Each chapter animates on its own entry, no stagger.
 - **Fallback:** `.is-visible` is applied by default in CSS; JS removes it on load before observing. Fully readable without JS.
@@ -298,12 +305,52 @@ footer {
 ```
 
 - Oversized mono headline sitting in the gradient: **"Let's talk."**
-- Contact block: email, LinkedIn, GitHub, Madrid, current status. Mono, one per line, generous leading.
+- Contact block: email, LinkedIn, Madrid, current status. Mono, one per line, generous leading. **No GitHub link** — removed at David's instruction; he does not publish there, so the row was a placeholder for something that is never coming. Do not add it back.
 - **Formspree form stays — do not rebuild it.** Restyle only: bottom-border inputs, no boxes, mono labels, accent focus ring. Preserve the existing action URL and field names exactly.
 - Two markup additions are allowed against "restyle only", both from step 14 and neither touching the action URL or the field names: `autocomplete="name"` and `autocomplete="email"` on the two inputs (WCAG 1.3.5, AA), and `class="eyebrow"` on the three labels so they take §1.3's mono label role rather than a duplicated type block.
 - **"No boxes" describes the form at rest.** On `:focus-visible` every control in the footer paints `background: var(--paper)` with `outline-offset: 0`. That is not decoration: the submit button sits ~73% down the gradient at 1440 and ~76% at 375, where `--accent` is 2.6:1 against the ground and misses the 3:1 a focus indicator needs. Painting `--paper` under the ring puts a 6.54:1 edge on its inner side and holds at any depth the footer grows to — the ground is a gradient, so no fixed ring colour can be checked once and trusted. Same mechanism as the nav in §3.1.
 - Text over the accent end must be `--paper`, never `--ink`. Verify `#FCFCFA` on `#1F3BFF` clears AA.
 - Bottom bar: `© 2026 · Built by hand · Madrid`, caption size.
+
+### 3.7 Case study — `work/<slug>/index.html`
+
+The v1 SACEM page ported onto the v2 system. Everything below is the shape every future case study takes.
+
+```
+┌──────────────────────────────────────────────┐  full bleed
+│              hero image                       │
+├──────────────────────────────────────────────┤
+│  CASE STUDY                                   │
+│  SACEM — Messaging App Redesign               │   ┌──────────┐
+│  one-line subtitle                            │   │ Overview │
+│  [tag] [tag] [tag]                            │   │ What I…  │  fixed
+│  ── Contents ─────────                        │   │ Context  │  rail
+├──────────────────────────────────────────────┤   │ …        │  ≥1200
+│  role · timeline · team · tools               │   └──────────┘
+├──────────────────────────────────────────────┤
+│  What I Did / Context / Problems & Goals /    │
+│  Research / Process / Outcome / Results /     │
+│  Takeaways                                    │
+└──────────────────────────────────────────────┘
+```
+
+**Sections, in order, with these exact ids:** `overview`, `what-i-did`, `context`, `challenge`, `research`, `process`, `outcome`, `results`, `takeaways`. They are v1's own sections and v1's own copy — a port, not a rewrite. The ids are what the contents nav targets.
+
+#### Build rules
+
+- **Its own reading column: `.cs-shell` at `min(820px, 92vw)`, not `--shell`.** A case study is long-form prose, and 62ch of copy in a 1140px field reads as a caption. The narrower column is also what leaves a gutter the fixed rail can live in.
+- **Contents nav — one element, two jobs, no duplicated markup.** In the flow it is an ordinary "Contents" list under the page header, which is what it is on a phone and what it stays as with JS off. From **1200px** it becomes a fixed rail in the right gutter, vertically centred so it clears both the site nav at 48px and the progress hairline at 0. `casestudy.js` marks the current entry; the mark is a rule that grows from 40% to full width, not colour alone (WCAG 1.4.1).
+  - 1200 is measured, not chosen: the gutter there is `(1200 − 820) / 2 = 190px` against a 140px rail plus `--s-4` of clearance, so it fits with 18px spare and only widens above.
+- **Scroll progress:** a 2px `--accent` hairline fixed at the top. It is scaled (`transform: scaleX`), never resized — animating `width` forces layout on every scroll frame — and the paint is batched into a `requestAnimationFrame`. `aria-hidden`: it reports a fact the document already gives assistive tech, and a `progressbar` role would announce on every tick.
+- **Site nav:** the same three bare links as §3.1, targets climbing `../../`. **Projects** is `is-active` and `aria-current="page"` on every case study.
+- **Footer:** the §3.6 footer, unchanged — same markup, same Formspree action and field names.
+- **`.kw`** — v1 marked phrases inside its prose. Carried over as an `--accent-dim` wash, not a colour swap: `--ink` on `--accent-dim` is 15.5:1, and recolouring the text would put a second meaning on the one colour §1.2 reserves for interaction. A wash also survives forced-colours mode, where a colour change vanishes.
+- **Subheads inside a prose section (`.cs-sub`) are mono**, on §1.3's "mono is the display face" rule — the same call `.card-title` makes. The `<h4>`s inside Target Users are body face, because they are leads, not labels.
+- **Images get `--shell`, wider than the reading column but not full bleed.** They are screenshots and they earn the extra width. The hero is the exception and runs edge to edge.
+- **v1's closing "Other Projects" block is not ported.** Both its cards were placeholders pointing back at the same page, with thumbnails loaded from `dummyimage.com` — an external host, which §0 rules out. A link back to the work section replaces it until there is a second case study.
+- **v1's two Final Outcome images do not exist in this repo** (`img/sacem/outcome-1.jpg`, `outcome-2.jpg` — the directory is absent). They are placeholder boxes carrying v1's captions, on the §3.5 rule: a placeholder is a box, the real image is not.
+
+---
 
 ---
 
@@ -319,18 +366,23 @@ v2/
 │   │   ├── tokens.css        ← custom properties, loaded first
 │   │   ├── base.css          ← reset, @font-face, typography, focus styles
 │   │   ├── layout.css        ← grid, shell, section rhythm
-│   │   └── components.css    ← nav, hero, cards, staircase, chapters, footer
+│   │   ├── components.css    ← nav, hero, cards, staircase, chapters, footer
+│   │   └── casestudy.css     ← case-study pages only; the index never loads it
 │   ├── js/
 │   │   ├── rotator.js
 │   │   ├── reveal.js
-│   │   └── counters.js
+│   │   ├── counters.js
+│   │   └── casestudy.js      ← case-study pages only
 │   ├── fonts/                ← geist-mono 400/500, inter-tight 400/600, syne 700
 │   └── img/
 └── design.md
 ```
 
-- Four `<link>` tags in order. No `@import` — it blocks rendering.
+- Four `<link>` tags in order on `index.html`. No `@import` — it blocks rendering.
+- **A case study loads a fifth, `casestudy.css`, after `components.css`.** It is the only page-scoped sheet, and it exists so the index pays nothing for a page it never shows. It restates nothing: `.shell`, `.band-alt`, the section rhythm, `.eyebrow`, `.meta`, `.cv-button`, the nav and the footer all come from the four above.
+- Likewise `casestudy.js` loads on case-study pages only, and the index's three scripts do not load on a case study.
 - JS with `defer`. Each file a plain IIFE — no ES modules, so local `file://` preview works.
+- **Every image on the site is a `<picture>`: an AVIF `<source>` with a JPEG or PNG `<img>` fallback.** §3.5 has the reasoning and the numbers. Everything below the fold carries `loading="lazy"` and `decoding="async"`; the one image above it — a case study's hero — carries `fetchpriority="high"` instead.
 
 ---
 
@@ -388,7 +440,7 @@ Each step independently reviewable. Stop after each and wait for review.
 
 - **Stay inside `/v2`.** Never touch the repo root.
 - Ask before deleting anything. The SACEM case study and the Formspree config are load-bearing.
-- **Assets pending, containers built now:** the "My origins" portrait and all three work card thumbnails. Build fixed-ratio placeholders so nothing shifts when the real files arrive. Do not source, generate, or substitute images.
+- **Assets pending, containers built now:** the chapter two and chapter three images and all three work card thumbnails. Build fixed-ratio placeholders so nothing shifts when the real files arrive. Do not source, generate, or substitute images. Chapter one's image (`the-beginning.png`) has landed and is wired in; see §3.5 for why it takes no fill, no radius and no crop.
 - When a behaviour is ambiguous, build the simpler version and flag it. Don't guess at complexity.
 - If a CSS rule seems to need `!important`, the specificity is wrong. Fix the selector.
 - Promotion is a manual step done by David, not by you: `rm index.html && rm -rf assets work && mv v2/* . && rmdir v2`, then remove the `noindex` tags. Rollback point is the `v1-live` tag.

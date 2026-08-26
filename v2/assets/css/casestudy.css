@@ -1,0 +1,471 @@
+/* casestudy.css — work/<slug>/index.html only. The index never loads this.
+   Loaded fifth, after components.css, so it can lean on everything the
+   system already has: .shell, .band-alt, the section rhythm, .eyebrow,
+   .meta, .cv-button, the nav and the footer all come from the four sheets
+   above and are not restated here.
+
+   The one structural departure from the index: a case study is long-form
+   reading, so its content sits in a narrower column than --shell. That is
+   what .cs-shell is, and it is also what makes room in the gutter for the
+   fixed contents rail. */
+
+/* --------------------------------------------------------------- shell */
+/* 820px against the index's 1140. Two reasons, and the second is the one
+   that pins the number: prose at --measure (62ch, ~500px) should not sit
+   in a 1140px field, and the fixed rail needs a gutter it can live in.
+   At 1200 — where the rail appears — the gutter is (1200-820)/2 = 190px
+   against a rail that measures 140px plus --s-4 of clearance. Fits with
+   18px to spare, and every width above that only widens it. */
+
+.cs-shell {
+  width: min(820px, 92vw);
+  margin-inline: auto;
+}
+
+/* Long-form prose needs paragraph spacing; base.css resets p to margin 0
+   because the index has no two-paragraph blocks. Scoped to .cs-shell so it
+   cannot reach the footer or the nav. */
+.cs-shell p + p {
+  margin-top: var(--s-3);
+}
+
+.cs-section h2,
+.cs-header h1 {
+  margin-bottom: var(--s-4);
+}
+
+/* ------------------------------------------------------ scroll progress */
+/* Fixed hairline at the very top. The bar is scaled, not resized: transform
+   is compositor-only, where animating width forces layout on every scroll
+   frame. Origin left so it grows rightward from 0. */
+
+.cs-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 20;
+  background: transparent;
+  pointer-events: none;
+}
+
+.cs-progress-bar {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+/* ------------------------------------------------------------ hero image */
+/* Full bleed, edge to edge, sitting above the first section. It is a
+   figure with no caption — the h1 immediately below names it. */
+
+.cs-hero-media img {
+  width: 100%;
+  height: clamp(200px, 34vw, 420px);
+  object-fit: cover;
+}
+
+/* ---------------------------------------------------------- page header */
+
+.cs-badge {
+  color: var(--ink-muted);
+  margin-bottom: var(--s-3);
+}
+
+/* The h1 is the page title, not the site's name, so it comes down from
+   §1.3's hero ceiling. 3.25rem holds "SACEM — Messaging App Redesign" to
+   two lines in the 820px column and to three at 375. */
+.cs-header h1 {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+}
+
+.cs-subtitle {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  margin-bottom: var(--s-4);
+}
+
+/* Tags take the card's idiom — square, 1px border, mono caption metrics —
+   for the same reason .cv-button does: it is the enclosure this system
+   has. They are not links, so the border stays --rule rather than the
+   --ink that WCAG 1.4.11 asks of a control's boundary. */
+.cs-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cs-tags li {
+  padding: 0.375rem var(--s-2);
+  border: 1px solid var(--rule);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+/* --------------------------------------------------------- contents nav */
+/* In the flow by default: a plain table of contents under the header, which
+   is what it must be on a phone and what it stays as with JS off. */
+
+.cs-nav {
+  margin-top: var(--s-6);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+}
+
+.cs-nav-title {
+  color: var(--ink-muted);
+  margin-bottom: var(--s-2);
+}
+
+.cs-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+}
+
+.cs-nav-link {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.cs-nav-link:hover,
+.cs-nav-link.is-current {
+  color: var(--ink);
+}
+
+/* From 1200 the same element becomes a fixed rail in the right gutter.
+   Vertically centred rather than pinned to the top, so it never collides
+   with the fixed site nav at 48px or the progress hairline at 0.
+
+   The current entry is marked by a rule that grows from 0, not by colour
+   alone — colour alone would be the only signal, and the resting and
+   active states here are one step apart on the same hue. WCAG 1.4.1. */
+@media (min-width: 1200px) {
+  .cs-nav {
+    position: fixed;
+    top: 50%;
+    right: var(--s-4);
+    transform: translateY(-50%);
+    width: 140px;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+    z-index: 10;
+  }
+
+  .cs-nav ul {
+    display: block;
+  }
+
+  .cs-nav li + li {
+    margin-top: 0.625rem;
+  }
+
+  .cs-nav-link {
+    display: block;
+    position: relative;
+    padding-left: var(--s-3);
+  }
+
+  .cs-nav-link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: var(--s-2);
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0.4);
+    transform-origin: 0 50%;
+    transition: transform 200ms ease;
+  }
+
+  .cs-nav-link:hover::before,
+  .cs-nav-link.is-current::before {
+    transform: scaleX(1);
+  }
+
+  .cs-nav-link.is-current {
+    color: var(--accent);
+  }
+}
+
+/* ------------------------------------------------------------ facts grid */
+
+.cs-facts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .cs-facts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-5);
+  }
+}
+
+.cs-fact dt {
+  color: var(--ink-muted);
+  padding-bottom: var(--s-1);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: var(--s-2);
+}
+
+.cs-fact dd {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.cs-fact strong {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ------------------------------------------- what i did / key takeaways */
+/* Same object twice: an outlined icon, a lead, and a paragraph. */
+
+.cs-did-grid,
+.cs-takeaways {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .cs-did-grid,
+  .cs-takeaways {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-5);
+  }
+}
+
+.cs-did,
+.cs-takeaways > li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-2);
+  align-items: start;
+}
+
+.cs-did h3,
+.cs-takeaways h3 {
+  margin-bottom: var(--s-1);
+}
+
+.cs-did p,
+.cs-takeaways p {
+  color: var(--ink-muted);
+}
+
+.cs-icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+
+.cs-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* --------------------------------------------------------- subheadings */
+/* h3 inside a prose section, above a run of paragraphs. Mono, because §1.3
+   makes mono the display face and this is a label for a block, not a lead
+   sentence — the same call .card-title makes. */
+
+.cs-sub {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-top: var(--s-5);
+  margin-bottom: var(--s-3);
+}
+
+.cs-shell > .cs-sub:first-of-type {
+  margin-top: 0;
+}
+
+/* ------------------------------------------------------------- keywords */
+/* v1 marked phrases inside its prose with .kw. Carried over as a wash
+   rather than a colour swap: --ink on --accent-dim is 15.5:1, well clear
+   of AA, where recolouring the text to --accent would put a second meaning
+   on the one colour §1.2 reserves for interaction. The wash also survives
+   forced-colours mode as a box, where a colour change would vanish. */
+
+.kw {
+  background: var(--accent-dim);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.1em 0.25em;
+  margin: 0 -0.05em;
+}
+
+/* -------------------------------------------------- target users / steps */
+/* Both are ordered lists whose numbers carry meaning, so they stay <ol> and
+   the counter is drawn rather than the marker, which cannot take the mono
+   face reliably across engines. */
+
+.cs-users,
+.cs-steps {
+  list-style: none;
+  counter-reset: cs-step;
+  margin: 0;
+  padding: 0;
+}
+
+.cs-users > li,
+.cs-steps > li {
+  counter-increment: cs-step;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-2) var(--s-3);
+  padding-top: var(--s-4);
+}
+
+.cs-users > li + li,
+.cs-steps > li + li {
+  margin-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+}
+
+.cs-users > li::before,
+.cs-steps > li::before {
+  content: counter(cs-step, decimal-leading-zero);
+  grid-row: 1 / span 2;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+.cs-users h4 {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.cs-users p,
+.cs-steps p {
+  color: var(--ink-muted);
+}
+
+/* ---------------------------------------------------------- figures */
+/* Wider than the reading column and narrower than full bleed: these are
+   screenshots, and they earn --shell. The caption keeps --measure so it
+   reads as a caption rather than a band of text under the image. */
+
+.cs-figure {
+  width: var(--shell);
+  margin: var(--s-5) auto 0;
+}
+
+.cs-figure figcaption {
+  margin-top: var(--s-2);
+}
+
+.cs-figure img {
+  width: 100%;
+}
+
+/* Placeholder for the two Final Outcome screens, which do not exist in the
+   repo. Same idea as the About chapters': an empty slot with no fill is an
+   invisible slot, so the placeholder is a box and the real image will not
+   be. */
+.cs-figure-slot {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  background: var(--paper-alt);
+}
+
+/* ------------------------------------------------------------- results */
+
+.cs-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cs-results > li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: baseline;
+}
+
+.cs-results > li + li {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+}
+
+/* The one accent mark in the section. Squared, matching §1.4's
+   everything-else-is-square rule; it is decorative, so it is drawn rather
+   than typed and never reaches the accessibility tree. */
+.cs-results > li::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--accent);
+  transform: translateY(-0.15em);
+}
+
+.cs-results strong {
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- footer-ish */
+
+.cs-eyebrow {
+  color: var(--ink-muted);
+  margin-bottom: var(--s-2);
+}
+
+.cs-more-link {
+  margin-top: var(--s-3);
+}
+
+/* ---------------------------------------------------- reduced motion */
+/* Every transition this sheet declares, retired. Same selectors, later in
+   the file, so no !important — the house rule from base.css. The progress
+   bar is not listed: it is scroll-linked, so it has no transition to stand
+   down and stopping it would break the one thing it reports. */
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-nav-link,
+  .cs-nav-link::before {
+    transition: none;
+  }
+}

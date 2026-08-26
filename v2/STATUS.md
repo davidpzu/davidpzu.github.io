@@ -4,130 +4,148 @@ Handoff notes. Companion to `design.md`, which stays the spec — this file
 only records where the build actually is and what is still undecided.
 Delete at promotion.
 
-**Last updated:** after build step 15 (performance pass). Steps 11–15, the
-nav redesign, the CV button and both `design.md` edits are committed as
-`16928bb`; this file follows in the commit after it, as it did last time —
-a file cannot name its own hash.
+**Last updated:** after the post-build pass of 2026-08-26 — David's
+instructions on the About images, the SACEM case study, the footer GitHub
+row and item 26. Nothing here is committed yet.
 
 ---
 
 ## State of play
 
-Steps 1–15 done. **The §5 build order is finished.** What is left is not
-a step: the open items below, the two things no machine here can do
-(Lighthouse, and looking at the page), and promotion.
+The §5 build order finished at step 15. Since then, one pass of changes
+David asked for directly:
 
-Everything is committed, across five commits on `main`: `7645aab`
-(step 1), `d05f724` (steps 2–6), `9774a97` (steps 7–10), `7bc6a3f` (STATUS)
-and `16928bb` (steps 11–15, the nav redesign and both `design.md` edits),
-with this file following one commit behind as before. **Nothing outside
-`v2/` was touched, and nothing is pushed** — `main` sits ahead of
-`origin/main`. Pushing publishes the preview to `davidpzu.github.io/v2/`
-via GitHub Pages; the `noindex` tag is in place for exactly that reason.
-
-Three things were deliberately kept out of `16928bb`:
-
-- **The root drift is untouched and still uncommitted.** `README.md` is
-  still deleted in the working tree, the three root `.DS_Store` files still
-  show as modified, and `CLAUDE.md` is still untracked. All of it sits
-  outside `v2/`, which the project rules put off limits.
-- **`v2/.DS_Store`, `v2/assets/.DS_Store` and `v2/assets/img/.DS_Store` are
-  untracked and were not staged.** Committing them would add Finder noise
-  to a repo that already carries three tracked ones it does not want. A
-  `v2/.gitignore` is *not* the fix: `mv v2/* .` at promotion does not move
-  dotfiles, so it would be left behind and `rmdir v2` would then fail.
-- **`my-origins.png` was committed** (920 KB), because it is David's own
-  file sitting inside `v2/`. Worth knowing that git keeps blobs forever and
-  that item 0 says this one is the wrong format and will be replaced.
-  Nothing is pushed, so dropping it from history is still cheap.
-
-**Commit authorship is wrong across all five commits.** See the note below.
-That is the thing to fix before the first push, and fixing all five at once
-is far easier than unpicking it later.
-
-| File | State |
+| what | state |
 |---|---|
-| `v2/design.md` | §3.1 rewritten for the bare nav; §3.1/§3.3/§3.6 amended for step 14 |
-| `v2/index.html` | All five sections, complete semantic skeleton |
-| `v2/assets/css/tokens.css` | Done, committed |
-| `v2/assets/css/base.css` | Focus, `scroll-margin-top`, link reduced-motion |
-| `v2/assets/css/layout.css` | Shell, rhythm, 12-col grid, `.band-alt` |
-| `v2/assets/css/components.css` | Nav, hero, cards, staircase, chapters, chapter reveal, footer. All sections styled |
-| `v2/assets/js/rotator.js` | Done |
-| `v2/assets/js/reveal.js` | Done, linked with `defer` |
-| `v2/assets/js/counters.js` | Done, linked with `defer` |
+| `the-beginning.png` replaces `my-origins.png` | wired, chapter renamed **The Beginning** |
+| `.portrait-slot` removed | now `.chapter-media` — **one image per chapter**, all three |
+| SACEM case study | **built** — `work/sacem/index.html`, v1 ported onto the v2 system |
+| footer GitHub row | removed, and §3.6 now says not to add it back |
+| Sanofi Connect descriptor | still a placeholder, deliberately (item 6) |
+| item 26 (Lighthouse) | **closed** — David runs it himself |
+| all images → AVIF | 1476 KB of PNG/JPEG became **206 KB**, 86% smaller |
 
-Also true: CV is in `v2/assets/` and its link is live, favicons linked,
-`_typecheck.html` deleted but recoverable from `7645aab`.
+**Nothing is committed and nothing is pushed.** `main` is six commits ahead
+of `origin/main`, and every one of those six is authored wrong — see below.
+That is still the thing to fix before the first push.
 
-**The repo root has drifted, and not from `v2/` work.** Three things sit
-outside `v2/` and none of them has been committed or touched:
+### Payload, both pages
 
-- `README.md` is **deleted in the working tree** but intact in git (21
-  bytes, `# davidpzu.github.io`, last changed in `1cbff1c`). Restore with
-  `git checkout -- README.md` if the deletion was not deliberate. Left
-  alone because the root is off-limits per the project rules.
-- `.DS_Store`, `assets/.DS_Store` and `assets/img/.DS_Store` are tracked
-  and show as modified. They are Finder noise and should be in a
-  `.gitignore` that does not exist yet — a root change, so it needs a
-  decision, not a drive-by fix.
-- `CLAUDE.md` is untracked at the root.
+Measured, not estimated. §6's budget is 800 KB.
 
-**Commits are authored as `David <david@MacBook-Pro-de-David.local>`.**
-No `user.email` is configured, so git auto-detects it — true of all five
-commits in this repo. That address is not a GitHub account, so none of this
-history will attribute to David's profile. `16928bb` was left consistent
-with the other four rather than being the odd one out; the fix is to set
-`user.email` and rewrite all five together, and it has to happen **before
-the first push**. Worth doing on a portfolio repo.
+| | index | case study |
+|---|---|---|
+| html + css + js + fonts + favicon | 126.5 KB | 142.1 KB |
+| images on initial load | 0 (all lazy) | 37.4 KB (hero, eager) |
+| **initial load** | **126.5 KB** | **179.5 KB** |
+| everything, after scrolling | 258.2 KB | 216.5 KB |
 
----
+The case study carries more because of the fifth stylesheet and a much
+longer document. Both are comfortably inside the budget with every image
+loaded, which was not true before the AVIF pass: `the-beginning.png` alone
+was 898 KB.
+
+### New files
+
+| file | what |
+|---|---|
+| `work/sacem/index.html` | the case study. Nine sections, v1's ids and v1's copy |
+| `assets/css/casestudy.css` | fifth sheet, case-study pages only. The index never loads it |
+| `assets/js/casestudy.js` | scroll progress + contents-rail scrollspy. 28 assertions, all passing |
+| `assets/img/the-beginning.avif` | 121 KB against the PNG's 898 |
+| `assets/img/projects/sacem-mensajeria/*.avif` | hero, challenge and thumb — 85 KB against 556 |
+
+`design.md` gained **§3.7**, which specifies the case study page, and §4 now
+lists the fifth sheet, the fourth script and the `<picture>` rule. §3.5 was
+rewritten for the per-chapter images. Read the spec, not this file.
+
+### Commit authorship is still wrong
+
+Six commits authored `David <david@MacBook-Pro-de-David.local>`. No
+`user.email` is set, so git auto-detected a hostname that is not a GitHub
+account, and none of this history will attribute to David's profile.
+**Blocked on one thing: which email address to use.** Fixing all six at
+once before the first push is far cheaper than unpicking it later.
+
+`my-origins.png` is also still in history at 920 KB, and it is now
+definitively dead — David has replaced it. Nothing is pushed, so dropping
+it from history is still cheap, and it is the same rewrite.
 
 ## Needs a decision
 
-**0. `my-origins.png` was replaced and rechecked at step 15. It is not a
-portrait, and `.portrait-slot` was built for the wrong kind of asset.**
-Now 957 × 738, 920 KB — a quarter of the old resolution, near enough the
-same bytes. The aspect ratio is unchanged at 1.297:1.
+**0. ~~`my-origins.png` and the portrait slot.~~ Closed. David replaced the
+file and changed the shape of the requirement.** Read this for what was
+decided, not for an open question.
 
-Opening it is what matters: **it is a composited collage on a transparent
-background**, not a photograph. A childhood photo of David in headphones
-sits in the middle, and a Sony CD Walkman, a Nike football and a
-PlayStation 2 are cut out around it, deliberately breaking outside the
-photo's rectangle onto transparency. The caption *"Always passionate about
-music"* is baked into the pixels.
+`the-beginning.png` (878 × 846, near enough square) replaces it, and the
+chapter is now titled **The Beginning**. More importantly the requirement
+itself changed: **every chapter gets its own image**, not one portrait for
+the section. `.portrait` / `.portrait-slot` are gone; `.chapter-media` is
+the replacement and it is on all three chapters. Chapters two and three
+carry placeholder boxes until their files arrive.
 
-Four things follow, and the first two are new:
+The three complaints in the old item 0 are all answered:
 
-- **The slot's shape fights the asset.** `object-fit: cover` at 4:5 keeps
-  the middle 61.7% of the width and crops **183px from each side** — which
-  is almost exactly the Walkman and almost exactly the PlayStation. The
-  crop removes the music and the videogames, which is what the chapter's
-  copy is actually about. A centred crop is not a smaller version of this
-  image, it is a different one.
-- **The slot's chrome fights it too.** `.portrait-slot` fills with
-  `--paper-alt` and rounds to `--radius`. This asset is a cut-out that
-  wants the page's own ground behind it and no corners at all. §3.5's
-  "portrait photo, square or 4:5, `--radius`, max 320px" describes a
-  different thing entirely.
-- **920 KB, and the right format cannot be produced here.** Transparency
-  rules out JPEG, and PNG is the wrong compressor for a photograph — hence
-  1.3 bytes per pixel. WebP does alpha *and* photographs, but there is no
-  `cwebp`, no ImageMagick and no `pngquant` on this machine, and `sips`
-  reads WebP without being able to write it. Nothing here can produce the
-  file this needs.
-- **Alt text still has to come from David.** §3.5 requires real alt text.
-  Now that the content is known it could be *drafted* for approval — it
-  would have to carry the baked-in caption too, since text in an image is
-  unreadable to AT and to anyone who needs to resize it (WCAG 1.4.5).
+- **No cropping, because nothing has a fixed ratio any more.** The `<img>`
+  carries its real `width` and `height`, and CSS sizes it `width: 100%;
+  height: auto`. The browser reserves the intrinsic ratio, so there is no
+  layout shift, and square or 4:5 both fit without `object-fit` choosing
+  what to lose. The old 4:5 `cover` box removed 183px from each side — the
+  Walkman and the PlayStation.
+- **No fill and no radius on a real image.** The asset is a cut-out on
+  transparency whose whole point is breaking its own rectangle. The
+  `--paper-alt` fill and `--radius` now live on the *placeholder* only,
+  because an empty slot with no fill is invisible; the real image never
+  inherits them.
+- **The format problem is solved, and not with WebP.** `sips` cannot write
+  WebP — it is read-only in its format list — but it *can* write **AVIF**,
+  which does alpha and photographs both. 878 × 846 at quality 85 is
+  **121 KB against the PNG's 898**, an 87% saving, checked by decoding it
+  back and looking at it: indistinguishable, caption included. Shipped as a
+  `<picture>` with the PNG as fallback, so only Safari below 16.4 pays.
+- **Alt text is drafted and needs David's approval** (see item 30). It
+  carries the baked-in caption, as WCAG 1.4.5 requires.
 
-**Nothing was wired in and nothing was cropped.** The recommendation, if
-the collage is the intended direction: give the slot the asset's own
-ratio, drop the `--paper-alt` fill and the `--radius`, and let it run wider
-than 320px. That is a real change to the chapter's proportion, so it is
-David's call, not a step 15 fix.
+The image also ran wider: `min(360px, 38%)` where the portrait rule said
+320. Measured — at 1024 that leaves the copy 405px (~50ch) and at 1440 it
+leaves 510px (~63ch), both clear of the 45ch floor.
 
-**1. `work/sacem/index.html` does not exist.** Card 01 links to it and
+**1. ~~`work/sacem/index.html` does not exist.~~ Built.** Read this for
+what it is and what is still missing inside it.
+
+v1's `sacem.html` ported onto the v2 system: same nine sections, same ids,
+same copy, restyled rather than rewritten. `design.md` §3.7 now specifies
+the page — read that, not this. What is worth knowing here:
+
+- **The contents nav is one element doing two jobs.** In the flow it is an
+  ordinary "Contents" list under the page header; from **1200px** it becomes
+  a fixed rail in the right gutter. No duplicated markup, and with JS off it
+  is still a complete, working table of contents.
+- **The reading column is 820px, not `--shell`'s 1140.** Long-form prose,
+  and it is also what leaves a gutter the rail can live in — measured at
+  1200, the rail fits with 18px spare.
+- **v1's two Final Outcome images do not exist in this repo.** v1 pointed at
+  `img/sacem/outcome-1.jpg` and `outcome-2.jpg`; that directory is absent
+  everywhere. They are placeholder boxes carrying v1's captions. **This is
+  the one piece of the case study that is still missing content.**
+- **v1's closing "Other Projects" block was not ported.** Both cards were
+  placeholders pointing back at the same page, with thumbnails from
+  `dummyimage.com` — an external host, which §0 rules out. A link back to
+  the work section replaces it.
+- **Card 01's thumbnail is now wired** on the index, using
+  `sacem-thumb.jpg`/`.avif` — that project's own asset, already in the repo.
+  Easily reverted if David wants a new one; it is one `<picture>` block.
+- `casestudy.js` was unit-tested the same way `counters.js` and `reveal.js`
+  were: **28 assertions** under `osascript -l JavaScript` against a stubbed
+  `document`, `window`, `requestAnimationFrame` and `IntersectionObserver`.
+  Covered: progress at load / halfway / bottom, overscroll and iOS bounce
+  clamping, rAF coalescing (20 scroll events, one paint), an unscrollable
+  page not producing NaN, a missing progress bar, the scrollspy's rootMargin
+  and single-mark invariant, mixed batches, no `IntersectionObserver`, no
+  links, dead links, non-fragment hrefs, and all-dead links. The harness is
+  outside `v2/` for the same reason the others are.
+
+ Card 01 links to it and
 gets a 404. No step in §5 creates it, and §4 lists it as a file. The v1
 case study is `sacem.html` at the repo root — is v2's version a port of
 that content or a fresh build? This is the largest open item and it
@@ -161,20 +179,28 @@ or it wraps mid-phrase at ~527px. Leave it, let it wrap, or move the
 rotator out of a `<p>` into a `<div>` — the last option satisfies the
 letter of the rule and changes nothing visible.
 
-**6. Two pieces of copy are placeholders, not guesses.** Sanofi Connect's
-one-line descriptor (§3.3 only ever shows two cards), and the GitHub URL
-in the footer. On the latter: this repo's own remote is
-`github.com/davidpzu/davidpzu.github.io`, so the profile is almost
-certainly `https://github.com/davidpzu` — but confirm with David before
-wiring it in rather than inferring it.
+**6. One piece of copy is still a placeholder.** Sanofi Connect's one-line
+descriptor (§3.3 only ever shows two cards). David has confirmed it stays a
+placeholder for now.
 
-**7. Empty media slots have no hover response.** §3.3 asks the media to
-scale `1.02` on hover. The transform is written against
-`.card-media img, .card-media video`, so today — with the slots empty —
-nothing scales; the placeholder label deliberately stays put. Border and
-CTA still go accent, so the card does respond. Alternative is scaling the
-label too, which reads as jitter on 13px of mono. Resolves itself when the
-thumbnails land.
+**The GitHub row is closed and it did not get a URL — it was removed.**
+David does not publish there, so the row was a placeholder for something
+that is never coming. `design.md` §3.6 now lists the contact block without
+it and says not to add it back.
+
+**7. Empty media slots have no hover response — now true of cards 02 and 03
+only.** §3.3 asks the media to scale `1.02` on hover. The transform is
+written against `.card-media img, .card-media video`, so an empty slot has
+nothing to scale. **Card 01 now has its thumbnail**, so it does scale; the
+two WIP cards do not, and their `.card-wip` class excludes them from the
+hover rule anyway. Resolves itself entirely when the remaining thumbnails
+land.
+
+One thing the wiring needed: `.card-media picture { display: contents }`.
+The img is sized `100%/100%` against the slot, and an inline `<picture>` box
+in between would hand it an auto height to resolve against instead.
+`<picture>` carries no semantics of its own, so removing its box costs
+nothing in the accessibility tree.
 
 **8. "Video must not autoplay under reduced motion" (§3.3) is not built.**
 It cannot be: no CSS selector stops an `autoplay` attribute, and §4 gives
@@ -428,14 +454,16 @@ fits at 320 with 19px to spare. But §3.6 says "mono, one per line", and at
 the narrow end one line becomes two. Dropping the list to `1rem` fixes 375
 and not 320. Left alone as the smallest of the open questions.
 
-**26. Step 15 could not run Lighthouse, and that is half of what §5's step
-15 asks for.** No browser on this machine. §6 wants performance ≥ 95 and
-accessibility 100, and both are verdicts only a browser gives. What step 15
-*could* do was measure, and the numbers are good: **the page loads 121.6 KB
-against §6's 800 KB budget** — 63.1 KB of fonts, 35.7 KB of CSS, 13.9 KB of
-HTML, 8.9 KB of JS, and one 539-byte favicon. No images load at all yet,
-which is the whole reason there is so much headroom, and item 0 is what
-will spend it.
+**26. ~~Step 15 could not run Lighthouse.~~ Closed — David runs it himself.**
+No browser on this machine, and §6's "performance ≥ 95, accessibility 100"
+are verdicts only a browser gives. Marked resolved at David's instruction.
+
+What *could* be measured is in the payload table at the top of this file,
+and it improved a great deal in this pass: every image is now AVIF, so the
+index loads **126.5 KB** and the case study **179.5 KB** against a 800 KB
+budget, with everything loaded still only 258 KB and 217 KB. Before this
+pass the About image alone would have added 898 KB and blown the budget on
+its own.
 
 **27. Fonts could not be subsetted further, and do not need to be.** The
 five `.woff2` files are already `latin` subsets from
@@ -448,15 +476,69 @@ element in `index.html` uses them, so the browser never fetches
 repo. Not a performance problem — a "decide whether the wordmark is
 coming back" problem.
 
-**28. 2.2 MB of v1 assets sit in `v2/assets/` that the page never
-references.** `img-david.jpg` (443 KB — and per §8 not the About portrait),
-`my-origins.png` (920 KB), three SACEM case-study JPEGs (554 KB, for the
-page item 1 says does not exist yet), and ten tool icons (240 KB, for the
-"Beyond the screen" section §7 explicitly rules out). None of it loads, so
-none of it touches §6's budget — but **all of it ships at promotion**,
-where `mv v2/* .` copies it to the live site. Nothing was deleted: §8 says
-ask first, and the SACEM images are load-bearing for a page that has yet to
-be built. Worth a decision before promotion, not before.
+**28. Unused v1 assets in `v2/assets/`, re-counted after this pass.** Three
+of the SACEM JPEGs are now in use, so the dead weight is smaller than it
+was — but all of it still ships at promotion, where `mv v2/* .` copies it to
+the live site.
+
+| file | KB | state |
+|---|---|---|
+| `my-origins.png` | 920 | **dead** — replaced by `the-beginning.png`. Also in git history |
+| `the-beginning.png` | 898 | live, but only as the AVIF's fallback |
+| `img-david.jpg` | 443 | unused, and per §8 not the About portrait |
+| `sacem-hero/-challenge/-thumb.jpg` | 556 | live — the `<picture>` fallbacks |
+| ten tool icons | 240 | unused; §7 rules out the section they were for |
+
+Nothing was deleted: §8 says ask first. **`my-origins.png` is the clear one
+to drop now** — David has explicitly replaced it and nothing references it.
+`img-david.jpg` and the icons want a decision before promotion, not before.
+
+**29. The case study's contents rail inherits item 23's problem, exactly.**
+From 1200px the rail is `position: fixed` and vertically centred, so once
+the footer fills the viewport the rail's links sit over the cobalt
+gradient. The numbers are item 23's, unchanged: `--ink-muted` is 4.99 on
+`--paper` and 4.65 on `--paper-alt` — fine over the page proper — and
+**1.67:1 at 80% down the footer, 1.31:1 at the bottom**. The current entry
+is `--accent`, which over the accent end of the gradient is 1:1.
+
+Not fixed, for the same reason item 23 is not: it is the accepted cost of
+nav elements that paint nothing, and David has deferred the whole
+nav-over-footer question to a human at the page. If it does need fixing,
+the cheap exit here is better than item 23's — the rail is a case-study
+element with a scrollspy already running, so `casestudy.js` can hide it once
+the last section is behind you, which is arguably the right behaviour
+regardless of contrast.
+
+**30. The alt text for `the-beginning.png` is drafted, not approved.** §3.5
+requires real alt text and this is the first image that has any. What is
+written:
+
+> A childhood photo of me at about three, wearing oversized headphones, with
+> cut-outs of a Sony CD Walkman, a Nike football and a PlayStation 2
+> arranged around it. Caption in the image: Always passionate about music.
+
+Two things to check. The description is what the image plainly shows, but
+"about three" is an estimate — David knows. And the trailing sentence is
+there because the caption is **baked into the pixels**, which WCAG 1.4.5
+treats as text that cannot be resized or read by assistive tech; naming it
+in `alt` is the mitigation, not the fix.
+
+**The related open question is legibility.** At `min(360px, 38%)` the
+caption renders at roughly a third of its authored size — about 6px per
+glyph. It will be small. The real fix is a caption-free image plus a
+`<figcaption>`, which would also satisfy 1.4.5 outright. Not done, because
+it means editing David's artwork. A judgement for a human at the page.
+
+**31. The AVIF fallback means two files ship for every image.** The
+`<picture>` pattern is right — only Safari below 16.4 fetches the fallback,
+so nobody downloads both — but at promotion `mv v2/* .` copies **both** to
+the live site. That is 1476 KB of PNG/JPEG sitting next to 206 KB of AVIF
+for the same five images.
+
+Worth knowing rather than worth acting on: it costs repo weight, not load
+time, and dropping the fallbacks would strand Safari 16.3 and older on a
+portfolio where the images are most of the point. Revisit at promotion
+alongside item 28, not before.
 
 ## Known spec contradictions
 
@@ -467,8 +549,10 @@ Worth resolving in `design.md` so they don't get re-litigated every step.
   eyebrow, §3.3 asks for an accent card-hover border. Both are being
   built as accent — that's seven places, not five.
 - **`--radius` scope.** §1.4 restricts it to cards and metric boxes;
-  §3.5 gives the portrait container `--radius`. Portrait wins as the more
-  specific instruction.
+  §3.5 gave the portrait container `--radius`. **Resolved, and in §1.4's
+  favour:** the portrait rule is gone, and `--radius` on a chapter image now
+  applies to the placeholder box only — which is a box, so §1.4 is satisfied
+  rather than overridden. See item 0.
 - **§3.4's diagram says `41→59%`, its table says `41% → 59%`.** Using the
   table's form.
 - **§1.3's metric numeral size does not fit §3.4's four-across layout.**
@@ -481,14 +565,12 @@ Worth resolving in `design.md` so they don't get re-litigated every step.
   `clamp(1.5rem, 3vw, 2.5rem)`, the largest the longest figure can be and
   still sit inside its box at every width. base.css keeps §1.3 verbatim,
   so reverting is deleting one block. If the figure ever shortens, revert.
-- **§3.5's portrait rule contradicts §3.5's own diagram, and neither fits
-  at 768.** The prose says the portrait sits "above the title on mobile,
-  beside the text on desktop"; the diagram draws it above the title at
-  every width. Measured, beside-the-text does not fit at 768: the chapter
-  column is 531px there, and a 320px photo would leave the copy 36ch. It
-  clears 45ch from 1024 up. So the build floats it alongside from 1024 and
-  stacks it below that — the prose where the prose is possible, the diagram
-  where it is not. Costs one breakpoint beyond 768, in `.portrait` only.
+- **~~§3.5's portrait rule contradicts §3.5's own diagram.~~ Gone with the
+  rule.** §3.5 now draws an image on every chapter and specifies the 1024
+  float directly, so the prose and the diagram agree. The measurement that
+  settled it still holds and is why 1024 is the breakpoint: at 768 the
+  chapter column is 531px, and an image beside the copy would leave it well
+  under 45ch.
 - **§1.2's `--accent-dim` "metric box hover" collides with §6's AA floor.**
   `--ink-muted` on `--accent-dim` is 4.34:1 — under 4.5 for text at
   `0.8125rem`. So the lit box moves its label and note to `--ink` (15.5:1)
@@ -526,9 +608,12 @@ Worth resolving in `design.md` so they don't get re-litigated every step.
   Scoping it to `.chapter-body` later is a small, contained change.
 - **`768px` is no longer quite the only breakpoint.** Cards go 1-up, the
   staircase flattens, the sticky year collapses, and section rhythm
-  switches — all at 768. **1024 is the only other one, and two components
-  now use it**: the portrait moves beside the text there (step 10), and the
-  rotator drops its height reservation there (step 13). Step 13 deliberately
+  switches — all at 768. **Two others exist.** 1024, where the chapter image
+  floats beside the text and the rotator drops its height reservation. And
+  **1200, new with the case study**, where the contents nav stops being a
+  list in the flow and becomes a fixed rail — measured, not chosen: the
+  gutter there is `(1200 − 820) / 2 = 190px` against a 140px rail plus
+  `--s-4`, so it fits with 18px spare. Step 13 deliberately
   did not add a third — the rotator's true wrap points are 433px and 865px,
   but those follow from the font metric of item 22, so pinning a breakpoint
   to them would be false precision. Hold new breakpoints to that standard:
@@ -567,14 +652,24 @@ Worth resolving in `design.md` so they don't get re-litigated every step.
 - **Nav targets.** Home → `index.html`, Projects → `#work`, About →
   `#about`. v1 had no scrollspy, so the active bracket is per-page, not
   per-section.
-- **Images.** The portrait and all three card media slots are
-  fixed-ratio placeholders. `img-david.jpg` in `v2/assets/img/` is **not**
-  the About portrait — David supplies one image per section later.
+- **Images.** Two have landed: `the-beginning.png` on About chapter one,
+  and `sacem-thumb` on work card 01. Still placeholders: About chapters two
+  and three, work cards 02 and 03, and the case study's two Final Outcome
+  screens. `img-david.jpg` in `v2/assets/img/` is **not** an About image —
+  David supplies one image per chapter and per card himself.
+- **Every image is a `<picture>`: AVIF source, PNG or JPEG fallback.** Not
+  WebP — `sips` is the only image tool on this machine and WebP is read-only
+  in its format list, while AVIF is writable and does alpha and photographs
+  both. Quality 85 for the alpha cut-out, 80 for the JPEG screenshots;
+  both checked by decoding back and looking. 1476 KB became 206 KB.
 - **How a card media slot accepts its asset.** `.card-media` holds the
   16:10 box with `aspect-ratio`; `.card-media img, .card-media video` are
-  already sized `100%/100%` with `object-fit: cover`. Dropping an `<img>`
+  already sized `100%/100%` with `object-fit: cover`. Dropping a `<picture>`
   or a `<video poster>` inside the span and deleting the
   `.card-media-label` is the whole change — no CSS edit, no layout shift.
+  Card 01 is the worked example. The one CSS line it did need is
+  `.card-media picture { display: contents }`, which is now in place for
+  every future card (item 7).
 - **`.card-head` was added to the step 2 skeleton.** §3.3's diagram shows
   `01 · SACEM` on one line, and the index and title were loose siblings in
   a column. They are now wrapped in a `<div class="card-head">` on all
