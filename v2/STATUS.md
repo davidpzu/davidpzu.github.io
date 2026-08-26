@@ -272,11 +272,12 @@ the fade into `--void` happens and it is also the extra separation from
 Impact that David asked for. Item 17's footer exception is gone (see there),
 so the rhythm now has exactly one deviation and it is documented in the spec.
 
-**5. The rotator `<p>` bends an acceptance criterion.** §6 says no
-paragraph exceeds `--measure`; the terminal line needs `max-width: none`
-or it wraps mid-phrase at ~527px. Leave it, let it wrap, or move the
-rotator out of a `<p>` into a `<div>` — the last option satisfies the
-letter of the rule and changes nothing visible.
+**5. ~~The rotator `<p>` bends an acceptance criterion.~~ Fixed, by the
+option that satisfies the letter.** It is a `<div class="rotator">` now, so
+base.css's `p { max-width: var(--measure) }` never applies and the
+`max-width: none` override that bent §6 is deleted rather than justified. A
+terminal line is not a paragraph. Nothing changed visually, `rotator.js`
+selects `.rotator-slot` and was untouched, and §3.2 records the reasoning.
 
 **6. One piece of copy is still a placeholder.** Sanofi Connect's one-line
 descriptor (§3.3 only ever shows two cards). David has confirmed it stays a
@@ -351,19 +352,14 @@ the chapter is a clean two-cell grid. Everything after the year marker is
 now inside `<div class="chapter-body">` on all three chapters. Render order
 is unchanged, so §3.5's "year / title / paragraph" still holds.
 
-**14. §3.5's fallback cannot fully rule out a flash at load, and only a
-browser can say whether it does.** The mechanism is the spec's, not a
-choice: the chapters render visible from the markup, and `reveal.js` strips
-`.is-visible` before it observes. If the browser paints before the deferred
-script runs, whatever is in view blinks visible → hidden → fades back. Half
-of it is already handled — the transition is declared on
-`.chapter.is-visible` only, never on the bare `.chapter`, so the strip is
-instant instead of a 500ms fade-*out*, which is the ugly half. The
-remaining single-frame risk is inherent to a markup-default fallback and
-cannot be measured in this environment. If it shows up at step 13, the fix
-is a different mechanism than §3.5 describes — an inline
-`document.documentElement.classList.add('js')` in `<head>` and a
-`.js .chapter` selector — so it needs a decision, not a drive-by.
+**14. ~~A possible flash when the chapters reveal at load.~~ Closed —
+David checked at the page and there is none.** The mechanism is §3.5's own:
+chapters render visible from the markup and `reveal.js` strips `.is-visible`
+before it observes, so a browser that paints before the deferred script runs
+would blink visible → hidden → fade. Half of it was already handled — the
+transition is declared on `.chapter.is-visible` only, so the strip is instant
+rather than a 500ms fade-*out*. The remaining single-frame risk was never
+measurable here. It does not happen.
 
 **15. Chapter 1 reveals at load, not on scroll.** It sits above the fold,
 so its first intersect is immediate and it fades in as the page settles.
@@ -428,46 +424,33 @@ pill and 48px now. It was never covered; it was the same 6px squeeze as
 item 20, measured somewhere else. With the bare nav both read +24px at 375
 and +112px above. Nothing to fix, and nothing was changed for it.
 
-**22. Three fits are decided by a font metric this environment cannot
-read.** Geist Mono is treated throughout as 0.6em advance (unitsPerEm 1000,
-advance 600). That is almost certainly right, but it could not be confirmed
-here: the fonts ship as `.woff2`, Python has no `brotli` to decompress
-them, and CoreText refuses to load woff2 through
-`CTFontManagerCreateFontDescriptorsFromURL`. Three measurements sit close
-enough to the edge that a wider advance would change the answer, all at
-768, all previously flagged on their own terms:
+**22. ~~Three fits decided by a font metric this environment cannot read.~~
+Closed — David checked them at the page.** Geist Mono was treated throughout
+as 0.6em advance, which could not be confirmed here: the fonts ship as
+`.woff2`, Python has no `brotli`, and CoreText refuses to load woff2 through
+`CTFontManagerCreateFontDescriptorsFromURL`. Two measurements sat close to
+the edge at 768 — `41% → 59%` in its box with 3.6px spare, and `2018–2020`
+in the year track with 2.7px — and the `→` was assumed to be in the latin
+subset. All of it holds in a browser.
 
-| what | available | needed | spare |
-|---|---|---|---|
-| `41% → 59%` in its box (item on §1.3) | 124.6px | 121.0px | 3.6px |
-| `2018–2020` in the sticky year track | 128.0px | 125.3px | 2.7px |
-| ~~nav pill against the viewport~~ | ~~375px~~ | ~~320.7px~~ | ~~54.3px~~ |
+**The year track's fit is still load-bearing** even though it is confirmed:
+item 32 records that narrowing it to buy chapter width breaks the date.
 
-The nav row is gone with the pill — the bare links measure 230.7px against
-345px of shell at 375, which is not a close call. **The first two rows are
-untouched by the nav redesign**: they are in Impact and About and have
-nothing to do with it. They remain the ones to look at in a browser. A
-related unknown: the `→` in `41% → 59%` is assumed to be in the latin
-subset. If it is not, it falls back to another face at a different width
-and the 3.6px goes.
+**23. ~~Nav contrast.~~ Closed, in two moves.** Worth keeping the whole
+shape of it, because the first move was a regression I introduced.
 
----
+**It became a regression, not an inherited cost.** When first written the
+failing ground was the bottom half of the footer — a short run at the end of
+the page — and About was `--paper` at 4.99. Making About `--void` turned the
+longest section on the site into a failing ground, and the *active* item was
+worse than the resting one: `--ink` on `--void` is 1.14:1. Scroll-hiding
+masked it and did not fix it; the nav returns after 350ms of stillness,
+which is exactly when someone has stopped to read.
 
-**23. Nav contrast — mostly fixed, and the residue is documented.** This item
-got worse before it got better, and both halves are worth recording.
-
-**It became a regression, not an inherited cost.** When it was first written
-the failing ground was the bottom half of the footer — a short run at the
-end of the page — and About was `--paper` at 4.99. Making About `--void`
-turned the longest section on the site into a failing ground, and the
-*active* item was worse than the resting one: `--ink` on `--void` is 1.14:1.
-Scroll-hiding masked it and did not fix it; the nav returns after 350ms of
-stillness, which is exactly when someone has stopped to read.
-
-**`mix-blend-mode: difference` on `.nav` is the fix**, chosen by David from
+**Move one: `mix-blend-mode: difference` on `.nav`**, chosen by David from
 three options. It inverts the backdrop, so the links are dark on light
 grounds and light on dark ones by construction — no scroll tracking, no
-second colour pair. Measured as shipped:
+second colour pair:
 
 | ground | resting | active | focus ring |
 |---|---|---|---|
@@ -477,23 +460,28 @@ second colour pair. Measured as shipped:
 | footer at 50% | 4.60 | 10.36 | 10.36 |
 | footer at 100% | **1.64** | **3.86** | 3.86 |
 
-**The bottom of the footer still fails for text and no source colour fixes
-it.** Inverting a saturated blue produces a yellow whose luminance sits close
-to cobalt's own, so even pure white reaches only 3.86. Resting drops under
-4.5 below **52%** of the footer; the active item holds to **92%**. The focus
-ring clears the whole run, which is the one part that is now unambiguously
-better than it has ever been.
+**Move two: `ui.js` suppresses the nav over the band that still fails.**
+No source colour closes the cobalt end — inverting a saturated blue lands
+near cobalt's own luminance, so even pure white reaches only 3.86 — so the
+nav does not render there. The test is geometric:
+`footerRect.top + footerRect.height × 0.52 ≤ 48`, and it outranks both the
+at-the-top rule and the idle timer.
 
-Net: the failure went from most of the page's height to the bottom half of
-the footer — better than the original pre-dark-passage build. **The
-remaining lever is having `ui.js` hide the nav outright once the footer is
-in view**; it already runs a scroll handler, so it is cheap. Not done,
-because it wants an eye on the real page first.
+Three things not to undo:
 
-Two things not to undo, both in §3.1: the blend sits on `.nav`, not on
-`.nav-link` (a blend on the links finds nothing inside `.nav`'s stacking
-context to blend with), and `--nav-rest` / `--nav-active` are blend
-*sources*, not colours — the logic is inverted.
+- **The blend sits on `.nav`, not on `.nav-link`.** A blend on the links
+  finds nothing inside `.nav`'s own stacking context to blend with.
+  `.site-header` must not gain a `z-index` or `isolation` either.
+- **`--nav-rest` / `--nav-active` are blend sources, not colours.** The
+  logic is inverted: a light source renders dark on `--paper`.
+- **The rect is read live, not cached.** The footer's height changes when
+  `form.js` swaps in the confirmation, and a stale measurement would go
+  wrong exactly when someone has just written to David. The idle callback
+  re-checks for the same reason.
+
+**Suppression is scoped to the band, not the whole footer**, so the nav
+stays available over the top half of the contact section where the blend
+clears on its own.
 
 **24. ~~`design.md` §3.3 still asks for `aria-disabled`.~~ Done — the spec
 is now current with step 14.** Four amendments, not one: §3.3 drops the
@@ -553,22 +541,24 @@ file**, and David chose to keep it for now and revisit at promotion. §7's
 toolkit in with an interests section, and they are not the same thing — a
 tools list is professional evidence.
 
-**29. The case study's contents rail still has item 23's old problem, and
-the blend mode did not travel to it.** From 1200px the rail is
-`position: fixed` and vertically centred, so once the footer fills the
-viewport its links sit over the cobalt gradient — `--ink-muted` at 1.67:1
-at 80% depth, and the current entry is `--accent`, which over the accent end
-is 1:1.
+**29. ~~The case study's contents rail over the footer.~~ Closed by the
+same pass as item 23, but with a different rule.** The rail carries no blend
+mode, so it fails from the very *top* of the footer rather than halfway
+down: `--ink-muted` on `--void` is 4.09 and the current entry's `--accent`
+is 3.13. The test is therefore overlap at all — `footerRect.top ≤
+railRect.bottom` — not overlap with a band.
 
-**The nav's fix was not applied here**, deliberately: `.cs-nav` is a
-different element in a different stacking context, and a blend mode on a
-rail that sits beside a reading column is a more visible change than one on
-three small links. The cheaper exit is also better here than it is for the
-nav — `casestudy.js` already runs a scrollspy, so hiding the rail once the
-last section is behind you is a few lines and is arguably the right
-behaviour regardless of contrast.
+**The nav's blend was considered here and rejected**: a blend mode on a rail
+beside a reading column is a far more visible change than one on three small
+links, and the rail had a cheaper exit available because `casestudy.js`
+already ran a scroll handler.
 
-Left for a human at the page, with item 23.
+**Guarded twice, and it must stay that way.** Below 1200 the rail is an
+ordinary contents list in the flow, and hiding it there would take a working
+table of contents out of the document. `casestudy.js` checks
+`matchMedia('(min-width: 1200px)')` before it ever adds the class, *and* the
+rule that hides it is scoped inside the same media query. Either guard alone
+would do; both mean a mistake in one cannot reach the in-flow version.
 
 **30. The alt text for `the-beginning.png` is drafted, not approved.** §3.5
 requires real alt text and this is the first image that has any. What is
@@ -625,22 +615,19 @@ at every width. That was measured the second time round: nine mono glyphs
 need ~130px at 768 and ~194px at 1440 against a track of 128 and 192, which
 is item 22's couple-of-pixels-spare fit.
 
-**33. The cursor replaces the native pointer, and three guards are what make
-that acceptable.** David was given the trade — a trailing ring that keeps
-the native cursor, versus a full replacement — and chose the replacement
-knowing it costs the I-beam and the resize arrows.
+**33. The cursor replaces the native pointer — reviewed and kept.** David
+was given the trade (a trailing ring that keeps the native cursor, versus a
+full replacement) and chose the replacement knowing it costs the I-beam and
+the resize arrows. **He has since checked it at the page: the easing and the
+blend over cobalt and the tool tiles all read correctly.**
 
-The guards are not optional and are specified in §0 and §3.8: a fine
-hovering pointer (live `matchMedia`, so a hybrid device that picks up a
+The guards are what make it acceptable and none is optional — §0 and §3.8: a
+fine hovering pointer (live `matchMedia`, so a hybrid device that picks up a
 mouse gets the ring and one that switches to touch gets its cursor back),
 reduced motion off, and **`cursor: none` scoped to a class `ui.js` adds** —
 so a parse error, a blocked script or JS off can never leave a visitor with
 no pointer and no way back. Over a text field the ring becomes a bar, which
 gives back the one affordance hiding the I-beam costs.
-
-What cannot be checked here: whether the 0.2-per-frame easing feels right,
-and whether `mix-blend-mode: difference` on a 28px ring reads well over the
-cobalt footer and the tool tiles. Both want a human at the page.
 
 **34. The background grid is drawn per section, and that is load-bearing.**
 It looks like it could be one fixed layer behind the page. It cannot: the

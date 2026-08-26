@@ -223,6 +223,19 @@
   .cs-nav-link.is-current {
     color: var(--accent);
   }
+
+  /* Hidden once the footer reaches it. Scoped inside this media query on
+     purpose: below 1200 the rail is an ordinary contents list in the flow,
+     and nothing may take that out of the document. casestudy.js guards the
+     same boundary, so it is checked twice. STATUS item 29. */
+  .cs-nav {
+    transition: opacity 300ms ease, visibility 300ms ease;
+  }
+
+  .cs-nav.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 /* ------------------------------------------------------------ facts grid */
@@ -483,6 +496,7 @@
    down and stopping it would break the one thing it reports. */
 
 @media (prefers-reduced-motion: reduce) {
+  .cs-nav,
   .cs-nav-link,
   .cs-nav-link::before {
     transition: none;

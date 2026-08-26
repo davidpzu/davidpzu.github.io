@@ -184,10 +184,6 @@
   font-family: var(--font-display);
   line-height: 1.5;
   color: var(--ink);
-  /* base.css caps every <p> at --measure, which is 62ch of the body face.
-     The longest line here is 76 mono characters and would wrap mid-phrase,
-     breaking the one thing the hero is built around. See the step 5 note. */
-  max-width: none;
 }
 
 /* Step 13. The five lines are different lengths, so at any width where the

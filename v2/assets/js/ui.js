@@ -17,7 +17,9 @@
    * Out of the way while you are actually moving, back as soon as you stop.
    * §3.1
    *
-   * Three states, in priority order:
+   * Four states, in priority order:
+   *   - over the failing band of the footer: hidden, scrolling or not, and
+   *     this outranks everything below it. §3.1
    *   - within 24px of the top: always visible. The threshold is not 0 so
    *     that the sub-pixel scroll a browser performs when restoring position
    *     does not flicker the nav on arrival.
@@ -35,27 +37,66 @@
 
   if (nav) {
     var IDLE = 350;
+
+    /* Below this depth of the footer the links stop clearing 4.5:1, and no
+     * source colour fixes it — inverting a saturated blue lands near
+     * cobalt's own luminance, so even pure white reaches only 3.86 at the
+     * bottom. Above it the blend mode handles every ground the page has,
+     * including all of --void, so the nav is suppressed only for the part
+     * that actually fails rather than for the whole footer. §3.1 */
+    var FOOTER_FAIL = 0.52;
+
+    /* Underside of the nav: top 1.25rem plus a 28px target box. */
+    var NAV_UNDERSIDE = 48;
+
+    var footer = document.querySelector('.site-footer');
     var navTicking = false;
     var idleTimer = null;
+    var overFooter = false;
+
+    var clearIdle = function () {
+      if (idleTimer !== null) { window.clearTimeout(idleTimer); idleTimer = null; }
+    };
+
+    /* True once the failing band has scrolled up past the nav. At most one
+     * rect read per frame, inside the rAF, so a fast scroll cannot queue a
+     * layout per event. Read live rather than cached: the footer's height
+     * changes when form.js swaps the form for the confirmation. */
+    var overFailingFooter = function () {
+      if (!footer) { return false; }
+      var r = footer.getBoundingClientRect();
+      if (r.height === 0) { return false; }
+      return (r.top + r.height * FOOTER_FAIL) <= NAV_UNDERSIDE;
+    };
 
     var showNav = function () {
+      // The idle timer fires on a delay, so the footer may have arrived
+      // since it was set. Re-check rather than trusting the queued call.
+      if (overFooter) { return; }
       nav.classList.remove('is-hidden');
     };
 
     var paintNav = function () {
       navTicking = false;
+      overFooter = overFailingFooter();
+
+      if (overFooter) {
+        clearIdle();
+        nav.classList.add('is-hidden');
+        return;
+      }
 
       if (window.scrollY <= 24) {
+        clearIdle();
         showNav();
         return;
       }
 
       nav.classList.add('is-hidden');
 
-      // Restarted on every scroll event, so it only fires once the page has
-      // actually been still for IDLE ms rather than IDLE ms after the first
-      // event of a long scroll.
-      if (idleTimer !== null) { window.clearTimeout(idleTimer); }
+      // Restarted on every scroll event, so it fires once the page has been
+      // still for IDLE ms rather than IDLE ms into a long scroll.
+      clearIdle();
       idleTimer = window.setTimeout(showNav, IDLE);
     };
 
@@ -67,6 +108,8 @@
     };
 
     window.addEventListener('scroll', requestNav, { passive: true });
+    // Resize changes the footer's height, and with it where the band falls.
+    window.addEventListener('resize', requestNav, { passive: true });
     paintNav();   // a reload partway down the page must not show the nav
   }
 

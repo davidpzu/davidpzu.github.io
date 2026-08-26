@@ -219,7 +219,14 @@ Measured as shipped, against §6's floors of 4.5:1 for text and 3:1 for a focus 
 
 **The bottom of the footer still fails for text, and no source colour fixes it.** Inverting a saturated blue produces a yellow whose luminance sits close to cobalt's own, so even pure white only reaches 3.86 there. Resting text drops under 4.5 below **52%** of the footer; the active item holds to **92%**. The focus ring clears the entire run.
 
-That is a large net improvement rather than a solution: the failure went from *all of About plus all of the footer* — most of the page's height — to *the bottom half of the footer*, which is better than the original pre-dark-passage build managed. The remaining lever, if it turns out to matter at the page, is having `ui.js` hide the nav outright once the footer is in view; it already runs a scroll handler, so it is cheap. Not done, because it wants an eye on the real page first.
+**The remaining band is handled by suppressing the nav there, and the two mechanisms together close the item.** `ui.js` hides the nav once the failing band has scrolled up past its underside, and that outranks both the at-the-top rule and the idle timer — the nav stays down over that band whether you are moving or not.
+
+The test is geometric, not a scroll offset: `footerRect.top + footerRect.height × 0.52 ≤ 48`, where 48px is the nav's underside (`top: 1.25rem` plus a 28px target box). Read live inside the existing rAF, at most one rect per frame, because **the footer's height changes when `form.js` swaps the form for the confirmation** — a cached measurement would go stale exactly when someone has just written to David.
+
+Two details that matter if this is ever touched:
+
+- **The suppression is scoped to the band, not to the footer.** Above 52% the blend mode clears on its own, so the nav stays available for the top half of the contact section rather than vanishing the moment the footer appears.
+- **The idle callback re-checks before it shows.** It fires on a delay, so the footer can arrive between the timer being set and it running; trusting the queued call would flash the nav over failing ground.
 
 The other two exits considered and **not** taken, recorded so they are not re-proposed: swapping the link colour over the dark passage from `ui.js` (predictable, but a second colour pair and a scroll-position check to keep in sync), and putting a ground back behind the links (the thing removing the pill was meant to avoid).
 
@@ -256,6 +263,7 @@ There is also a collision no contrast ratio describes: the links pass directly o
 - **No CV download link in the hero.** It lives in the About section only.
 - Content constrained to `--shell`. Not `100vh` — let the work peek above the fold.
 - Rotator: 4s hold, 400ms crossfade, `aria-live="off"` so it doesn't spam screen readers.
+- **The rotator is a `<div>`, not a `<p>`, and that is what keeps §6 honest.** base.css caps every `<p>` at `--measure`, which is 62ch of the *body* face; the longest terminal line is 76 mono characters and wrapped mid-phrase, breaking the one thing the hero is built around. It used to carry `max-width: none` to escape that, which bent §6's "no paragraph exceeds `--measure`". A terminal line is not a paragraph, so it is no longer marked up as one — the rule is satisfied by the letter and nothing changed visually.
 - `<noscript>`: line one renders statically. Also the default state in HTML, so it's visible before JS runs.
 - Caret: CSS `@keyframes` blink, 1s `step-end`.
 - Under `prefers-reduced-motion`: rotation stops on line one, caret stops blinking (stays solid).
@@ -481,6 +489,10 @@ The v1 SACEM page ported onto the v2 system. Everything below is the shape every
 #### Build rules
 
 - **Its own reading column: `.cs-shell` at `min(820px, 92vw)`, not `--shell`.** A case study is long-form prose, and 62ch of copy in a 1140px field reads as a caption. The narrower column is also what leaves a gutter the fixed rail can live in.
+- **The rail hides once the footer reaches it**, and unlike the site nav this is overlap with the footer *at all*, not with a band inside it. The rail carries no blend mode, so it fails from the very top of the footer: `--ink-muted` on `--void` is 4.09 and the current entry's `--accent` is 3.13, both under 4.5. The test is `footerRect.top ≤ railRect.bottom`.
+  - **The nav's blend mode was considered here and rejected.** A blend on a rail sitting beside a reading column is a far more visible change than one on three small links.
+  - **Guarded twice, and it must stay that way.** Below 1200 the rail is an ordinary contents list in the flow, and hiding it there would take a working table of contents out of the document. `casestudy.js` checks `matchMedia('(min-width: 1200px)')` before it ever adds the class, *and* the rule that hides it is scoped inside the same media query. Either guard alone would do; both together mean a mistake in one cannot reach the in-flow version.
+  - `visibility: hidden` keeps layout, so the rail's own rect stays valid while hidden and the test cannot oscillate.
 - **Contents nav — one element, two jobs, no duplicated markup.** In the flow it is an ordinary "Contents" list under the page header, which is what it is on a phone and what it stays as with JS off. From **1200px** it becomes a fixed rail in the right gutter, vertically centred so it clears both the site nav at 48px and the progress hairline at 0. `casestudy.js` marks the current entry; the mark is a rule that grows from 40% to full width, not colour alone (WCAG 1.4.1).
   - 1200 is measured, not chosen: the gutter there is `(1200 − 820) / 2 = 190px` against a 140px rail plus `--s-4` of clearance, so it fits with 18px spare and only widens above.
 - **Scroll progress:** a 2px `--accent` hairline fixed at the top. It is scaled (`transform: scaleX`), never resized — animating `width` forces layout on every scroll frame — and the paint is batched into a `requestAnimationFrame`. `aria-hidden`: it reports a fact the document already gives assistive tech, and a `progressbar` role would announce on every tick.
@@ -598,7 +610,7 @@ Each step was independently reviewable, with a stop for review after each.
 - [ ] ~~Every metric box disclosure reachable by keyboard and by tap.~~ Retired: there is no disclosure. §3.4.
 - [ ] Visible focus state on every interactive element. Four grounds, four answers, each recorded where it lives: `--accent` on the light half; `--accent-lift` in About (`--accent` is 3.13:1 on `--void`); `--paper` in the footer (`--accent` is 1:1 against the footer's own bottom stop); and `--nav-active` through the blend mode on the nav, which is the only one that clears every point of the page.
 - [ ] **Hiding the native cursor is never reachable without JS.** §3.8.
-- [ ] No text anywhere under 4.5:1, and no border or focus indicator under 3:1 — checked on `--paper`, `--paper-alt`, `--void`, and at five points down the footer gradient. **One known exception, recorded rather than waived:** the nav links over the bottom half of the footer. §3.1 has the numbers, why no colour choice fixes it, and the remaining lever.
+- [ ] No text anywhere under 4.5:1, and no border or focus indicator under 3:1 — checked on `--paper`, `--paper-alt`, `--void`, and at five points down the footer gradient. **No exceptions.** The two grounds no colour choice could fix — the nav over the bottom of the footer, and the case study's rail over any of it — are handled by not rendering there: §3.1 and §3.7.
 - [ ] No paragraph exceeds `--measure`.
 - [ ] No About chapter exceeds 60 words.
 - [ ] Every metric matches the CV exactly.

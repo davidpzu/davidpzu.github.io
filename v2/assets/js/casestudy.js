@@ -14,12 +14,21 @@
   // rAF so a fast scroll cannot queue one layout per event.
 
   var bar = document.querySelector('.cs-progress-bar');
+  var rail = document.querySelector('.cs-nav');
+  var footer = document.querySelector('.site-footer');
 
-  if (bar) {
+  /* The rail is only fixed from 1200px — below that it is an ordinary
+   * "Contents" list in the flow, and hiding it there would take a working
+   * table of contents out of the document. The query mirrors the CSS
+   * breakpoint exactly; the rule that hides it is scoped to the same media
+   * query, so even a mistake here cannot reach the in-flow version. */
+  var railFixed = window.matchMedia('(min-width: 1200px)');
+
+  if (bar || rail) {
     var ticking = false;
 
-    var paint = function () {
-      ticking = false;
+    var paintProgress = function () {
+      if (!bar) { return; }
       var doc = document.documentElement;
       var scrollable = doc.scrollHeight - window.innerHeight;
       // A page shorter than the viewport has nothing to report. Guard the
@@ -28,6 +37,34 @@
       if (ratio < 0) { ratio = 0; }
       if (ratio > 1) { ratio = 1; }
       bar.style.transform = 'scaleX(' + ratio + ')';
+    };
+
+    /* Unlike the site nav, the rail has no blend mode, so it fails from the
+     * TOP of the footer rather than halfway down: --ink-muted on --void is
+     * 4.09 and the current entry's --accent is 3.13, both under 4.5. So the
+     * test is overlap with the footer at all, not with a band inside it.
+     * Applying the nav's blend here was considered and rejected — a blend
+     * mode on a rail beside a reading column is a far more visible change
+     * than one on three small links. STATUS item 29. */
+    var paintRail = function () {
+      if (!rail || !footer) { return; }
+
+      if (!railFixed.matches) {
+        rail.classList.remove('is-hidden');
+        return;
+      }
+
+      // visibility: hidden keeps layout, so the rail's own rect stays valid
+      // while it is hidden and the test cannot oscillate.
+      var f = footer.getBoundingClientRect();
+      var r = rail.getBoundingClientRect();
+      rail.classList.toggle('is-hidden', f.top <= r.bottom);
+    };
+
+    var paint = function () {
+      ticking = false;
+      paintProgress();
+      paintRail();
     };
 
     var request = function () {
@@ -39,6 +76,11 @@
 
     window.addEventListener('scroll', request, { passive: true });
     window.addEventListener('resize', request, { passive: true });
+
+    // Crossing 1200 hands the rail back to the flow, or takes it away again.
+    if (railFixed.addEventListener) { railFixed.addEventListener('change', request); }
+    else if (railFixed.addListener) { railFixed.addListener(request); }
+
     paint();
   }
 
