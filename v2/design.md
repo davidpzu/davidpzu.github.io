@@ -122,24 +122,45 @@ Everything else on the page stays quiet.
 
 ### 3.1 Navigation
 
-Floating pill nav, same three items, same behaviour. The only change is the mono treatment.
+**Revised after step 13.** This section previously specified v1's floating pill and said not to touch its position, blur or scroll behaviour. The pill is gone — that was a deliberate decision, not drift, and the reasons are recorded below. Anything still describing a pill is out of date, not authoritative.
+
+Three bare links, fixed to the top of the page. Same three items as v1, same targets, same mono treatment. **No enclosure of any kind** — no pill, no border, no radius, no fill, no blur, no shadow.
 
 ```
-              ╭─────────────────────────────╮
-              │  [HOME]   PROJECTS   ABOUT  │
-              ╰─────────────────────────────╯
+   [HOME]   PROJECTS   ABOUT
+   ─────────────────────────────────────────────
+   DAVID PRIETO ZURITA
 ```
 
 - **Brackets encode state, they don't decorate.** Active item renders `[HOME]`; inactive items render `HOME` with no brackets. On hover/focus, brackets fade in at 40% opacity as a preview of the active state.
-- Brackets are real characters in the DOM (`<span class="bracket">[</span>`), not `::before`/`::after` content, so screen readers and copy-paste behave.
-- Mono, `0.75rem`, `0.12em` tracking, uppercase.
-- Do not add items. Do not change the pill's position, blur, or scroll behaviour.
+- Brackets are real characters in the DOM (`<span class="bracket">[</span>`), not `::before`/`::after` content, so copy-paste behaves.
+- **The brackets carry `aria-hidden="true"`** (added at step 14). They are a visual state indicator, and on inactive items they are invisible and encode nothing — a screen reader announcing "[ Projects ]" there is reading punctuation for no reason. `aria-current="page"` is what carries the state to assistive tech. `aria-hidden` affects the accessibility tree only, so they remain real, selectable characters.
+- Mono, `0.75rem`, `0.12em` tracking, uppercase. `--ink-muted` at rest, `--ink` when active or hovered.
+- **Left-aligned to `--shell`**, in line with the hero name and every section title. The pill was centred and so needed no relationship to anything; bare links do. The `<nav>` is fixed with `left: 0; right: 0` and carries an inner `<div class="shell">` — the same mechanism every section uses, so the two cannot drift apart at any width.
+- Because it spans the viewport while painting nothing, the `<nav>` carries `pointer-events: none`, restored to `auto` on the links alone. An invisible full-width strip must not swallow clicks.
+- Fixed `1.25rem` from the top, and it stays for the whole page. It does not change on scroll — there is no longer anything to change.
+- Link target height is 28px: `0.35rem` vertical padding on `0.75rem`/1.4 text. The bare line box is 16.8px and would miss WCAG 2.5.8's 24px floor. Vertical padding only — the horizontal separation is the list's `--s-2` gap, and side padding would push the first link off the shell's left edge.
+- Do not add items. Do not re-centre them. Do not put a ground back behind them without first deciding the footer question below.
+
+**Nothing is painted behind the links, so their contrast is whatever scrolls under them.** Measured, on `--ink-muted` at `0.75rem`, against §6's 4.5:1 floor:
+
+| ground | `--ink-muted` | `--ink` |
+|---|---|---|
+| `--paper` — hero, work, about | 4.99 | 17.87 |
+| `--paper-alt` — impact band | 4.65 | 16.65 |
+| footer gradient at 55% | 4.34 | 15.52 |
+| footer gradient at 80% | **1.67** | 5.96 |
+| footer gradient at 100% | **1.31** | **2.73** |
+
+Over the page proper this clears AA, though `--paper-alt` and the footer's top edge are thin. Over the bottom half of the footer the links effectively vanish, and `--ink` does not rescue them — nothing is legible on cobalt except `--paper`. This is a known and accepted cost of removing the enclosure. If it has to be solved, the two exits are a `--paper` link colour that swaps in over the footer, or restoring a ground behind the links. There is also a collision no contrast ratio describes: the links now pass directly over card borders and chapter text.
+
+**Keyboard focus is a separate problem, and it is already solved — do not undo it.** The resting text above is a judgement call; a focus ring is not. Over the footer an `--accent` ring on cobalt is `--accent` on `--accent`: 1:1, completely invisible, a straight WCAG failure. No single ring colour survives the whole page — `--ink` is 2.73:1 on cobalt, `--paper` is 1:1 on `--paper`. So `.nav-link:focus-visible` paints its own ground: `background: var(--paper)` with `outline-offset: 0`, which puts the ring flush against `--paper` at 6.54:1 whatever is scrolling underneath. §6 keeps its `--accent` ring, and nothing paints unless a link has keyboard focus.
 
 ### 3.2 Hero
 
 ```
 ┌──────────────────────────────────────────────┐
-│  [floating pill nav]                         │
+│  [HOME]  PROJECTS  ABOUT                     │  fixed, no enclosure
 │                                              │
 │  DAVID PRIETO ZURITA                         │  display, tight
 │  Senior Product Designer · Madrid            │  mono, muted
@@ -178,7 +199,8 @@ Floating pill nav, same three items, same behaviour. The only change is the mono
   - `<img>` (webp + jpg fallback), or
   - `<video autoplay muted loop playsinline>` with a `poster`.
   - Under `prefers-reduced-motion`, video must not autoplay — show the poster.
-- WIP cards: `--ink-muted` text, `IN PROGRESS` eyebrow, `cursor: default`, **not** an `<a>`, `aria-disabled="true"`. A dead link is worse than an honest label.
+- WIP cards: `--ink-muted` text, `IN PROGRESS` eyebrow, `cursor: default`, **not** an `<a>`. A dead link is worse than an honest label.
+- **No `aria-disabled`** (this section asked for it until step 14). It is not an allowed attribute on `role=listitem`, which is what a `<li>` is, so axe flags it under `aria-allowed-attr` and it costs §6's "accessibility 100". It was also doing nothing: with no interactive element on the card there is nothing to disable, and `IN PROGRESS` is real text in the DOM, so the state already reaches everyone. Do not add it back.
 - Live card: entire card is one `<a>`, no nested interactive elements. Hover: media scales `1.02`, border → `--accent`, 200ms ease.
 - 2-up desktop (third card starts a second row, left-aligned — do not stretch it), 1-up below 768px.
 - Numbering `01 / 02 / 03` is earned: the order is by significance and the reader uses it.
@@ -278,6 +300,8 @@ footer {
 - Oversized mono headline sitting in the gradient: **"Let's talk."**
 - Contact block: email, LinkedIn, GitHub, Madrid, current status. Mono, one per line, generous leading.
 - **Formspree form stays — do not rebuild it.** Restyle only: bottom-border inputs, no boxes, mono labels, accent focus ring. Preserve the existing action URL and field names exactly.
+- Two markup additions are allowed against "restyle only", both from step 14 and neither touching the action URL or the field names: `autocomplete="name"` and `autocomplete="email"` on the two inputs (WCAG 1.3.5, AA), and `class="eyebrow"` on the three labels so they take §1.3's mono label role rather than a duplicated type block.
+- **"No boxes" describes the form at rest.** On `:focus-visible` every control in the footer paints `background: var(--paper)` with `outline-offset: 0`. That is not decoration: the submit button sits ~73% down the gradient at 1440 and ~76% at 375, where `--accent` is 2.6:1 against the ground and misses the 3:1 a focus indicator needs. Painting `--paper` under the ring puts a 6.54:1 edge on its inner side and holds at any depth the footer grows to — the ground is a gradient, so no fixed ring colour can be checked once and trusted. Same mechanism as the nav in §3.1.
 - Text over the accent end must be `--paper`, never `--ink`. Verify `#FCFCFA` on `#1F3BFF` clears AA.
 - Bottom bar: `© 2026 · Built by hand · Madrid`, caption size.
 

@@ -2,51 +2,51 @@
    Built one section at a time, in design.md §5 order. */
 
 /* ============================================================== nav §3.1 */
-/* Geometry, blur and radius carried over from v1 css/nav.css unchanged:
-   fixed, centred, 1.25rem from the top, blur(16px), 50px radius. Only the
-   palette moves to v2 tokens and the type becomes mono. */
+/* Revised after step 13, on David's call: the pill is gone. Three bare
+   links, still fixed, with nothing painted behind them. v1's border,
+   50px radius, translucent fill and blur(16px) are all removed, and with
+   them §3.1's "do not change the pill's position, blur, or scroll
+   behaviour" — design.md needs updating to match. The brackets stay:
+   they encode which item is active and nothing asked for them to go.
+
+   Two things the pill used to do for free and now need saying out loud:
+   the links have to align with the page themselves, and with no fill
+   behind them they have to keep out of the way of what scrolls past. */
 
 .nav {
   position: fixed;
   top: 1.25rem;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   z-index: 100;
 
-  padding: 0.4rem 0.5rem;
-  border: 1px solid var(--rule);
-  border-radius: 50px;
-
-  background: rgba(252, 252, 250, 0.75);          /* --paper at 75% */
-  background: color-mix(in srgb, var(--paper) 75%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-
-  transition: background 300ms ease;
-}
-
-/* v1 darkened the pill past 10px of scroll (js/main.js). Nothing toggles
-   this class in v2 yet — v2 has no nav script. The v1 rule also carried a
-   drop shadow, dropped here because §1.4 allows shadows on card hover only. */
-.nav.is-scrolled {
-  background: color-mix(in srgb, var(--paper) 95%, transparent);
+  /* Spans the viewport so its inner .shell lands on exactly the same
+     centre line as every section's — same mechanism, so they cannot drift
+     apart. Nothing is painted across that span, so nothing across it may
+     swallow a click either; only the links themselves take events. */
+  pointer-events: none;
 }
 
 .nav-list {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--s-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* 0.35rem of padding on 0.75rem/1.4 text makes a 28px target, over WCAG
+   2.5.8's 24px floor, which the bare 16.8px line would miss. Vertical
+   only — the gap does the horizontal separation, and side padding would
+   push the first link off the shell's left edge. */
 .nav-link {
   display: block;
-  padding: 0.45rem 1rem;
+  padding: 0.35rem 0;
   color: var(--ink-muted);
   text-decoration: none;
   white-space: nowrap;
+  pointer-events: auto;
   transition: color 200ms ease;
 }
 
@@ -74,6 +74,35 @@
   opacity: 1;
 }
 
+/* ------------------------------------------------------------- focus */
+/* base.css draws the ring in --accent, and over the footer's cobalt that
+   is --accent on --accent: a 1:1 ring, invisible. The links pass over
+   every ground on the page, so no single ring colour survives the trip —
+   --ink is 2.73:1 on cobalt and --paper is 1:1 on --paper. So focus paints
+   its own ground instead, and the ring sits flush against it rather than
+   2px out over whatever is scrolling past. The resting design is untouched
+   and §6 keeps its --accent ring; this exists only while a link has
+   keyboard focus. Does not fix item 23 — that is the resting text. */
+
+.nav-link:focus-visible {
+  background: var(--paper);
+  outline-offset: 0;
+}
+
+/* ------------------------------------------------------ reduced motion */
+/* The nav never had one of these — the bracket fade and the link colour
+   were the only two transitions on the page with nothing standing them
+   down. base.css has no blanket override on purpose (it would need
+   !important), so the component has to say it. Both states still happen;
+   they just arrive at once. */
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link,
+  .bracket {
+    transition: none;
+  }
+}
+
 /* ============================================================= hero §3.2 */
 /* Static: no rotation, no blink. Both arrive with rotator.js in step 6.
    No min-height — the hero is deliberately shorter than the viewport so
@@ -98,6 +127,36 @@
      The longest line here is 76 mono characters and would wrap mid-phrase,
      breaking the one thing the hero is built around. See the step 5 note. */
   max-width: none;
+}
+
+/* Step 13. The five lines are different lengths, so at any width where the
+   longest one does not fit on a single line, some wrap and some do not —
+   and the hero, with the whole page under it, changes height every 4s as
+   they cycle. Measured at the four pass widths: 375 alternates between two
+   and three lines, 768 between one and two, 1024 and 1440 are stable at
+   one. So reserve the tallest state instead of letting it shift.
+
+   The exact wrap points are 433px and 865px of viewport, but those follow
+   from the mono advance being 0.6em, which could not be verified from the
+   woff2 in this environment. Reserving at the breakpoints the build
+   already has costs at most one spare line of whitespace between 865 and
+   1023, and survives the advance being wider than assumed — which two new
+   and precisely-placed breakpoints would not. */
+
+.rotator {
+  min-height: calc(1.5em * 3);
+}
+
+@media (min-width: 768px) {
+  .rotator {
+    min-height: calc(1.5em * 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .rotator {
+    min-height: 1.5em;
+  }
 }
 
 .rotator-stem {
@@ -485,9 +544,6 @@
 }
 
 /* ========================================================== about §3.5 */
-/* Static. The reveal — .is-visible, opacity and the 16px lift — arrives
-   with reveal.js at step 11, so nothing here hides anything: what the
-   markup says is what the page shows. */
 
 .about h2 {
   margin-bottom: var(--s-5);
@@ -551,6 +607,42 @@
   margin-top: var(--s-4);
 }
 
+/* ------------------------------------------------------- the CV button */
+/* §3.5 asks for mono, accent on hover, and the file type and size in the
+   label. It does not say what shape it is, and the system has no button
+   component to borrow — .form-submit is a ruled line rather than an
+   enclosure, and it belongs to the footer's gradient problem.
+
+   So this takes the card's idiom, which is the system's one "this is a
+   thing you can click" enclosure: a 1px border that goes --accent on
+   hover, at caption metrics. Two departures from the card, both deliberate.
+   Square, because §1.4 scopes --radius to cards and metric boxes and says
+   everything else is square. And the border is --ink, not the card's
+   --rule: --rule on --paper is 1.15:1, which is fine for a hairline
+   between sections but not for the boundary of a control, where WCAG
+   1.4.11 wants 3:1. --ink is 17.9:1, and it matches the ruled line the
+   submit button already carries. */
+
+.cv-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 1ch;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.cv-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* --------------------------------------------------------- the portrait */
 /* Empty today. aspect-ratio holds the 4:5 box — §3.5 allows square or 4:5
    — so the real photo drops in with no layout shift and needs real alt
@@ -596,5 +688,236 @@
     float: left;
     width: min(320px, 34%);
     margin-right: var(--s-5);
+  }
+}
+
+/* ------------------------------------------------------------- reveal */
+/* §3.5. This runs backwards from the usual scroll reveal, and has to:
+   .is-visible sits in the markup, a bare .chapter is the hidden state,
+   and reveal.js strips the class on load before it observes. So JS off,
+   no IntersectionObserver, or reduced motion on, and nothing here ever
+   hides anything — the markup's own class keeps every chapter up.
+
+   The transition is declared on the shown state only, so removing the
+   class on load is instant while adding it back on entry fades. Put it
+   on the bare .chapter and every chapter in view would fade *out* first
+   as the script starts. */
+
+.chapter {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.chapter.is-visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+/* ------------------------------------------------------ reduced motion */
+/* reveal.js leaves the markup alone when the setting is already on, so
+   this only covers switching it on mid-scroll: the script hands the class
+   back to every chapter at once, and they must arrive without a fade. */
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter.is-visible,
+  .cv-button {
+    transition: none;
+  }
+}
+
+/* ========================================================== footer §3.6 */
+/* The gradient is not a backdrop here, it is the constraint. Paper at the
+   top, cobalt at the bottom, so how far down a piece of text sits decides
+   what colour it is allowed to be. Measured against §6's AA floor, on the
+   gradient exactly as §3.6 writes it:
+
+     token         4.5:1 (text)        3:1 (borders, focus)
+     --ink         top down to 86%     top down to 97%
+     --ink-muted   top down to 40%     top down to 65%
+     --rule        from 96% down       from 86% down
+     --accent      top down to 61%     top down to 72%
+     --paper       from 90% down       from 81% down
+
+   Three things follow, and every rule below depends on them: nothing in
+   this footer is --ink-muted, no hairline in it is --rule, and the
+   colophon is the only thing allowed past 90%. */
+
+/* Rhythm's --s-8 keeps the top edge, where it is doing the §1.4 job — the
+   gap from the About section. The bottom edge gives way, and has to:
+   symmetric padding holds the colophon 160px clear of the bottom, which on
+   any real footer height lands it around 82%, in the band where neither
+   --ink nor --paper clears AA. --s-3 puts it past 90% instead. The one
+   place the section rhythm bends; flagged in STATUS. */
+
+.site-footer {
+  padding-bottom: var(--s-3);
+
+  background: linear-gradient(180deg,
+    var(--paper) 0%,
+    var(--accent-dim) 55%,
+    var(--accent) 100%);
+}
+
+/* No hairline above the footer. The gradient's first stop is --paper, the
+   same ground the About section sits on, so the two meet seamlessly and a
+   rule would only cut the fade in half. */
+
+/* ------------------------------------------------------- the headline */
+/* Oversized, per §3.6 — §1.3 has no row for it, so this is a read. The
+   floor is set by "Let's talk." staying on one line: eleven mono glyphs at
+   ~0.6em each need 6.6em, which fits 92vw down to 375px at 2.75rem. */
+
+.footer-headline {
+  font-size: clamp(2.75rem, 8vw, 6rem);
+  line-height: 1;
+}
+
+/* ---------------------------------------------------------- the columns */
+/* Contact block and form side by side above 768. Stacked, they add ~180px
+   to the footer's content and push the form down into the band where an
+   --accent focus ring stops clearing 3:1. Two columns is a layout read —
+   §3.6 lists both but does not place them. */
+
+.footer-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-6);
+  margin-top: var(--s-6);
+}
+
+/* Step 13. The contact track is minmax(max-content, 1fr), not a plain
+   1fr, because a proportional split overflows at 768: the longest line —
+   "Available for senior product roles", 34 mono glyphs, ~347px — is wider
+   than the 264px a 1fr track gets there, and none of these lines has a
+   sensible wrap point. max-content as the floor means the track never
+   squeezes them; above ~1010px the 1fr share overtakes it on its own and
+   the proportional split resumes, so the wide end is unchanged. */
+@media (min-width: 768px) {
+  .footer-cols {
+    grid-template-columns: minmax(max-content, 1fr) minmax(0, 1.4fr);
+    column-gap: var(--s-6);
+  }
+}
+
+/* ----------------------------------------------------- the contact block */
+/* Mono, one per line, generous leading — §3.6. Body size from §1.3 with
+   the display face swapped in, since §3.6 changes the face and says
+   nothing about the size. Ink, not muted: muted gives out at 40% of the
+   gradient and this block sits below that. */
+
+.contact-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-display);
+  line-height: 2.2;
+}
+
+/* --------------------------------------------------------------- the form */
+/* Restyle only. The action URL and the three field names are v1's, byte
+   for byte, and nothing here touches them. §3.6 */
+
+.contact-form {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.form-field {
+  display: grid;
+  gap: var(--s-1);
+}
+
+/* Bottom border, no box — §3.6. The rule is --ink rather than --rule:
+   over this gradient a --rule hairline never reaches 3:1 above 86%, so it
+   would fade out at exactly the depth the fields sit at. appearance:none
+   and the zeroed radius stop iOS drawing its own rounded box back on. */
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: var(--s-1) 0;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  background: none;
+  color: var(--ink);
+}
+
+.contact-form textarea {
+  resize: vertical;
+}
+
+/* The card CTA idiom of §3.3 — mono at caption metrics, ink not muted,
+   because it is the action and not the meta — over the same ruled line the
+   fields carry. Accent on hover is the link-hover site of §1.2, not a new
+   one. The focus ring is base.css's, which §3.6 asks for by name. */
+
+.form-submit {
+  justify-self: start;
+  margin-top: var(--s-2);
+  padding-bottom: var(--s-1);
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+
+.form-submit:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ------------------------------------------------------- the bottom bar */
+/* The only text that reaches the accent end, and the reason §3.6 has a
+   rule about it. --paper, never --ink. .meta gives it caption size and
+   the mono face; the colour here outranks .meta's muted by load order,
+   not by weight.
+
+   The top margin is doing structural work, not decoration. Everything
+   above it has to stay above 72% of the footer or the --accent focus ring
+   on the submit button drops under 3:1. With --s-3 of bottom padding the
+   colophon block is ~44px, so that holds as long as the footer's top edge
+   through the bottom of the button measures 709px or less. Estimated at
+   ~660 desktop and ~750 mobile — the mobile end is tight and wants a real
+   measurement at step 13. Flagged in STATUS. */
+
+.colophon {
+  margin-top: calc(var(--s-8) + var(--s-6));
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------- focus */
+/* Item 18, resolved. The submit button lands ~73% down the gradient at
+   1440 and ~76% at 375, where --accent is 2.6:1 against the ground and
+   misses the 3:1 a focus indicator needs. Same answer as the nav: focus
+   paints --paper under itself, which puts a 6.54:1 edge on the ring's
+   inner side and holds at any depth the footer ever grows to. The contact
+   links sit higher, around 35–50%, where --accent already clears on its
+   own — they are included so the rule cannot go stale if the footer's
+   content changes length.
+
+   §3.6's "bottom-border inputs, no boxes" describes the form at rest.
+   Nothing here paints while nothing has keyboard focus, and §6 keeps its
+   --accent ring rather than trading it for an --ink one. */
+
+.site-footer a:focus-visible,
+.contact-form input:focus-visible,
+.contact-form textarea:focus-visible,
+.form-submit:focus-visible {
+  background: var(--paper);
+  outline-offset: 0;
+}
+
+/* ------------------------------------------------------ reduced motion */
+/* Nothing in the footer moves; the submit button's colour shift is the
+   only transition, and it stands down like every other component's. */
+
+@media (prefers-reduced-motion: reduce) {
+  .form-submit {
+    transition: none;
   }
 }

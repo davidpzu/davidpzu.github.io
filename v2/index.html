@@ -14,6 +14,16 @@
   <link rel="icon" href="assets/img/favicon/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="assets/img/favicon/apple-touch-icon.png">
 
+  <!-- The three faces that render above the fold: the h1 and eyebrows are
+       Geist Mono 500, the rotator and meta are Geist Mono 400, body copy is
+       Inter Tight 400. Without this they are not discovered until
+       components.css has parsed. Inter Tight 600 is deliberately absent —
+       it is the h3s, which are all below the fold. crossorigin is required
+       even same-origin, or the font is fetched twice. -->
+  <link rel="preload" href="assets/fonts/geist-mono-v6-latin-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/geist-mono-v6-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-tight-v9-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/layout.css">
@@ -24,20 +34,28 @@
   <!-- ============================================================ nav
        §3.1 — brackets are real characters in the DOM, present on every
        item. Which one is lit is a CSS state; aria-current carries the
-       same fact for assistive tech. -->
+       same fact for assistive tech.
+
+       The pill is gone: three bare links, still fixed, with nothing behind
+       them. That is a deliberate departure from §3.1, which asks for the
+       pill and its blur to be left alone — design.md needs updating to
+       match. The inner .shell is what aligns the links with the h1 and
+       with every section below, using the same mechanism they use. -->
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
-      <ul class="nav-list">
-        <li>
-          <a class="nav-link eyebrow is-active" href="index.html" aria-current="page"><span class="bracket">[</span>Home<span class="bracket">]</span></a>
-        </li>
-        <li>
-          <a class="nav-link eyebrow" href="#work"><span class="bracket">[</span>Projects<span class="bracket">]</span></a>
-        </li>
-        <li>
-          <a class="nav-link eyebrow" href="#about"><span class="bracket">[</span>About<span class="bracket">]</span></a>
-        </li>
-      </ul>
+      <div class="shell">
+        <ul class="nav-list" role="list">
+          <li>
+            <a class="nav-link eyebrow is-active" href="index.html" aria-current="page"><span class="bracket" aria-hidden="true">[</span>Home<span class="bracket" aria-hidden="true">]</span></a>
+          </li>
+          <li>
+            <a class="nav-link eyebrow" href="#work"><span class="bracket" aria-hidden="true">[</span>Projects<span class="bracket" aria-hidden="true">]</span></a>
+          </li>
+          <li>
+            <a class="nav-link eyebrow" href="#about"><span class="bracket" aria-hidden="true">[</span>About<span class="bracket" aria-hidden="true">]</span></a>
+          </li>
+        </ul>
+      </div>
     </nav>
   </header>
 
@@ -75,12 +93,18 @@
     <!-- ================================================ selected work
          §3.3 — card 01 is one <a> wrapping the whole card. Cards 02 and
          03 are not links at all: honest label, no dead href. Media slots
-         are empty containers today, sized to hold their 16:10 box. -->
+         are empty containers today, sized to hold their 16:10 box.
+
+         §3.3 also asks for aria-disabled on the WIP cards. Step 14 removed
+         it: aria-disabled is not allowed on role=listitem and fails
+         validation, and there is nothing interactive on those cards to
+         disable. "In progress" is real text in the DOM, so the state
+         reaches everyone without it. design.md §3.3 needs amending. -->
     <section id="work" class="work" aria-labelledby="work-title">
       <div class="shell">
         <h2 id="work-title">Selected work</h2>
 
-        <ul class="card-grid">
+        <ul class="card-grid" role="list">
 
           <li class="card">
             <a class="card-link" href="work/sacem/index.html">
@@ -97,7 +121,7 @@
             </a>
           </li>
 
-          <li class="card card-wip" aria-disabled="true">
+          <li class="card card-wip">
             <span class="card-media">
               <span class="card-media-label meta">Media pending</span>
             </span>
@@ -110,7 +134,7 @@
             <span class="card-status eyebrow">In progress</span>
           </li>
 
-          <li class="card card-wip" aria-disabled="true">
+          <li class="card card-wip">
             <span class="card-media">
               <span class="card-media-label meta">Media pending</span>
             </span>
@@ -137,7 +161,7 @@
       <div class="shell">
         <h2 id="impact-title">Impact</h2>
 
-        <ul class="staircase">
+        <ul class="staircase" role="list">
 
           <li class="metric">
             <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-1">
@@ -178,12 +202,16 @@
     <!-- ====================================================== about
          §3.5 — year markers are typed text, including the en dash in
          2018–2020 and the trailing em dash in 2024 —. Chapter titles are
-         h3 under the section h2; no skipped levels. -->
+         h3 under the section h2; no skipped levels.
+
+         is-visible is written here on purpose: CSS treats a bare .chapter
+         as the hidden state, so reveal.js has to take the class away
+         before it can give it back. JS off and every chapter stays. -->
     <section id="about" class="about" aria-labelledby="about-title">
       <div class="shell">
         <h2 id="about-title">Design and tooling for B2B platforms, with AI where it truly helps</h2>
 
-        <article class="chapter">
+        <article class="chapter is-visible">
           <p class="year">1997</p>
           <div class="chapter-body">
             <figure class="portrait">
@@ -196,7 +224,7 @@
           </div>
         </article>
 
-        <article class="chapter">
+        <article class="chapter is-visible">
           <p class="year">2018–2020</p>
           <div class="chapter-body">
             <h3 class="chapter-title">Where it all started</h3>
@@ -204,12 +232,12 @@
           </div>
         </article>
 
-        <article class="chapter">
+        <article class="chapter is-visible">
           <p class="year">2024 —</p>
           <div class="chapter-body">
             <h3 class="chapter-title">Where I am now</h3>
             <p>Half a year working remotely from China taught me how design reads in a mobile-first, gamified, pro-AI culture. Back in Madrid — eight years and counting — I'm still leading those same two platforms six years on, studying the Google UX Design certificate, building AI tooling, and turning up at design events to meet people whose work I admire.</p>
-            <p class="cv-link meta"><a href="assets/CV_DavidPrietoZurita-EN.pdf" download>Download CV — PDF, 194 KB</a></p>
+            <p class="cv-link"><a class="cv-button" href="assets/CV_DavidPrietoZurita-EN.pdf" download>Download CV — PDF, 194 KB<span class="cv-arrow" aria-hidden="true">↓</span></a></p>
           </div>
         </article>
       </div>
@@ -219,43 +247,51 @@
 
   <!-- ====================================================== footer
        §3.6 — Formspree action and field names are carried over exactly
-       from about.html. v1 submitted via fetch and swapped in an inline
-       success message; that script has no v2 equivalent yet, so this
-       posts natively for now. -->
+       from about.html, byte for byte. v1 submitted via fetch and swapped
+       in an inline success message; that script has no v2 equivalent yet,
+       so this posts natively for now.
+
+       The gradient decides the colour of everything in here: --ink down
+       to 86% of the footer, --paper only from 90%. The colophon is the
+       one thing that sits past that line, which is why it is the only
+       thing §3.6 asks to be --paper. -->
   <footer id="contact" class="site-footer" aria-labelledby="contact-title">
     <div class="shell">
       <h2 id="contact-title" class="footer-headline">Let's talk.</h2>
 
-      <ul class="contact-list">
-        <li><a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a></li>
-        <li><a href="https://www.linkedin.com/in/davidprietozurita/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-        <!-- TODO content: no GitHub URL exists anywhere in the repo. -->
-        <li>GitHub — URL pending</li>
-        <li>Madrid, Spain</li>
-        <li>Available for senior product roles</li>
-      </ul>
+      <div class="footer-cols">
+        <ul class="contact-list" role="list">
+          <li><a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a></li>
+          <li><a href="https://www.linkedin.com/in/davidprietozurita/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <!-- TODO content: no GitHub URL exists anywhere in the repo. -->
+          <li>GitHub — URL pending</li>
+          <li>Madrid, Spain</li>
+          <li>Available for senior product roles</li>
+        </ul>
 
-      <form class="contact-form" action="https://formspree.io/f/xzdypydw" method="POST">
-        <div class="form-field">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-field">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-field">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="5" required></textarea>
-        </div>
-        <button type="submit">Send message</button>
-      </form>
+        <form class="contact-form" action="https://formspree.io/f/xzdypydw" method="POST">
+          <div class="form-field">
+            <label class="eyebrow" for="name">Name</label>
+            <input type="text" id="name" name="name" autocomplete="name" required>
+          </div>
+          <div class="form-field">
+            <label class="eyebrow" for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+          <div class="form-field">
+            <label class="eyebrow" for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+          <button class="form-submit" type="submit">Send message</button>
+        </form>
+      </div>
 
       <p class="colophon meta">© 2026 · Built by hand · Madrid</p>
     </div>
   </footer>
 
   <script src="assets/js/rotator.js" defer></script>
+  <script src="assets/js/reveal.js" defer></script>
   <script src="assets/js/counters.js" defer></script>
 
 </body>
