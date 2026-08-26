@@ -432,7 +432,8 @@
    note is always in flow and always in the accessibility tree, and opacity
    alone carries the reveal. That satisfies §0's "no hover-only content"
    without a script, and keeps the staircase from shifting when a box
-   lights up. Nothing toggles aria-expanded yet — see STATUS. */
+   lights up. There is no aria-expanded to toggle: §3.4 describes a reveal,
+   not a toggle, and the attribute was removed rather than wired. */
 
 .impact h2 {
   margin-bottom: var(--s-5);
@@ -848,6 +849,53 @@
 .contact-form {
   display: grid;
   gap: var(--s-3);
+}
+
+/* ------------------------------------------------- the form's two results */
+/* form.js swaps the form for the confirmation on a successful post. Both
+   states ship hidden in the markup and stay hidden with JS off, where the
+   form posts natively as it always did. §3.6
+
+   The explicit [hidden] rules are not belt-and-braces: the UA sheet's
+   [hidden] { display: none } is a type-less selector, so .contact-form's
+   own display: grid outranks it and the form would stay visible underneath
+   the confirmation. This is the fix for that, and it is why the rule is
+   not !important. */
+
+.contact-form[hidden],
+.form-success[hidden],
+.form-error[hidden] {
+  display: none;
+}
+
+/* --ink, not --ink-muted, for the same reason every other word in this
+   footer is: muted gives out at 40% of the gradient. Both of these sit at
+   the form's own depth or higher — the confirmation is shorter than the
+   form, so the footer gets shorter and the text moves up, never down. */
+
+.form-success h3 {
+  margin-bottom: var(--s-2);
+}
+
+.form-success,
+.form-error {
+  color: var(--ink);
+}
+
+/* The confirmation takes focus when it replaces the form, so it needs a
+   ring. Same mechanism as everything else in this footer: it paints its own
+   --paper ground rather than trusting a fixed colour over a gradient. */
+.form-success:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+  background: var(--paper);
+}
+
+.form-error {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
 }
 
 .form-field {

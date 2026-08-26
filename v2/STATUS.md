@@ -24,12 +24,17 @@ David asked for directly:
 | Sanofi Connect descriptor | still a placeholder, deliberately (item 6) |
 | item 26 (Lighthouse) | **closed** — David runs it himself |
 | all images → AVIF | 1476 KB of PNG/JPEG became **206 KB**, 86% smaller |
+| contact form | **confirms inline** now — `form.js`, the fourth script (item 2) |
+| `aria-expanded` on the metric boxes | **removed**, not wired — it was never a toggle (item 10) |
+| the repo root | **cleaned** — see below. The one change outside `v2/` |
+| `img-david.jpg` + ten tool icons | **kept** for now, at David's call (item 28) |
 
-All of it is **committed** as `e4d47a3`, with this file following in the
-commit after it as it has each time — a file cannot name its own hash.
-**Nothing is pushed:** `main` is 7 commits ahead of `origin/main`. The
-authorship problem is fixed for those 7; see the section below, which also
-corrects the count and names the 13 pushed commits it does not cover.
+The first seven rows are committed across `e4d47a3` (the case study and
+image pass) and the commit this file lands in; the root cleanup is
+`c7b9747`, deliberately on its own. **Nothing is pushed** — `main` runs
+ahead of `origin/main`. The authorship problem is fixed for every unpushed
+commit; see below, which also corrects the count and names the 13 pushed
+commits it does not cover.
 
 ### Payload, both pages
 
@@ -37,10 +42,12 @@ Measured, not estimated. §6's budget is 800 KB.
 
 | | index | case study |
 |---|---|---|
-| html + css + js + fonts + favicon | 126.5 KB | 142.1 KB |
+| html + css + js + fonts + favicon | 131.6 KB | 147.0 KB |
 | images on initial load | 0 (all lazy) | 37.4 KB (hero, eager) |
-| **initial load** | **126.5 KB** | **179.5 KB** |
-| everything, after scrolling | 258.2 KB | 216.5 KB |
+| **initial load** | **131.6 KB** | **184.4 KB** |
+| everything, after scrolling | 263.3 KB | 221.4 KB |
+
+`form.js` added 2.5 KB to each.
 
 The case study carries more because of the fifth stylesheet and a much
 longer document. Both are comfortably inside the budget with every image
@@ -54,12 +61,33 @@ was 898 KB.
 | `work/sacem/index.html` | the case study. Nine sections, v1's ids and v1's copy |
 | `assets/css/casestudy.css` | fifth sheet, case-study pages only. The index never loads it |
 | `assets/js/casestudy.js` | scroll progress + contents-rail scrollspy. 28 assertions, all passing |
+| `assets/js/form.js` | inline form confirmation, on **both** pages. 34 assertions, all passing |
+| `.gitignore` (root) | `.DS_Store`. The only file outside `v2/` this rebuild has added |
 | `assets/img/the-beginning.avif` | 121 KB against the PNG's 898 |
 | `assets/img/projects/sacem-mensajeria/*.avif` | hero, challenge and thumb — 85 KB against 556 |
 
 `design.md` gained **§3.7**, which specifies the case study page, and §4 now
 lists the fifth sheet, the fourth script and the `<picture>` rule. §3.5 was
 rewritten for the per-chapter images. Read the spec, not this file.
+
+### The repo root was cleaned — the one change outside `v2/`
+
+At David's instruction, and the rule that nothing outside `v2/` gets touched
+is otherwise still in force. Committed on its own as `c7b9747`, touching
+nothing under `v2/`.
+
+- `README.md` restored from git. The deletion was not deliberate.
+- **`.gitignore` added at the root** with `.DS_Store`, and the three tracked
+  `.DS_Store` files untracked — they stay on disk, only the tracking goes.
+  **The root is the right place for it, not `v2/`:** at promotion
+  `mv v2/* .` does not move dotfiles, so a `v2/.gitignore` would be left
+  behind and `rmdir v2` would then fail. This also settles why the three
+  untracked `v2/*.DS_Store` files were never staged — they are ignored now.
+- `CLAUDE.md` committed. It carries the project rules, so it belongs in the
+  repo.
+
+**The working tree is now clean** apart from work in progress, which it has
+not been for the whole rebuild.
 
 ### Commit authorship — fixed for the unpushed commits, open for 13 others
 
@@ -186,15 +214,40 @@ case study is `sacem.html` at the repo root — is v2's version a port of
 that content or a fresh build? This is the largest open item and it
 blocks card 01 being real.
 
-**2. The Formspree form no longer confirms inline.** v1 submitted through
-`fetch` in `js/main.js` and swapped in a success message. §4 gives v2 no
-file for that, so the form currently posts natively and redirects to
-Formspree's own thank-you page. Either add a fourth JS file or accept the
-redirect. Action URL and field names are carried over byte-exact either
-way — verified again at step 12 against `about.html`. v1's `placeholder`
-attributes were not carried over and step 12 did not put them back: the
-labels are visible mono, so the hints would be decoration, and placeholder
-text is copy that §3.5 does not contain.
+**2. ~~The Formspree form no longer confirms inline.~~ Fixed — `form.js` is
+the fourth JS file.** David chose the new file over accepting the redirect.
+
+It restores exactly what v1's `js/main.js` did and nothing more: intercept
+the submit, post with `fetch` and `Accept: application/json`, swap the form
+for a confirmation. **The action URL and the three field names are still
+untouched, byte for byte.** Three things it does that v1 did not, all
+because v1's version was thin:
+
+- **Both result states are markup, not strings in the script** — §0 forbids
+  JS supplying content. The copy is v1's own.
+- **Failure is recoverable.** v1 called `alert()`. This shows an inline
+  message with a `mailto:` above the button, leaves the form filled in and
+  re-enables the submit, and clears the error when you resubmit. A failed
+  message must not cost the visitor their typing.
+- **Focus moves to the confirmation.** The form the visitor was working in
+  has just left the page; without this a keyboard or screen-reader user is
+  dropped back to `<body>`. `role="status"` is the fallback.
+
+Still fully progressive: no `fetch`, no `FormData`, no `.form-success` in
+the DOM, or JS off, and the listener is never attached — the form posts
+natively exactly as before.
+
+One CSS trap worth knowing: `.contact-form[hidden]` needs an explicit
+`display: none`, because the UA sheet's type-less `[hidden]` rule loses to
+`.contact-form { display: grid }` and the form would otherwise stay visible
+underneath the confirmation. A specificity fix, not a place for
+`!important`.
+
+**34 assertions passing** under `osascript -l JavaScript`: the happy path
+and every header and body field of the request, in-flight button state,
+server rejection, network failure, retry-after-failure, and the five
+degraded paths (no `fetch`, no `FormData`, no form, no confirmation markup,
+missing submit or error elements).
 
 **3. ~~The nav pill no longer darkens on scroll.~~ Closed by the nav
 redesign.** There is no pill to darken. `.nav.is-scrolled` and its rule are
@@ -251,26 +304,21 @@ that to display face 500 / `-0.02em`, on §1.3's "mono is the display face
 keep the base rule. Flagging because it is a read of the spec, not a line
 in it.
 
-**10. Nothing toggles `aria-expanded` on the metric buttons.** The step 8
-disclosure is CSS only — `.metric:hover` and `.metric:focus-within`. That
-covers pointer, keyboard and touch with no script (a button takes focus
-when it is tapped), and it works with JS off, which §0 requires. What it
-cannot do is keep `aria-expanded` truthful: all four still read `false`
-while their note is on screen. Three ways out, all cheap: have step 9's
-`counters.js` also wire the buttons; add the `ui.js` that items 2 and 3
-already want; or drop `aria-expanded` and `aria-controls`, on the grounds
-that §3.4 describes a *reveal*, not a toggle — clicking twice does not
-close it. Step 9 did **not** quietly resolve this: `counters.js` touches
-the figures only and leaves the buttons alone, because which file owns that
-wiring is exactly what is undecided.
+**10. ~~Nothing toggles `aria-expanded` on the metric buttons.~~ Closed —
+the attributes were removed, not wired.** David picked the third of the
+three exits, which was also the recommended one.
 
-**Step 14 looked at it and deliberately left it.** It is not an automated
-failure — no checker can tell that the note is on screen — and the fix is a
-choice between three approaches, one of which adds a fourth JS file. It is
-also the mildest of the three: because the notes never leave the
-accessibility tree (item 11), a screen reader already has all four, so
-`aria-expanded` is not hiding anything from anyone, it is merely untrue.
-Step 14 fixed what was unambiguously broken and left what needs a decision.
+§3.4 describes a *reveal*, not a toggle: clicking a second time does not
+close the note, so the four buttons were never a disclosure widget and
+`aria-expanded` could only ever have reported `false` while the note was on
+screen. `aria-expanded` and `aria-controls` are gone from all four. The
+note `id`s stay — they cost nothing and a real toggle would want them back.
+
+Nothing is lost by it: the notes are permanently in the DOM and in the
+accessibility tree (item 11), so a screen reader already had all four
+regardless of state. The disclosure stays CSS-only, works with JS off, and
+covers pointer, keyboard and touch. §3.4 now says this and says the
+attributes must not come back.
 
 **11. Note text is exposed to screen readers even while invisible.** The
 disclosure fades with `opacity` alone, never `display` or `visibility`, so
@@ -524,9 +572,10 @@ the live site.
 | `sacem-hero/-challenge/-thumb.jpg` | 556 | live — the `<picture>` fallbacks |
 | ten tool icons | 240 | unused; §7 rules out the section they were for |
 
-Nothing was deleted: §8 says ask first. **`my-origins.png` is the clear one
-to drop now** — David has explicitly replaced it and nothing references it.
-`img-david.jpg` and the icons want a decision before promotion, not before.
+`my-origins.png` is gone — deleted and dropped from history. **David has
+decided to keep `img-david.jpg` and the ten icons for now** and revisit at
+promotion, so the live dead weight is 683 KB. Nothing else was deleted:
+§8 says ask first.
 
 **29. The case study's contents rail inherits item 23's problem, exactly.**
 From 1200px the rail is `position: fixed` and vertically centred, so once

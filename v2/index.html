@@ -159,9 +159,16 @@
 
     <!-- ====================================================== impact
          §3.4 — each figure is a button so the disclosure is reachable by
-         keyboard and tap, never hover alone. aria-expanded is toggled by
-         counters/disclosure JS in step 8; the notes are in the DOM now so
-         the section is complete without script. Band ground per §3.4. -->
+         keyboard and tap, never hover alone.
+
+         No aria-expanded and no aria-controls, deliberately: §3.4 describes
+         a reveal, not a toggle. Clicking twice does not close it, so the
+         buttons were never a disclosure widget, and the attribute could
+         only ever have read "false" while the note was on screen. The notes
+         are permanently in the DOM and in the accessibility tree, so a
+         screen reader has all four regardless of state and nothing is
+         hidden from anyone. The note ids stay — they cost nothing and a
+         real toggle would want them back. Band ground per §3.4. -->
     <section id="impact" class="impact band-alt" aria-labelledby="impact-title">
       <div class="shell">
         <h2 id="impact-title">Impact</h2>
@@ -169,7 +176,7 @@
         <ul class="staircase" role="list">
 
           <li class="metric">
-            <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-1">
+            <button class="metric-toggle" type="button">
               <span class="figure">€3.7M</span>
               <span class="metric-label eyebrow">avoided spend</span>
             </button>
@@ -177,7 +184,7 @@
           </li>
 
           <li class="metric">
-            <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-2">
+            <button class="metric-toggle" type="button">
               <span class="figure">18%</span>
               <span class="metric-label eyebrow">drop-off reduction</span>
             </button>
@@ -185,7 +192,7 @@
           </li>
 
           <li class="metric">
-            <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-3">
+            <button class="metric-toggle" type="button">
               <span class="figure">41% → 59%</span>
               <span class="metric-label eyebrow">weekly active users</span>
             </button>
@@ -193,7 +200,7 @@
           </li>
 
           <li class="metric">
-            <button class="metric-toggle" type="button" aria-expanded="false" aria-controls="metric-note-4">
+            <button class="metric-toggle" type="button">
               <span class="figure">+130%</span>
               <span class="metric-label eyebrow">in-platform messaging</span>
             </button>
@@ -290,21 +297,34 @@
           <li>Available for senior product roles</li>
         </ul>
 
-        <form class="contact-form" action="https://formspree.io/f/xzdypydw" method="POST">
-          <div class="form-field">
-            <label class="eyebrow" for="name">Name</label>
-            <input type="text" id="name" name="name" autocomplete="name" required>
+        <!-- The form and its two result states share one grid cell. The
+             success block is a sibling, not a child, because JS hides the
+             form to show it. Both start hidden and stay hidden with JS
+             off, where the form posts natively as it always did. §3.6 -->
+        <div class="form-col">
+          <form class="contact-form" action="https://formspree.io/f/xzdypydw" method="POST">
+            <div class="form-field">
+              <label class="eyebrow" for="name">Name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required>
+            </div>
+            <div class="form-field">
+              <label class="eyebrow" for="email">Email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+            </div>
+            <div class="form-field">
+              <label class="eyebrow" for="message">Message</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            <p class="form-error" role="alert" hidden>Something went wrong. Please try again, or email me directly at <a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a>.</p>
+
+            <button class="form-submit" type="submit">Send message</button>
+          </form>
+
+          <div class="form-success" role="status" tabindex="-1" hidden>
+            <h3>Done!</h3>
+            <p>Thanks for your message. I'll get back as soon as possible.</p>
           </div>
-          <div class="form-field">
-            <label class="eyebrow" for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" required>
-          </div>
-          <div class="form-field">
-            <label class="eyebrow" for="message">Message</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
-          </div>
-          <button class="form-submit" type="submit">Send message</button>
-        </form>
+        </div>
       </div>
 
       <p class="colophon meta">© 2026 · Built by hand · Madrid</p>
@@ -314,6 +334,7 @@
   <script src="assets/js/rotator.js" defer></script>
   <script src="assets/js/reveal.js" defer></script>
   <script src="assets/js/counters.js" defer></script>
+  <script src="assets/js/form.js" defer></script>
 
 </body>
 </html>

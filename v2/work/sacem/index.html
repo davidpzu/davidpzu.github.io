@@ -413,21 +413,34 @@
           <li>Available for senior product roles</li>
         </ul>
 
-        <form class="contact-form" action="https://formspree.io/f/xzdypydw" method="POST">
-          <div class="form-field">
-            <label class="eyebrow" for="name">Name</label>
-            <input type="text" id="name" name="name" autocomplete="name" required>
+        <!-- The form and its two result states share one grid cell. The
+             success block is a sibling, not a child, because JS hides the
+             form to show it. Both start hidden and stay hidden with JS
+             off, where the form posts natively as it always did. §3.6 -->
+        <div class="form-col">
+          <form class="contact-form" action="https://formspree.io/f/xzdypydw" method="POST">
+            <div class="form-field">
+              <label class="eyebrow" for="name">Name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required>
+            </div>
+            <div class="form-field">
+              <label class="eyebrow" for="email">Email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+            </div>
+            <div class="form-field">
+              <label class="eyebrow" for="message">Message</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            <p class="form-error" role="alert" hidden>Something went wrong. Please try again, or email me directly at <a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a>.</p>
+
+            <button class="form-submit" type="submit">Send message</button>
+          </form>
+
+          <div class="form-success" role="status" tabindex="-1" hidden>
+            <h3>Done!</h3>
+            <p>Thanks for your message. I'll get back as soon as possible.</p>
           </div>
-          <div class="form-field">
-            <label class="eyebrow" for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" required>
-          </div>
-          <div class="form-field">
-            <label class="eyebrow" for="message">Message</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
-          </div>
-          <button class="form-submit" type="submit">Send message</button>
-        </form>
+        </div>
       </div>
 
       <p class="colophon meta">© 2026 · Built by hand · Madrid</p>
@@ -435,6 +448,7 @@
   </footer>
 
   <script src="../../assets/js/casestudy.js" defer></script>
+  <script src="../../assets/js/form.js" defer></script>
 
 </body>
 </html>

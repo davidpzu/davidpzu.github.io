@@ -228,7 +228,8 @@ Four boxes, offset vertically to form a rising staircase left to right. Rising e
 
 - The 4.2 → 2.5 min figure is deliberately **not** here — it already carries a rotator line. Don't duplicate it.
 - Numerals `--font-display`, `--accent`. Labels `--ink-muted`, mono, small.
-- **Disclosure must not be hover-only.** Each box is a `<button type="button">` with `aria-expanded`. Reveal on `:hover`, `:focus-visible`, and click/tap. Below 768px the disclosure text is **always visible** and the staircase flattens to a stacked 1-up list with no offset.
+- **Disclosure must not be hover-only.** Each box is a `<button type="button">`. Reveal on `:hover`, `:focus-visible`, and click/tap — a button takes focus when it is tapped, so that covers pointer, keyboard and touch with no script. Below 768px the disclosure text is **always visible** and the staircase flattens to a stacked 1-up list with no offset.
+- **No `aria-expanded` and no `aria-controls`, and they must not come back.** This section describes a *reveal*, not a toggle: clicking a second time does not close the note, so the buttons are not a disclosure widget and the attribute could only ever report `false` while the note was on screen. The notes are permanently in the DOM and in the accessibility tree — the reveal is `opacity` alone, never `display` or `visibility` — so a screen reader has all four regardless of state and nothing is hidden from anyone. The note `id`s stay in the markup: they cost nothing, and a real toggle would want them back.
 - Staircase offsets via `transform: translateY()` on `nth-child`, in `--s-3` steps: box 1 = `+4.5rem`, box 2 = `+3rem`, box 3 = `+1.5rem`, box 4 = `0`. Parent needs matching bottom padding so the offset doesn't collide with the next section.
 - Count-up on first intersect, 900ms `ease-out`. Under reduced motion, render the final value immediately.
 - Section sits on `--paper-alt`.
@@ -307,6 +308,12 @@ footer {
 - Oversized mono headline sitting in the gradient: **"Let's talk."**
 - Contact block: email, LinkedIn, Madrid, current status. Mono, one per line, generous leading. **No GitHub link** — removed at David's instruction; he does not publish there, so the row was a placeholder for something that is never coming. Do not add it back.
 - **Formspree form stays — do not rebuild it.** Restyle only: bottom-border inputs, no boxes, mono labels, accent focus ring. Preserve the existing action URL and field names exactly.
+- **It confirms inline, and `form.js` is what does it.** v1 intercepted the submit with `fetch` and swapped in a success message; without that the form posts natively and hands the visitor to formspree.io, which is the last thing a contact form should do. `form.js` restores v1's behaviour and nothing else — it never touches the action URL or the three field names.
+  - **Both result states are markup, not strings in the script.** `.form-success` (with v1's copy: *"Done!"* / *"Thanks for your message. I'll get back as soon as possible."*) and `.form-error` (v1's *"Something went wrong…"*, now an inline message with a `mailto:` rather than v1's `alert()`). Both ship `hidden`. §0 forbids JS supplying content, and this is why.
+  - **Progressive, and it must stay that way.** No `fetch`, no `FormData`, no `.form-success` in the DOM, or JS off entirely — the listener is never attached and the form posts natively exactly as before. Degraded, not broken.
+  - **On success, focus moves to the confirmation.** The form the visitor was working in has just left the page; without moving focus, a keyboard or screen-reader user is dropped back to `<body>` and loses their place. `role="status"` is the belt for the case where focus cannot be taken, and the confirmation carries `tabindex="-1"` so it can.
+  - **On failure the form stays put, re-enabled, with the error above the button** — a failed message must be retryable without retyping. Resubmitting clears the error first.
+  - `.contact-form[hidden]` needs an explicit `display: none`. The UA sheet's `[hidden]` rule loses to `.contact-form { display: grid }`, so without it the form stays visible under the confirmation. That is a specificity fix, not a place for `!important`.
 - Two markup additions are allowed against "restyle only", both from step 14 and neither touching the action URL or the field names: `autocomplete="name"` and `autocomplete="email"` on the two inputs (WCAG 1.3.5, AA), and `class="eyebrow"` on the three labels so they take §1.3's mono label role rather than a duplicated type block.
 - **"No boxes" describes the form at rest.** On `:focus-visible` every control in the footer paints `background: var(--paper)` with `outline-offset: 0`. That is not decoration: the submit button sits ~73% down the gradient at 1440 and ~76% at 375, where `--accent` is 2.6:1 against the ground and misses the 3:1 a focus indicator needs. Painting `--paper` under the ring puts a 6.54:1 edge on its inner side and holds at any depth the footer grows to — the ground is a gradient, so no fixed ring colour can be checked once and trusted. Same mechanism as the nav in §3.1.
 - Text over the accent end must be `--paper`, never `--ink`. Verify `#FCFCFA` on `#1F3BFF` clears AA.
@@ -372,6 +379,7 @@ v2/
 │   │   ├── rotator.js
 │   │   ├── reveal.js
 │   │   ├── counters.js
+│   │   ├── form.js           ← every page with the footer form
 │   │   └── casestudy.js      ← case-study pages only
 │   ├── fonts/                ← geist-mono 400/500, inter-tight 400/600, syne 700
 │   └── img/
@@ -380,7 +388,7 @@ v2/
 
 - Four `<link>` tags in order on `index.html`. No `@import` — it blocks rendering.
 - **A case study loads a fifth, `casestudy.css`, after `components.css`.** It is the only page-scoped sheet, and it exists so the index pays nothing for a page it never shows. It restates nothing: `.shell`, `.band-alt`, the section rhythm, `.eyebrow`, `.meta`, `.cv-button`, the nav and the footer all come from the four above.
-- Likewise `casestudy.js` loads on case-study pages only, and the index's three scripts do not load on a case study.
+- Likewise `casestudy.js` loads on case-study pages only, and the index's three scripts do not load on a case study. `form.js` loads on **both**, because both carry the §3.6 footer.
 - JS with `defer`. Each file a plain IIFE — no ES modules, so local `file://` preview works.
 - **Every image on the site is a `<picture>`: an AVIF `<source>` with a JPEG or PNG `<img>` fallback.** §3.5 has the reasoning and the numbers. Everything below the fold carries `loading="lazy"` and `decoding="async"`; the one image above it — a case study's hero — carries `fetchpriority="high"` instead.
 
