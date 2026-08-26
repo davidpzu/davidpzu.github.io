@@ -164,3 +164,437 @@
 .status-dot {
   color: var(--accent);
 }
+
+/* ==================================================== selected work §3.3 */
+/* Card 01 is a single <a> wrapping the whole card, so there is nothing
+   nested inside it to tab to. Cards 02 and 03 are not links at all — an
+   honest label instead of a dead href. Everything below therefore has to
+   work for a card that is interactive and for one that is not. */
+
+.work h2 {
+  margin-bottom: var(--s-5);
+}
+
+/* ----------------------------------------------------------- the grid */
+/* 2-up desktop. The third card lands in column one of a second row and
+   keeps its column width — the track sizing does that on its own, so
+   nothing here stretches it. §3.3 */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* Column gutter is the grid gutter of §1.4; rows get a step more so
+       two stacked rows of cards do not read as one block. */
+    column-gap: var(--s-3);
+    row-gap: var(--s-4);
+  }
+}
+
+/* ---------------------------------------------------------- the frame */
+/* The border and --radius live on the card; the padding lives on the
+   card's contents. That keeps the focus ring — drawn on the <a> — inside
+   the frame instead of being clipped by it. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper);
+  transition: border-color 200ms ease;
+}
+
+/* Only the live card responds. The <a> covers the whole card, so hovering
+   the card and hovering the link are the same gesture. §3.3 */
+.card:not(.card-wip):hover {
+  border-color: var(--accent);
+}
+
+/* Card 01's contents hang off the <a>; a WIP card has no <a>, so the card
+   itself does that job. Same padding, same column, so a live card and a
+   WIP card in the same row line up rule for rule. */
+.card-link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--s-2);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------------- the media */
+/* Empty today. aspect-ratio holds the 16:10 box with nothing in it, and
+   an <img> or a <video> dropped in later fills the same box exactly — no
+   layout shift when the assets arrive. §3.3, §6 */
+
+.card-media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  background: var(--paper-alt);
+  overflow: hidden;   /* clips the 1.02 hover scale */
+}
+
+/* The two shapes the slot must accept without any other change:
+   <img> (webp + jpg fallback), or
+   <video autoplay muted loop playsinline poster="…">. */
+.card-media img,
+.card-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 200ms ease;
+}
+
+.card:not(.card-wip):hover .card-media img,
+.card:not(.card-wip):hover .card-media video {
+  transform: scale(1.02);
+}
+
+/* Placeholder label. Centred on the empty fill, and it does not scale —
+   it is a note about a missing asset, not the asset. It disappears the
+   moment real media is put in the slot. */
+.card-media-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-2);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------- the text */
+
+.card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  margin-top: var(--s-3);
+}
+
+/* The separator of §3.3's diagram is decoration, not content, so it stays
+   out of the DOM — unlike the nav brackets, nothing is encoded in it and a
+   screen reader is better off reading "01" then "SACEM". */
+.card-index::after {
+  content: "·";
+  padding-left: 0.5ch;
+}
+
+/* Mono, because §1.3 gives headlines to the display face. The chapter h3s
+   in §3.5 are explicitly body face and keep base.css's rule. */
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.card-desc {
+  margin-top: var(--s-1);
+  color: var(--ink-muted);
+}
+
+/* Pushed to the bottom so the rule and the last line sit level across a
+   row of cards whose descriptions differ in length. */
+.card-rule {
+  display: block;
+  margin-top: auto;
+  padding-top: var(--s-3);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* Caption metrics from §1.3, at ink rather than muted — it is the card's
+   action, not its meta. */
+.card-cta {
+  margin-top: var(--s-2);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  transition: color 200ms ease;
+}
+
+.card:not(.card-wip):hover .card-cta {
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------- in progress */
+/* Muted throughout, default cursor, no hover response of any kind. §3.3 */
+
+.card-wip {
+  padding: var(--s-2);
+  color: var(--ink-muted);
+  cursor: default;
+}
+
+.card-status {
+  margin-top: var(--s-2);
+}
+
+/* ------------------------------------------------------ reduced motion */
+/* Nothing here animates on its own, so this only stands down the hover
+   transitions. The border and the CTA still change colour — that is a
+   state, not motion — they just change instantly. */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card-cta,
+  .card-media img,
+  .card-media video {
+    transition: none;
+  }
+
+  .card:not(.card-wip):hover .card-media img,
+  .card:not(.card-wip):hover .card-media video {
+    transform: none;
+  }
+}
+
+/* ========================================================== impact §3.4 */
+/* Static values — the count-up is step 9. The disclosure is CSS only: the
+   note is always in flow and always in the accessibility tree, and opacity
+   alone carries the reveal. That satisfies §0's "no hover-only content"
+   without a script, and keeps the staircase from shifting when a box
+   lights up. Nothing toggles aria-expanded yet — see STATUS. */
+
+.impact h2 {
+  margin-bottom: var(--s-5);
+}
+
+/* ------------------------------------------------------------ the stair */
+
+.staircase {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .staircase {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    /* Box 1 hangs --s-6 below the list's own box — translate does not take
+       part in layout — so the list carries that much bottom padding and the
+       stair stops short of the next section's hairline. §3.4 */
+    padding-bottom: var(--s-6);
+  }
+
+  /* Rising left to right in --s-3 steps. Box 4 is the top of the stair;
+     the direction encodes the content, so don't invert it. §3.4 */
+  .metric:nth-child(1) { transform: translateY(var(--s-6)); }   /* 4.5rem */
+  .metric:nth-child(2) { transform: translateY(var(--s-5)); }   /* 3rem   */
+  .metric:nth-child(3) { transform: translateY(var(--s-3)); }   /* 1.5rem */
+  .metric:nth-child(4) { transform: translateY(0); }            /* 0      */
+}
+
+/* -------------------------------------------------------------- the box */
+/* --paper against the band's --paper-alt, so a box reads as an object on
+   the ground rather than a hole in it. --radius is allowed here: §1.4
+   scopes it to cards and metric boxes. */
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper);
+
+  /* One handle for every piece of muted text in the box, so the lit state
+     is a single declaration instead of a rule per child. */
+  --metric-fg: var(--ink-muted);
+
+  transition: background-color 200ms ease;
+}
+
+/* §1.2 assigns --accent-dim to "metric box hover". The text has to move to
+   --ink at the same time: --ink-muted on --accent-dim is 4.34:1, under
+   §6's AA floor, where --ink is 15.5:1. :focus-within rather than
+   :focus-visible because it is what makes click and tap work — a button
+   takes focus when it is tapped, so the same rule covers pointer,
+   keyboard and touch with no script. §3.4 */
+.metric:hover,
+.metric:focus-within {
+  background: var(--accent-dim);
+  --metric-fg: var(--ink);
+}
+
+.metric-toggle {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+/* §1.3's clamp(2rem, 4.5vw, 3.5rem) cannot hold the "41% → 59%" figure in
+   a quarter of --shell: nine mono glyphs at 3.5rem is ~282px against a
+   235px column, and it overflows at every width from 768 up, not just the
+   wide end. Same shape of rule, lower ceiling — this is the largest the
+   longest figure can be and still sit inside its box. Flagged in STATUS;
+   base.css keeps §1.3 verbatim so the revert is this one block. */
+.staircase .figure {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.metric-label {
+  display: block;   /* an inline span would drop the margin */
+  margin-top: var(--s-2);
+  color: var(--metric-fg);
+  transition: color 200ms ease;
+}
+
+/* ------------------------------------------------------- the disclosure */
+
+.metric-note {
+  margin-top: var(--s-2);
+  color: var(--metric-fg);
+  transition: opacity 200ms ease, color 200ms ease;
+}
+
+/* Below 768 the note is simply always visible and the stair is flat, so
+   the hidden state is scoped to the stair, not the other way round. §3.4 */
+@media (min-width: 768px) {
+  .metric-note {
+    opacity: 0;
+  }
+
+  .metric:hover .metric-note,
+  .metric:focus-within .metric-note {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------ reduced motion */
+/* The reveal itself stays — it is the content. Only the fade goes. */
+
+@media (prefers-reduced-motion: reduce) {
+  .metric,
+  .metric-label,
+  .metric-note {
+    transition: none;
+  }
+}
+
+/* ========================================================== about §3.5 */
+/* Static. The reveal — .is-visible, opacity and the 16px lift — arrives
+   with reveal.js at step 11, so nothing here hides anything: what the
+   markup says is what the page shows. */
+
+.about h2 {
+  margin-bottom: var(--s-5);
+}
+
+/* ---------------------------------------------------------- the column */
+/* Year left, chapter right. The year track is a clamp that rises with the
+   same vw the year's own type scale rises with (§1.3), so "2018–2020" —
+   the widest marker, nine mono glyphs — clears it at every width with a
+   few px to spare instead of only at the wide end. */
+
+.chapter {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-2);
+}
+
+@media (min-width: 768px) {
+  .chapter {
+    grid-template-columns: clamp(8rem, 16vw, 12rem) minmax(0, 1fr);
+    column-gap: var(--s-5);
+  }
+}
+
+/* Hairline between chapters, matching the section rule of §1.4. §3.5's
+   diagram draws it across the chapter column only, leaving the year column
+   an unbroken spine; this runs the full width of the shell because it is
+   one declaration instead of four and reads the same at a glance. Easy to
+   scope to .chapter-body later if the spine is wanted. */
+.chapter + .chapter {
+  margin-top: var(--s-6);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule);
+}
+
+/* The year holds its place while its own chapter scrolls past — the grid
+   area is the whole chapter, so it releases at the next one. --s-6 clears
+   the floating nav pill, whose underside sits at about 64px. §3.5 */
+@media (min-width: 768px) {
+  .year {
+    position: sticky;
+    top: var(--s-6);
+    align-self: start;
+    white-space: nowrap;   /* overflow into the gutter beats wrapping a date */
+  }
+}
+
+/* ---------------------------------------------------------- the chapter */
+/* flow-root so the floated portrait is contained and the next chapter's
+   hairline starts below it rather than through it. */
+
+.chapter-body {
+  display: flow-root;
+}
+
+.chapter-title {
+  margin-bottom: var(--s-2);
+}
+
+.cv-link {
+  margin-top: var(--s-4);
+}
+
+/* --------------------------------------------------------- the portrait */
+/* Empty today. aspect-ratio holds the 4:5 box — §3.5 allows square or 4:5
+   — so the real photo drops in with no layout shift and needs real alt
+   text at that point. --radius is §3.5's explicit instruction for this
+   container; it outranks §1.4's cards-and-metric-boxes-only scope. */
+
+.portrait {
+  width: min(320px, 100%);
+  margin-bottom: var(--s-3);
+}
+
+.portrait-slot {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius);
+  background: var(--paper-alt);
+  overflow: hidden;
+}
+
+.portrait-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portrait-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-2);
+  text-align: center;
+}
+
+/* §3.5 wants the portrait beside the text on desktop, but it does not fit
+   beside it at 768: the chapter column is 531px there, and a 320px photo
+   would leave the copy 36ch. It clears 45ch from 1024 up, so that is where
+   it moves alongside — below that it stays above the title, which is what
+   §3.5's own diagram draws anyway. Flagged in STATUS. */
+@media (min-width: 1024px) {
+  .portrait {
+    float: left;
+    width: min(320px, 34%);
+    margin-right: var(--s-5);
+  }
+}
