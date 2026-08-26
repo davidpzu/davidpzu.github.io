@@ -25,12 +25,45 @@
      apart. Nothing is painted across that span, so nothing across it may
      swallow a click either; only the links themselves take events. */
   pointer-events: none;
+
+  /* Visible at the top of the page, gone the moment you scroll. ui.js adds
+     .is-hidden past a small threshold and takes it off again once you stop.
+     visibility is animated alongside opacity so the links cannot be tabbed
+     to or clicked while invisible — opacity alone would leave three
+     unreachable-looking but fully live targets floating over the content. */
+  transition: opacity 300ms ease, visibility 300ms ease;
+
+  /* The nav paints nothing behind itself, so its contrast is whatever
+     scrolls under it — and since About went --void that was failing across
+     most of the page's height. difference inverts the backdrop, so the links
+     are dark on light grounds and light on dark ones by construction, with
+     no scroll position to track and no second colour pair to keep in sync.
+
+     The blend has to sit HERE, not on .nav-link. An element blends with its
+     backdrop within its parent stacking context, and .nav is one (fixed +
+     z-index: 100) — a blend on the links would find nothing inside .nav to
+     blend with. On .nav itself the backdrop is the root context, which is
+     the page. .site-header creates no stacking context, so the chain holds.
+
+     Everything inside is therefore blended, the focus ring included. That is
+     why the ring below no longer paints a --paper ground. §3.1 */
+  mix-blend-mode: difference;
 }
 
+.nav.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Centred, not aligned to the shell's left edge. This deliberately gives up
+   the alignment with the h1 and the section titles that the bare nav was
+   built for — David's call. The .shell wrapper stays because it still holds
+   the links inside the page's own gutters at every width. */
 .nav-list {
   display: flex;
   align-items: center;
-  gap: var(--s-2);
+  justify-content: center;
+  gap: var(--s-3);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -43,7 +76,7 @@
 .nav-link {
   display: block;
   padding: 0.35rem 0;
-  color: var(--ink-muted);
+  color: var(--nav-rest);
   text-decoration: none;
   white-space: nowrap;
   pointer-events: auto;
@@ -52,7 +85,7 @@
 
 .nav-link:hover,
 .nav-link.is-active {
-  color: var(--ink);
+  color: var(--nav-active);
 }
 
 /* Brackets sit in the DOM on every item and always occupy their width, so
@@ -80,13 +113,18 @@
    every ground on the page, so no single ring colour survives the trip —
    --ink is 2.73:1 on cobalt and --paper is 1:1 on --paper. So focus paints
    its own ground instead, and the ring sits flush against it rather than
-   2px out over whatever is scrolling past. The resting design is untouched
-   and §6 keeps its --accent ring; this exists only while a link has
-   keyboard focus. Does not fix item 23 — that is the resting text. */
+   2px out over whatever is scrolling past.
+
+   The blend mode replaces that trick entirely. A white ring under difference
+   is the exact inverse of whatever is beneath it: near-black on --paper,
+   white on --void, and #E0C400 on cobalt at 3.86:1 — above the 3:1 a focus
+   indicator needs, at every point of the page. No painted ground, no
+   measurement, and §3.6's "no boxes" becomes literally true for the nav
+   too. */
 
 .nav-link:focus-visible {
-  background: var(--paper);
-  outline-offset: 0;
+  outline: 2px solid var(--nav-active);
+  outline-offset: 2px;
 }
 
 /* ------------------------------------------------------ reduced motion */
@@ -98,7 +136,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .nav-link,
-  .bracket {
+  .bracket,
+  .nav {
     transition: none;
   }
 }
@@ -108,8 +147,30 @@
    No min-height — the hero is deliberately shorter than the viewport so
    the work section peeks above the fold. */
 
+/* The one type size on the site that is not in §1.3's scale. It dropped
+   .meta when it stopped being meta: it used to read "Senior Product
+   Designer · Madrid", a caption-weight fact, and the location half of it now
+   lives in the hero's top-right corner. What is left is a positioning line,
+   so it takes the mono display face at 1.5rem (24px) — above §1.3's body
+   size, below the h1 — and --ink rather than --ink-muted.
+
+   It wraps to two lines below about 720px. That is intended: the line is
+   58 glyphs and forcing it onto one would mean shrinking it back to the
+   size it just came up from. */
 .hero-role {
   margin-top: var(--s-2);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+@media (max-width: 480px) {
+  .hero-role {
+    font-size: 1.25rem;
+  }
 }
 
 /* --------------------------------------------------- the terminal line */
@@ -209,19 +270,72 @@
   margin-top: var(--s-4);
 }
 
-.hero-rule {
-  margin: var(--s-5) 0 0;
-  border: 0;
-  border-top: 1px solid var(--rule);
+/* ------------------------------------------------- the hero's two corners */
+/* Availability left, location right, on the hero's own top edge. They sit
+   inside .shell, so they land on the same two grid lines the h1 does.
+
+   Stacked at 375 rather than squeezed: together they are ~55 mono glyphs,
+   which does not fit one line until about 620px. Below that the location
+   line sits under the status and both stay left. */
+
+.hero-corners {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+  justify-content: space-between;
+  margin-bottom: var(--s-5);
 }
 
-.hero-status {
-  margin-top: var(--s-2);
+.hero-status,
+.hero-place {
+  margin: 0;
   color: var(--ink-muted);
 }
 
-.status-dot {
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6ch;
+}
+
+/* The one accent mark in the hero, and the only thing on the page that
+   turns. 8s is deliberately slow — at anything faster it reads as a
+   loading spinner, which is the opposite of what it means. */
+.status-star {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
   color: var(--accent);
+  animation: star-spin 8s linear infinite;
+}
+
+.status-star svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes star-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Reduced motion: the star holds still. It is decorative and aria-hidden,
+   so nothing is lost by stopping it. */
+@media (prefers-reduced-motion: reduce) {
+  .status-star {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------ section eyebrow */
+/* A mono label above each section title: "See the process", "By the
+   numbers", "About me", "Where to find me". §1.3's eyebrow role, muted, so
+   the h2 under it stays the loudest thing in the section. In the dark
+   passage --ink-muted is unreadable, so the colour comes from a token the
+   dark blocks re-point rather than from a second rule per section. */
+
+.section-eyebrow {
+  margin-bottom: var(--s-2);
+  color: var(--eyebrow-fg, var(--ink-muted));
 }
 
 /* ==================================================== selected work §3.3 */
@@ -428,12 +542,16 @@
 }
 
 /* ========================================================== impact §3.4 */
-/* Static values — the count-up is step 9. The disclosure is CSS only: the
-   note is always in flow and always in the accessibility tree, and opacity
-   alone carries the reveal. That satisfies §0's "no hover-only content"
-   without a script, and keeps the staircase from shifting when a box
-   lights up. There is no aria-expanded to toggle: §3.4 describes a reveal,
-   not a toggle, and the attribute was removed rather than wired. */
+/* There is no disclosure any more. The note is always visible, at every
+   width, like the label and the figure above it — David's call, and it
+   ends a long thread: the hover reveal, the aria-expanded that could never
+   be truthful, and the question of which file should own the toggle all
+   go with it. §0's "no hover-only content" is now satisfied by there being
+   no hover state that carries content at all.
+
+   The box is therefore plain markup. The <button> is gone: nothing in it
+   is interactive, so nothing in it should be a tab stop. Only the count-up
+   in counters.js still touches this section. */
 
 .impact h2 {
   margin-bottom: var(--s-5);
@@ -487,22 +605,31 @@
   transition: background-color 200ms ease;
 }
 
-/* §1.2 assigns --accent-dim to "metric box hover". The text has to move to
-   --ink at the same time: --ink-muted on --accent-dim is 4.34:1, under
-   §6's AA floor, where --ink is 15.5:1. :focus-within rather than
-   :focus-visible because it is what makes click and tap work — a button
-   takes focus when it is tapped, so the same rule covers pointer,
-   keyboard and touch with no script. §3.4 */
-.metric:hover,
-.metric:focus-within {
+/* §1.2 assigns --accent-dim to "metric box hover". The wash stays — it is
+   the box acknowledging the pointer — but it no longer reveals anything,
+   so there is no :focus-within: nothing inside the box can take focus now.
+   The text still moves to --ink with the wash, because --ink-muted on
+   --accent-dim is 4.34:1, under §6's AA floor, where --ink is 15.5:1. */
+.metric:hover {
   background: var(--accent-dim);
   --metric-fg: var(--ink);
 }
 
-.metric-toggle {
+/* v1's icons, one per figure, matched to what each one measures: a currency
+   mark on avoided spend, a clock on the completion-time drop-off, a rising
+   chart on weekly actives, a speech bubble on messaging. Decorative — the
+   figure and the label carry the meaning — so every svg is aria-hidden. */
+.metric-icon {
   display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-bottom: var(--s-2);
+  color: var(--accent);
+}
+
+.metric-icon svg {
   width: 100%;
-  text-align: left;
+  height: 100%;
 }
 
 /* §1.3's clamp(2rem, 4.5vw, 3.5rem) cannot hold the "41% → 59%" figure in
@@ -522,29 +649,20 @@
   transition: color 200ms ease;
 }
 
-/* ------------------------------------------------------- the disclosure */
+/* ------------------------------------------------------------- the note */
+/* Always visible, at every width. margin-top: auto pushes it to the bottom
+   of the box so the four notes share a baseline even though the figures
+   above them are different heights — the stair's rhythm comes from the
+   translateY, not from ragged box interiors. */
 
 .metric-note {
-  margin-top: var(--s-2);
+  margin-top: auto;
+  padding-top: var(--s-2);
   color: var(--metric-fg);
-  transition: opacity 200ms ease, color 200ms ease;
-}
-
-/* Below 768 the note is simply always visible and the stair is flat, so
-   the hidden state is scoped to the stair, not the other way round. §3.4 */
-@media (min-width: 768px) {
-  .metric-note {
-    opacity: 0;
-  }
-
-  .metric:hover .metric-note,
-  .metric:focus-within .metric-note {
-    opacity: 1;
-  }
+  transition: color 200ms ease;
 }
 
 /* ------------------------------------------------------ reduced motion */
-/* The reveal itself stays — it is the content. Only the fade goes. */
 
 @media (prefers-reduced-motion: reduce) {
   .metric,
@@ -572,10 +690,16 @@
   gap: var(--s-2);
 }
 
+/* The year track keeps its clamp — it is load-bearing. "2018–2020" is nine
+   mono glyphs and needs ~130px at 768 and ~194px at 1440 against a track of
+   128px and 192px, which is the couple-of-pixels-spare fit STATUS item 22
+   has always flagged. Narrowing it was tried and breaks the date at every
+   width. Only the gutter gives: --s-5 to --s-4, which is 16px to the copy
+   and still leaves room for the item-22 overhang. */
 @media (min-width: 768px) {
   .chapter {
     grid-template-columns: clamp(8rem, 16vw, 12rem) minmax(0, 1fr);
-    column-gap: var(--s-5);
+    column-gap: var(--s-4);
   }
 }
 
@@ -671,7 +795,7 @@
    and the PlayStation — the music and the videogames the copy is about. */
 
 .chapter-media {
-  width: min(360px, 100%);
+  width: min(400px, 100%);
   margin-bottom: var(--s-3);
 }
 
@@ -711,11 +835,28 @@
    1440 it leaves 510px, about 63ch. Both clear the floor, which is what
    allows 360px here where the old portrait rule said 320. Flagged in
    STATUS. */
+/* Two real columns from 1024, not a float. The float was the cause of the
+   narrow copy, and not in the way it looked: a float shortens the line
+   boxes inside a paragraph but does not move the paragraph's own box, so
+   base.css's `p { max-width: var(--measure) }` was capping the box at 564px
+   and the image was consuming 343px of that from the left. What was left
+   for text was ~220px — four or five words a line, exactly as reported.
+   Widening the body column could not fix it, because the cap, not the
+   column, was the binding constraint.
+
+   As a grid column the text gets its own box, so --measure caps the text
+   and nothing else: 62ch at 1440, ~50ch at 1024. align-items: start keeps
+   the image at the top rather than stretching it down the chapter. */
 @media (min-width: 1024px) {
+  .chapter-body {
+    display: grid;
+    grid-template-columns: min(400px, 34%) minmax(0, 1fr);
+    column-gap: var(--s-4);
+    align-items: start;
+  }
+
   .chapter-media {
-    float: left;
-    width: min(360px, 38%);
-    margin-right: var(--s-5);
+    margin-bottom: 0;
   }
 }
 
@@ -754,42 +895,250 @@
   }
 }
 
-/* ========================================================== footer §3.6 */
-/* The gradient is not a backdrop here, it is the constraint. Paper at the
-   top, cobalt at the bottom, so how far down a piece of text sits decides
-   what colour it is allowed to be. Measured against §6's AA floor, on the
-   gradient exactly as §3.6 writes it:
+/* ===================================================== the dark passage */
+/* About fades out of --paper into --void and stays there; the footer picks
+   --void up as its first stop. From the top of the About section to the
+   bottom of the page is one continuous dark run.
 
-     token         4.5:1 (text)        3:1 (borders, focus)
-     --ink         top down to 86%     top down to 97%
-     --ink-muted   top down to 40%     top down to 65%
-     --rule        from 96% down       from 86% down
-     --accent      top down to 61%     top down to 72%
-     --paper       from 90% down       from 81% down
+   The fade lives entirely inside the About section's own top padding, and
+   the length is absolute (200px), not a percentage, so it cannot stretch or
+   compress as the section's content grows. Content starts well below it, so
+   nothing is ever read against a mid-grey.
 
-   Three things follow, and every rule below depends on them: nothing in
-   this footer is --ink-muted, no hairline in it is --rule, and the
-   colophon is the only thing allowed past 90%. */
+   Everything inside is repointed through three custom properties rather than
+   a rule per element: --eyebrow-fg, and overrides of --ink and --rule that
+   the existing chapter, CV-button and media rules already read. That is why
+   this block is short — it changes what the tokens mean here, not what the
+   components do. */
 
-/* Rhythm's --s-8 keeps the top edge, where it is doing the §1.4 job — the
-   gap from the About section. The bottom edge gives way, and has to:
-   symmetric padding holds the colophon 160px clear of the bottom, which on
-   any real footer height lands it around 82%, in the band where neither
-   --ink nor --paper clears AA. --s-3 puts it past 90% instead. The one
-   place the section rhythm bends; flagged in STATUS. */
+.about {
+  /* No hairline on this seam. layout.css draws one between every pair of
+     sections, and here it landed as a dark line across the --paper end of
+     the fade — the section repoints --rule to --void-rule for its own
+     interior, and the border read that. The gradient is the transition; a
+     rule across it only cuts the fade in half. Same reasoning as the
+     footer, which has never had one for the same reason. */
+  border-top: 0;
 
-.site-footer {
-  padding-bottom: var(--s-3);
-
-  background: linear-gradient(180deg,
-    var(--paper) 0%,
-    var(--accent-dim) 55%,
-    var(--accent) 100%);
+  /* "More separation from the impact section" — the fade needs somewhere to
+     happen, and the extra air is what makes the change of ground read as
+     deliberate rather than abrupt. Overrides layout.css's rhythm, which is
+     two type selectors against this one class. */
+  padding-top: calc(var(--s-8) + var(--s-6));
+  background: linear-gradient(180deg, var(--paper) 0, var(--void) 200px);
+  color: var(--paper);
 }
 
-/* No hairline above the footer. The gradient's first stop is --paper, the
-   same ground the About section sits on, so the two meet seamlessly and a
-   rule would only cut the fade in half. */
+@media (max-width: 767px) {
+  .about {
+    padding-top: calc(var(--s-6) + var(--s-6));
+    background: linear-gradient(180deg, var(--paper) 0, var(--void) 120px);
+  }
+}
+
+/* One place to repoint the tokens the components below already read. */
+.about {
+  --ink: var(--paper);
+  --ink-muted: var(--paper-muted);
+  --rule: var(--void-rule);
+  --eyebrow-fg: var(--paper-muted);
+  --paper-alt: #141414;   /* the chapter-image placeholder's fill */
+
+  /* --accent is 3.13:1 on --void, under the 4.5 that a link hover needs.
+     Repointing it here carries every rule that already reads it — base.css's
+     a:hover, the CV button's hover border, and the :focus-visible ring —
+     without a single one of them being restated. */
+  --accent: var(--accent-lift);
+}
+
+/* The chapter hairline and the year marker come from §3.5's rules and now
+   read the repointed tokens, so nothing there needs restating. The one
+   thing that does: the CV button's border was --ink for a 3:1 boundary on
+   --paper, and --ink is now --paper, which is exactly right on --void. */
+
+/* ------------------------------------------------ education & experience */
+
+.resume,
+.toolkit {
+  margin-top: var(--s-7);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--void-rule);
+}
+
+.block-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: var(--s-5);
+}
+
+.resume-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-6);
+}
+
+@media (min-width: 768px) {
+  .resume-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-5);
+  }
+}
+
+.resume-col-title {
+  color: var(--paper-muted);
+  padding-bottom: var(--s-1);
+  border-bottom: 1px solid var(--void-rule);
+  margin-bottom: var(--s-3);
+}
+
+.resume-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resume-item + .resume-item {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--void-rule);
+}
+
+.resume-date {
+  color: var(--paper-muted);
+  margin-bottom: var(--s-1);
+}
+
+.resume-role {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.resume-place {
+  color: var(--paper-muted);
+  margin-bottom: var(--s-2);
+}
+
+.resume-desc {
+  color: var(--paper-muted);
+}
+
+/* ---------------------------------------------------------- the toolkit */
+/* Ten tools, and the grid is told to be 5 x 2 rather than left to auto-fill.
+   auto-fill packed as many as fitted, which at a wide shell was eight on the
+   first row and two orphaned on the second. A fixed count keeps the two rows
+   even at every width above 768, which is what makes it read as a set. */
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4) var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 480px) {
+  .tools-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .tools-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+  text-align: center;
+}
+
+/* The light tile. Four of the ten icons are drawn in near-black and would
+   vanish on --void; the other six are brand-coloured and must not be
+   inverted to rescue them. A --paper tile gives all ten the ground they
+   were drawn for, and reads as deliberate rather than as a patch. */
+/* Flex rather than grid, with line-height zeroed. The ten icons have wildly
+   different intrinsic shapes — Figma is 120×90, Affinity 249×283, Adobe
+   240×234 with no viewBox at all — and several are Illustrator exports with
+   whitespace baked into the viewBox. Centring the box was not enough on its
+   own; the img needed an explicit object-position and a zero line-height so
+   no inline leading could push it off the vertical centre. */
+.tool-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  line-height: 0;
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+/* Two of the ten — DaVinci and Adobe — are effectively raster: DaVinci is a
+   145 KB gradient mesh and Adobe is a 56 KB embedded PNG, both for something
+   drawn at 32px. They ship as 192px AVIF (4.7 KB and 6.7 KB) with the SVG
+   kept as the <picture> fallback. The other eight are real vectors and stay
+   as they are. display:contents so the img sizes against the tile. */
+.tool-icon picture {
+  display: contents;
+}
+
+.tool-icon img {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  object-position: center center;
+}
+
+.tool-name {
+  color: var(--paper-muted);
+}
+
+/* ========================================================== footer §3.6 */
+/* The gradient now runs --void to --accent, not --paper to --accent, because
+   the About section above it ends black and the two are one continuous dark
+   passage. That change deletes a whole class of problem rather than moving
+   it: on the old gradient every token had a depth past which it stopped
+   clearing AA, and the rules below were written around a measured table of
+   those depths.
+
+   On --void → --accent there is exactly one legible colour and it is legible
+   everywhere: --paper is 20.4:1 at the top and 6.54:1 at the cobalt end,
+   with the worst point of the run being that 6.54. So everything in this
+   footer is --paper — text, hairlines, focus rings, all of it — and nothing
+   here depends on how far down it sits any more.
+
+   What that retires: the per-depth table, the --s-3 bottom padding that
+   existed only to push the colophon past 90%, and the :focus-visible ground
+   that existed only because --accent stopped clearing 3:1 around 72%. The
+   rhythm is symmetric again, which also settles §1.4's "one rule, no
+   exceptions" for this section. */
+
+.site-footer {
+  color: var(--paper);
+
+  background: linear-gradient(180deg,
+    var(--void) 0%,
+    var(--accent) 100%);
+
+  /* Not --paper-muted. That token clears AA on --void but tops out at 4.16:1
+     against the cobalt end, and the eyebrow sits high enough that it would
+     look fine and measure wrong. One colour, everywhere, is the rule here. */
+  --eyebrow-fg: var(--paper);
+}
+
+/* No hairline above the footer, still. The gradient's first stop is --void,
+   the same ground the About section ends on, so the two meet seamlessly. */
 
 /* ------------------------------------------------------- the headline */
 /* Oversized, per §3.6 — §1.3 has no row for it, so this is a read. The
@@ -799,6 +1148,19 @@
 .footer-headline {
   font-size: clamp(2.75rem, 8vw, 6rem);
   line-height: 1;
+}
+
+/* ------------------------------------------------------- the lead line */
+/* Sits between the headline and the two columns. Body face, not mono: it is
+   a sentence, where everything else in this footer is a label or a field.
+   --measure keeps it to one comfortable line length rather than letting it
+   run the full shell under a 96px headline. */
+
+.contact-lead {
+  margin-top: var(--s-4);
+  max-width: var(--measure);
+  font-size: 1.125rem;
+  line-height: 1.6;
 }
 
 /* ---------------------------------------------------------- the columns */
@@ -868,10 +1230,7 @@
   display: none;
 }
 
-/* --ink, not --ink-muted, for the same reason every other word in this
-   footer is: muted gives out at 40% of the gradient. Both of these sit at
-   the form's own depth or higher — the confirmation is shorter than the
-   form, so the footer gets shorter and the text moves up, never down. */
+/* --paper, like everything else in this footer. */
 
 .form-success h3 {
   margin-bottom: var(--s-2);
@@ -879,16 +1238,16 @@
 
 .form-success,
 .form-error {
-  color: var(--ink);
+  color: var(--paper);
 }
 
 /* The confirmation takes focus when it replaces the form, so it needs a
-   ring. Same mechanism as everything else in this footer: it paints its own
-   --paper ground rather than trusting a fixed colour over a gradient. */
+   ring. --paper, not --accent: on this gradient --accent is 1:1 against its
+   own bottom stop, and --paper is the one colour legible the whole way
+   down. Offset, because there is no longer any need to paint a ground. */
 .form-success:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 0;
-  background: var(--paper);
+  outline: 2px solid var(--paper);
+  outline-offset: 4px;
 }
 
 .form-error {
@@ -903,10 +1262,9 @@
   gap: var(--s-1);
 }
 
-/* Bottom border, no box — §3.6. The rule is --ink rather than --rule:
-   over this gradient a --rule hairline never reaches 3:1 above 86%, so it
-   would fade out at exactly the depth the fields sit at. appearance:none
-   and the zeroed radius stop iOS drawing its own rounded box back on. */
+/* Bottom border, no box — §3.6. --paper, like everything else here.
+   appearance:none and the zeroed radius stop iOS drawing its own rounded
+   box back on. */
 
 .contact-form input,
 .contact-form textarea {
@@ -915,76 +1273,64 @@
   -webkit-appearance: none;
   appearance: none;
   border: 0;
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 1px solid var(--paper);
   border-radius: 0;
   background: none;
-  color: var(--ink);
+  color: var(--paper);
 }
 
 .contact-form textarea {
   resize: vertical;
 }
 
-/* The card CTA idiom of §3.3 — mono at caption metrics, ink not muted,
-   because it is the action and not the meta — over the same ruled line the
-   fields carry. Accent on hover is the link-hover site of §1.2, not a new
-   one. The focus ring is base.css's, which §3.6 asks for by name. */
+/* The card CTA idiom of §3.3 — mono at caption metrics — over the same
+   ruled line the fields carry. Hover does not go --accent here: the button
+   sits low in the gradient where --accent is close to the ground it would
+   be painted on. It dims to 70% instead, which reads as a response on any
+   depth of this run. */
 
 .form-submit {
   justify-self: start;
   margin-top: var(--s-2);
   padding-bottom: var(--s-1);
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 1px solid var(--paper);
   font-family: var(--font-display);
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
-  transition: color 200ms ease, border-color 200ms ease;
+  transition: opacity 200ms ease;
 }
 
 .form-submit:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  opacity: 0.7;
 }
 
 /* ------------------------------------------------------- the bottom bar */
-/* The only text that reaches the accent end, and the reason §3.6 has a
-   rule about it. --paper, never --ink. .meta gives it caption size and
-   the mono face; the colour here outranks .meta's muted by load order,
-   not by weight.
+/* .meta gives it caption size and the mono face; the colour here outranks
+   .meta's muted by load order, not by weight.
 
-   The top margin is doing structural work, not decoration. Everything
-   above it has to stay above 72% of the footer or the --accent focus ring
-   on the submit button drops under 3:1. With --s-3 of bottom padding the
-   colophon block is ~44px, so that holds as long as the footer's top edge
-   through the bottom of the button measures 709px or less. Estimated at
-   ~660 desktop and ~750 mobile — the mobile end is tight and wants a real
-   measurement at step 13. Flagged in STATUS. */
+   The top margin is now ordinary spacing. It used to be structural — it
+   held everything above it above 72% of the footer, where the --accent
+   focus ring stopped clearing 3:1 — and that constraint is gone with the
+   --paper-on-everything rule above. --s-8 is the rhythm's own step. */
 
 .colophon {
-  margin-top: calc(var(--s-8) + var(--s-6));
+  margin-top: var(--s-8);
   color: var(--paper);
 }
 
 /* ------------------------------------------------------------- focus */
-/* Item 18, resolved. The submit button lands ~73% down the gradient at
-   1440 and ~76% at 375, where --accent is 2.6:1 against the ground and
-   misses the 3:1 a focus indicator needs. Same answer as the nav: focus
-   paints --paper under itself, which puts a 6.54:1 edge on the ring's
-   inner side and holds at any depth the footer ever grows to. The contact
-   links sit higher, around 35–50%, where --accent already clears on its
-   own — they are included so the rule cannot go stale if the footer's
-   content changes length.
+/* The ring is --paper here, not base.css's --accent. Over a gradient that
+   ends in --accent, an --accent ring is 1:1 against its own ground at the
+   bottom of the run — invisible exactly where the submit button sits.
+   --paper is 20.4:1 at the top and 6.54:1 at the cobalt end, so one colour
+   holds the whole way down and no element's depth has to be measured.
 
-   §3.6's "bottom-border inputs, no boxes" describes the form at rest.
-   Nothing here paints while nothing has keyboard focus, and §6 keeps its
-   --accent ring rather than trading it for an --ink one. */
+   This also replaces the paint-your-own-ground trick the old gradient
+   needed. §3.6's "no boxes" is now literally true, at rest and on focus. */
 
-.site-footer a:focus-visible,
-.contact-form input:focus-visible,
-.contact-form textarea:focus-visible,
-.form-submit:focus-visible {
-  background: var(--paper);
-  outline-offset: 0;
+.site-footer :focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
 }
 
 /* ------------------------------------------------------ reduced motion */
@@ -994,5 +1340,72 @@
 @media (prefers-reduced-motion: reduce) {
   .form-submit {
     transition: none;
+  }
+}
+
+/* ========================================================== cursor ring */
+/* Replaces the native pointer. The native one is hidden ONLY under
+   .has-cursor-ring, a class ui.js adds after it has checked for a fine
+   hovering pointer and for reduced motion — so JS off, a blocked script, a
+   touch device or a reduced-motion preference all keep the browser's own
+   cursor. Nothing here hides a pointer that this stylesheet cannot give
+   back.
+
+   mix-blend-mode: difference is what lets one ring work on --paper, on
+   --paper-alt, on --void and on cobalt without ever being told which it is
+   over: it inverts whatever is beneath it, so it is dark on light grounds
+   and light on dark ones by construction. */
+
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--paper);
+  border-radius: 50%;
+  pointer-events: none;   /* must never intercept what it is pointing at */
+  opacity: 0;
+  mix-blend-mode: difference;
+  transition: opacity 200ms ease, width 160ms ease, height 160ms ease,
+              border-radius 160ms ease, background-color 160ms ease;
+  will-change: transform;
+}
+
+/* Only ever shown by the script, and only after the first real pointer
+   position is known — otherwise it flies in from the top-left corner. */
+.cursor-ring.is-visible {
+  opacity: 1;
+}
+
+/* Over anything interactive. Filled rather than merely larger, so the state
+   is legible at a glance and not just a size the eye has to compare. */
+.cursor-ring.is-active {
+  width: 44px;
+  height: 44px;
+  background: var(--paper);
+}
+
+/* Over a text field the ring becomes a bar. This is the one affordance lost
+   by hiding the native I-beam, so it is given back explicitly. */
+.cursor-ring.is-text {
+  width: 2px;
+  height: 26px;
+  border-radius: 0;
+  background: var(--paper);
+}
+
+.has-cursor-ring,
+.has-cursor-ring * {
+  cursor: none;
+}
+
+/* Belt: if the query flips to reduced motion, ui.js removes the class and
+   the native cursor returns. This rule means the ring cannot be left
+   easing on screen in the frame before that happens. */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring {
+    display: none;
   }
 }

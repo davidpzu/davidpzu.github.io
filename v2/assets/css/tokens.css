@@ -8,7 +8,46 @@
   --ink-muted:  #6E6E68;  /* captions, meta, mono labels */
   --rule:       #E2E2DC;  /* hairlines, card borders */
   --accent:     #1F3BFF;  /* cobalt — links, focus ring, caret, metric numerals */
-  --accent-dim: #E8EBFF;  /* accent wash, metric box hover, footer gradient stop */
+  --accent-dim: #E8EBFF;  /* accent wash, .kw highlight */
+
+  /* The dark passage. About fades into --void and stays there through the
+     education, experience and toolkit blocks; the footer then runs --void
+     to --accent. One continuous dark run to the bottom of the page.
+     Everything written on it is --paper: 20.4:1 on --void, 6.54:1 on
+     --accent, so it clears AA at every point of the gradient without
+     needing the per-depth table the old --paper → --accent footer did. */
+  --void:       #000000;  /* the dark ground */
+  --void-rule:  #2A2A2A;  /* hairlines on --void, where --rule would vanish */
+
+  /* Background grid. Two values because one fixed colour cannot read on
+     both grounds: --grid-line on --paper, --grid-line-dark on --void. */
+  --grid-line:      #EDEDE7;
+  /* White at 8% rather than a fixed grey. Over --void it is a faint light
+     hairline; over the --paper end of the About fade it is white on white,
+     so the grid simply is not there yet and arrives as the ground darkens.
+     A fixed dark grey would have been a harsh black line across the fade. */
+  --grid-line-dark: rgba(255, 255, 255, 0.08);
+
+  /* Muted text on --void only. 8.79:1 there. Deliberately NOT used in the
+     footer: no muted tone clears 4.5:1 against the cobalt end of that
+     gradient — the best candidate manages 4.16 — so the footer is --paper
+     throughout and this token never travels into it. */
+  --paper-muted: #A8A8A2;
+
+  /* Cobalt lifted for the dark passage. --accent itself is only 3.13:1 on
+     --void, under the 4.5 a hover colour or a link needs, so .about
+     repoints --accent to this and every rule that already reads --accent —
+     link hover, the CV button, the focus ring — follows without restating.
+     7.11:1, and still recognisably the same blue. */
+  --accent-lift: #7C8DFF;
+
+  /* Nav link colours. These are SOURCE values for mix-blend-mode: difference,
+     not the colours you see — the painted result is |backdrop − source| per
+     channel, so the logic is inverted: light sources render dark on --paper
+     and light on --void. Putting --ink-muted here would render near-white on
+     near-white. Read §3.1 before changing either. */
+  --nav-rest:   #B4B4B4;
+  --nav-active: #FFFFFF;
 
   /* Type — design.md §1.3 */
   --font-display: "Geist Mono", ui-monospace, SFMono-Regular, monospace;

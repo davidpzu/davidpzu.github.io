@@ -20,6 +20,7 @@ Non-negotiable. Do not propose alternatives.
 - **`<meta name="robots" content="noindex">`** on every `/v2` page until promotion. Remove at promotion.
 - **JS is progressive enhancement.** Every section readable and navigable with JavaScript disabled. JS adds motion, never content.
 - **Accessibility floor:** visible keyboard focus, `prefers-reduced-motion` respected, semantic landmarks, AA contrast minimum, no hover-only content.
+- **The native cursor is never hidden by CSS alone.** `cursor: none` lives under a class `ui.js` adds after its guards pass, so no failure mode — a parse error, a blocked script, JS off, a touch device, reduced motion — can leave a visitor with no pointer and no way to get one back. §3.8.
 
 ---
 
@@ -33,17 +34,41 @@ Non-negotiable. Do not propose alternatives.
 
 ```css
 :root {
+  /* the light half of the page */
   --paper:      #FCFCFA;  /* page background — barely warm, not cream */
   --paper-alt:  #F4F4F0;  /* alternating section band */
   --ink:        #14150F;  /* primary text */
   --ink-muted:  #6E6E68;  /* captions, meta, mono labels */
   --rule:       #E2E2DC;  /* hairlines, card borders */
   --accent:     #1F3BFF;  /* cobalt — links, focus ring, caret, metric numerals */
-  --accent-dim: #E8EBFF;  /* accent wash, metric box hover, footer gradient stop */
+  --accent-dim: #E8EBFF;  /* accent wash, metric box hover, .kw highlight */
+
+  /* the dark passage — About through the bottom of the footer */
+  --void:        #000000;  /* the dark ground */
+  --void-rule:   #2A2A2A;  /* hairlines on --void, where --rule vanishes */
+  --paper-muted: #A8A8A2;  /* muted text on --void ONLY. Never in the footer */
+  --accent-lift: #7C8DFF;  /* cobalt lifted so it clears AA on --void */
+
+  /* the background grid */
+  --grid-line:      #EDEDE7;
+  --grid-line-dark: rgba(255, 255, 255, 0.08);
+
+  /* nav links — SOURCE values for mix-blend-mode: difference, not the
+     colours you see. Light sources render dark on --paper. §3.1 */
+  --nav-rest:   #B4B4B4;
+  --nav-active: #FFFFFF;
 }
 ```
 
-Accent appears in **five places only**: link hover, focus ring, the hero caret, metric numerals, footer gradient. Nowhere else. Electric cobalt reads engineered against near-white and stays clear of the warm-cream palette that every templated portfolio lands on.
+Electric cobalt reads engineered against near-white and stays clear of the warm-cream palette that every templated portfolio lands on.
+
+**The "accent appears in five places only" rule is retired.** It was never true — §3.2's availability dot and §3.3's card-hover border made seven before a line of it was built — and the page has since grown a scroll-progress bar, four metric icons, a spinning star and a results bullet. The rule that replaces it is narrower and actually holds: **accent marks interaction or measurement, never decoration.** Links, focus, the caret, figures, the progress bar, the metric icons. If a new accent mark is neither something you can act on nor something that was counted, it does not get accent.
+
+**Four tokens exist only because one colour cannot cross the dark passage.** Two repoint an existing colour for `--void`; two are blend-mode sources.
+
+- `--paper-muted` is the muted tone on `--void` (8.79:1). It is **banned in the footer**: no muted tone clears 4.5:1 against the cobalt end of that gradient — the best candidate manages 4.16 — so the footer is `--paper` for everything, full stop.
+- `--accent-lift` exists because `--accent` is **3.13:1 on `--void`**, under the 4.5 a link hover needs. `.about` repoints `--accent` to it, which carries every rule that already reads `--accent` — `a:hover`, the CV button, the focus ring — without one of them being restated.
+- `--nav-rest` and `--nav-active` are **not colours, they are blend sources.** The nav is `mix-blend-mode: difference`, so what gets painted is `|backdrop − source|` and the logic inverts: a light source renders dark on `--paper` and light on `--void`. This is what lets one nav be legible on both halves of the page with no scroll tracking. Read §3.1 before touching either.
 
 ### 1.3 Type tokens
 
@@ -62,6 +87,7 @@ Mono is the display face — headlines, section titles, nav, metrics, eyebrows. 
 | Role | Size | Face | Tracking | Weight |
 |---|---|---|---|---|
 | Hero name | `clamp(2.5rem, 7vw, 5rem)` | display | `-0.03em` | 500 |
+| Positioning line | `1.5rem` (`1.25rem` ≤480) | display | `-0.02em` | 400 |
 | Section title | `clamp(1.75rem, 3.5vw, 2.75rem)` | display | `-0.02em` | 500 |
 | Metric numeral | `clamp(2rem, 4.5vw, 3.5rem)` | display | `-0.04em` | 500 |
 | Chapter year | `clamp(1.5rem, 3vw, 2.25rem)` | display | `-0.02em` | 400 |
@@ -69,6 +95,11 @@ Mono is the display face — headlines, section titles, nav, metrics, eyebrows. 
 | Body | `1.0625rem / 1.65` | body | `0` | 400 |
 | Eyebrow / nav | `0.75rem` | display | `0.12em`, uppercase | 500 |
 | Caption / meta | `0.8125rem` | display | `0.02em` | 400 |
+| Block title (§3.5) | `clamp(1.5rem, 3vw, 2rem)` | display | `-0.02em` | 500 |
+
+**The positioning line is the one size added after the scale was set**, and it earns the row: it used to be `.meta` reading "Senior Product Designer · Madrid", a caption-weight fact. The location half now lives in the hero's top-right corner, and what is left — "Shipping B2B SaaS that gets measured" — is a claim, not a caption. It sits above body size and below the `h1`, in `--ink`.
+
+Two sizes are deliberately **not** in this table because they are local overrides with their reasons recorded where they live: the staircase figure lowers §1.3's metric ceiling to `clamp(1.5rem, 3vw, 2.5rem)` so `41% → 59%` fits its box, and the footer headline is `clamp(2.75rem, 8vw, 6rem)`, which §1.3 has no row for.
 
 ### 1.4 Space and layout
 
@@ -84,9 +115,27 @@ Whitespace is the mechanism, not an afterthought. Strict scale, used consistentl
 }
 ```
 
-- Section rhythm: `--s-8` desktop, `--s-6` mobile. **One rule, no exceptions.**
+- Section rhythm: `--s-8` desktop, `--s-6` mobile. **One rule, one exception**, and the exception is `.about`: it needs `calc(var(--s-8) + var(--s-6))` on top because that padding is where the fade into `--void` happens. See §3.5.
 - 12-column grid, `--s-3` gutter, `--shell` container.
-- Hairline `1px solid var(--rule)` between major sections. No shadows except card hover.
+- Hairline `1px solid var(--rule)` between major sections. **Two seams deliberately have none**: About→footer, and impact→About. Both are places where a gradient is doing the transition, and a rule across a fade only cuts it in half. No shadows except card hover.
+
+#### The background grid
+
+Three hairlines running the full height of every section: the shell's **left edge, centre, and right edge**.
+
+```
+│                    │                    │
+│   DAVID PRIETO ZURITA                   │
+│                    │                    │
+↑                    ↑                    ↑
+shell L           centre              shell R
+```
+
+- They are the shell's own edges, not decoration near them, so the `h1`, every section title, the card grid and the chapter column all sit on a line that is actually drawn.
+- **Drawn per section (`main > section::before`), not as one fixed layer behind the page.** A layer behind would be covered by the About section's and the footer's own `--void` background. A pseudo-element is inside the section, so it paints on top of that background — and each section can therefore set its own line colour, which is what lets the grid survive the dark passage.
+- Stacking is explicit, not inherited: the section is the positioning parent, `::before` takes `z-index: 0` (above the section background), `.shell` takes `z-index: 1` above that. Nothing relies on the subtleties of negative `z-index` against a parent's background.
+- `.is-dark` flips `--grid-line` to `--grid-line-dark`, which is **white at 8%, not a fixed grey**. Over `--void` that is a faint light hairline; over the `--paper` end of the About fade it is white on white, so the grid simply is not there yet and arrives as the ground darkens. A fixed dark grey would have drawn a harsh black line across the fade.
+- Full-bleed media (`.cs-hero-media`, `.cs-figure`) sits above the grid: a hairline crossing a screenshot reads as an artefact rather than as structure.
 
 ### 1.5 Signature element
 
@@ -112,9 +161,11 @@ Everything else on the page stays quiet.
 |---|---|---|
 | 1 | Hero | Positioning + the signature rotator |
 | 2 | Selected work | 3 cards: 1 live, 2 in progress |
-| 3 | Impact | 4 metric boxes in a rising staircase, hover/focus discloses context |
-| 4 | About — chapters | Scrolled timeline, replaces the wall of text |
+| 3 | Impact | 4 metric boxes in a rising staircase, each with an icon, figure, label and note |
+| 4 | About — chapters | Scrolled timeline, then background and toolkit. Enters the dark passage |
 | 5 | Get in touch | Gradient footer, contact details, Formspree |
+
+**The page has two halves, and the seam is inside the About section.** Everything from the hero through Impact sits on `--paper`/`--paper-alt`. About fades into `--void` in its own top padding and stays there; the footer picks `--void` up as its first stop and runs to `--accent`. From the top of About to the bottom of the page is one continuous dark run. §3.5 and §3.6.
 
 ---
 
@@ -127,7 +178,7 @@ Everything else on the page stays quiet.
 Three bare links, fixed to the top of the page. Same three items as v1, same targets, same mono treatment. **No enclosure of any kind** — no pill, no border, no radius, no fill, no blur, no shadow.
 
 ```
-   [HOME]   PROJECTS   ABOUT
+            [HOME]   PROJECTS   ABOUT              centred, no enclosure
    ─────────────────────────────────────────────
    DAVID PRIETO ZURITA
 ```
@@ -136,44 +187,72 @@ Three bare links, fixed to the top of the page. Same three items as v1, same tar
 - Brackets are real characters in the DOM (`<span class="bracket">[</span>`), not `::before`/`::after` content, so copy-paste behaves.
 - **The brackets carry `aria-hidden="true"`** (added at step 14). They are a visual state indicator, and on inactive items they are invisible and encode nothing — a screen reader announcing "[ Projects ]" there is reading punctuation for no reason. `aria-current="page"` is what carries the state to assistive tech. `aria-hidden` affects the accessibility tree only, so they remain real, selectable characters.
 - Mono, `0.75rem`, `0.12em` tracking, uppercase. `--ink-muted` at rest, `--ink` when active or hovered.
-- **Left-aligned to `--shell`**, in line with the hero name and every section title. The pill was centred and so needed no relationship to anything; bare links do. The `<nav>` is fixed with `left: 0; right: 0` and carries an inner `<div class="shell">` — the same mechanism every section uses, so the two cannot drift apart at any width.
+- **Centred.** This deliberately gives up the alignment with the `h1` and the section titles that the left-aligned version was built for — David's call. The `<nav>` is still fixed with `left: 0; right: 0` and still carries an inner `<div class="shell">`, which keeps the links inside the page's own gutters at every width.
 - Because it spans the viewport while painting nothing, the `<nav>` carries `pointer-events: none`, restored to `auto` on the links alone. An invisible full-width strip must not swallow clicks.
-- Fixed `1.25rem` from the top, and it stays for the whole page. It does not change on scroll — there is no longer anything to change.
+- Fixed `1.25rem` from the top for the whole page.
+- **It hides while you scroll and comes back when you stop.** `ui.js` adds `.is-hidden`; three states, in priority order: within 24px of the top it is always visible; a scroll event just fired means hidden; **350ms with no scroll event** means visible again. The 24px threshold is not 0 so the sub-pixel scroll a browser performs when restoring position cannot flicker it on arrival. The idle timer restarts on every scroll event, so a long scroll does not reveal it mid-way.
+  - The idle timer is the whole point: a scroll-direction check alone only reveals on an upward flick, and the requirement is that it returns while you sit still reading.
+  - `visibility` is animated alongside `opacity` so the links cannot be tabbed to or clicked while invisible. `opacity` alone would leave three live but unreachable-looking targets floating over the content.
+  - With `ui.js` absent the nav is simply always visible. Nothing about the page depends on it hiding.
 - Link target height is 28px: `0.35rem` vertical padding on `0.75rem`/1.4 text. The bare line box is 16.8px and would miss WCAG 2.5.8's 24px floor. Vertical padding only — the horizontal separation is the list's `--s-2` gap, and side padding would push the first link off the shell's left edge.
 - Do not add items. Do not re-centre them. Do not put a ground back behind them without first deciding the footer question below.
 
-**Nothing is painted behind the links, so their contrast is whatever scrolls under them.** Measured, on `--ink-muted` at `0.75rem`, against §6's 4.5:1 floor:
+**Nothing is painted behind the links, so their contrast is whatever scrolls under them.** When About went `--void` that became a real failure across most of the page's height, and the fix is `mix-blend-mode: difference` on the nav.
 
-| ground | `--ink-muted` | `--ink` |
-|---|---|---|
-| `--paper` — hero, work, about | 4.99 | 17.87 |
-| `--paper-alt` — impact band | 4.65 | 16.65 |
-| footer gradient at 55% | 4.34 | 15.52 |
-| footer gradient at 80% | **1.67** | 5.96 |
-| footer gradient at 100% | **1.31** | **2.73** |
+**The blend inverts the backdrop, so the links are dark on light grounds and light on dark ones by construction** — no scroll position to track, no second colour pair to keep in sync, one declaration that is correct on every ground the page has or ever grows.
 
-Over the page proper this clears AA, though `--paper-alt` and the footer's top edge are thin. Over the bottom half of the footer the links effectively vanish, and `--ink` does not rescue them — nothing is legible on cobalt except `--paper`. This is a known and accepted cost of removing the enclosure. If it has to be solved, the two exits are a `--paper` link colour that swaps in over the footer, or restoring a ground behind the links. There is also a collision no contrast ratio describes: the links now pass directly over card borders and chapter text.
+Three things about it are load-bearing:
 
-**Keyboard focus is a separate problem, and it is already solved — do not undo it.** The resting text above is a judgement call; a focus ring is not. Over the footer an `--accent` ring on cobalt is `--accent` on `--accent`: 1:1, completely invisible, a straight WCAG failure. No single ring colour survives the whole page — `--ink` is 2.73:1 on cobalt, `--paper` is 1:1 on `--paper`. So `.nav-link:focus-visible` paints its own ground: `background: var(--paper)` with `outline-offset: 0`, which puts the ring flush against `--paper` at 6.54:1 whatever is scrolling underneath. §6 keeps its `--accent` ring, and nothing paints unless a link has keyboard focus.
+- **The blend sits on `.nav`, not on `.nav-link`.** An element blends with its backdrop within its *parent* stacking context, and `.nav` is one (fixed + `z-index: 100`). A blend on the links would find nothing inside `.nav` to blend with and do effectively nothing. On `.nav` the backdrop is the root context — the page. `.site-header` creates no stacking context, so the chain holds. **Do not move it down to the links, and do not give `.site-header` a `z-index` or `isolation`.**
+- **The colour logic is inverted, and the tokens are sources, not colours.** What gets painted is `|backdrop − source|` per channel, so a *light* source renders dark on `--paper` and light on `--void`. `--ink-muted` in there renders near-white on near-white. `--nav-rest: #B4B4B4` and `--nav-active: #FFFFFF` (§1.2) carry that warning at the point of definition.
+- **The focus ring no longer paints its own ground.** A white ring under difference is the exact inverse of whatever is beneath it, so `outline: 2px solid var(--nav-active)` with a 2px offset needs no ground and no measurement. §3.6's "no boxes" is now literally true for the nav too.
+
+Measured as shipped, against §6's floors of 4.5:1 for text and 3:1 for a focus indicator:
+
+| ground | resting | active | focus ring |
+|---|---|---|---|
+| `--paper` — hero, work | 8.92 | 20.06 | 20.06 |
+| `--paper-alt` — impact band | 9.44 | 17.82 | 17.82 |
+| `--void` — About, footer top | 10.13 | 21.00 | 21.00 |
+| footer gradient at 50% | 4.60 | 10.36 | 10.36 |
+| footer gradient at 100% | **1.64** | **3.86** | 3.86 |
+
+**The bottom of the footer still fails for text, and no source colour fixes it.** Inverting a saturated blue produces a yellow whose luminance sits close to cobalt's own, so even pure white only reaches 3.86 there. Resting text drops under 4.5 below **52%** of the footer; the active item holds to **92%**. The focus ring clears the entire run.
+
+That is a large net improvement rather than a solution: the failure went from *all of About plus all of the footer* — most of the page's height — to *the bottom half of the footer*, which is better than the original pre-dark-passage build managed. The remaining lever, if it turns out to matter at the page, is having `ui.js` hide the nav outright once the footer is in view; it already runs a scroll handler, so it is cheap. Not done, because it wants an eye on the real page first.
+
+The other two exits considered and **not** taken, recorded so they are not re-proposed: swapping the link colour over the dark passage from `ui.js` (predictable, but a second colour pair and a scroll-position check to keep in sync), and putting a ground back behind the links (the thing removing the pill was meant to avoid).
+
+**Keyboard focus is solved and stays solved.** See the ring row above — it is the one thing that clears at every point of the page.
+
+There is also a collision no contrast ratio describes: the links pass directly over card borders and chapter text.
 
 ### 3.2 Hero
 
 ```
 ┌──────────────────────────────────────────────┐
-│  [HOME]  PROJECTS  ABOUT                     │  fixed, no enclosure
+│           [HOME]  PROJECTS  ABOUT            │  fixed, centred, no enclosure
+│                                              │
+│  ✦ OPEN TO WORK    MADRID, ES · REMOTE CET…  │  the hero's own two corners
 │                                              │
 │  DAVID PRIETO ZURITA                         │  display, tight
-│  Senior Product Designer · Madrid            │  mono, muted
+│  Senior Product Designer · Shipping B2B      │  mono, 1.5rem, --ink
+│  SaaS that gets measured                     │
 │                                              │
 │  currently > [rotating line] ▮               │  the signature
 │                                              │
 │  See the work →                              │  single text link
-│                                              │
-│  ─────────────────────────────────────────   │
-│  ● AVAILABLE FOR SENIOR PRODUCT ROLES        │  eyebrow, accent dot
 └──────────────────────────────────────────────┘
 ```
 
+**The two corner items are the hero's, not the viewport's.** They sit inside `.shell` at the top of the hero block, so they land on the same two grid lines the `h1` does, and they scroll away with the hero rather than sitting fixed over the page. `justify-content: space-between` puts availability left and location right; below about 620px they wrap and both stay left.
+
+- **"Open to work"**, with a four-point star that turns. 8s linear, and deliberately that slow — at anything faster it reads as a loading spinner, which is the opposite of what it means. The star is `aria-hidden`: the text carries the meaning. Under `prefers-reduced-motion` it holds still.
+- **"Madrid, ES · Remote CET/EST-friendly"** right. This is why the positioning line no longer says Madrid.
+- The old bottom-of-hero availability line and the `<hr>` above it are **gone**. Do not put them back — the fact now lives in the corner, and repeating it would be the same claim twice on one screen.
+- The same wording is used in the footer contact list ("Open to work"), so the site says one thing in one voice.
+
+- **The positioning line is `.hero-role`**, and it is not `.meta` any more — see §1.3. It wraps to two lines below about 1024px and three at 375px. That is intended: the line is 62 glyphs, and forcing it onto one would mean shrinking it back to the size it just came up from.
 - **No CV download link in the hero.** It lives in the About section only.
 - Content constrained to `--shell`. Not `100vh` — let the work peek above the fold.
 - Rotator: 4s hold, 400ms crossfade, `aria-live="off"` so it doesn't spam screen readers.
@@ -193,10 +272,11 @@ Over the page proper this clears AA, though `--paper-alt` and the footer's top e
 └───────────────────────┘  └───────────────────────┘
 ```
 
+- **Section eyebrow: "See the process."** Every section title now carries one — see §3.9.
 - **Three cards: SACEM (live), Sacem Collab+ (WIP), Sanofi Connect (WIP).** The two WIP case study pages get built after v2 ships.
 - **No metrics on the cards.** The numbers live in section 3.4 only, so they aren't diluted across two places.
 - **Media slot must work empty today.** Build a fixed 16:10 container with `--paper-alt` fill and a mono placeholder label. Thumbnails and Cursorful navigation videos arrive later, so the container must accept, without any layout change:
-  - `<img>` (webp + jpg fallback), or
+  - `<picture>` with an AVIF `<source>` and a JPEG `<img>` fallback (§4), wrapped in `display: contents` so the img sizes against the slot rather than against an inline `<picture>` box, or
   - `<video autoplay muted loop playsinline>` with a `poster`.
   - Under `prefers-reduced-motion`, video must not autoplay — show the poster.
 - WIP cards: `--ink-muted` text, `IN PROGRESS` eyebrow, `cursor: default`, **not** an `<a>`. A dead link is worse than an honest label.
@@ -219,17 +299,24 @@ Four boxes, offset vertically to form a rising staircase left to right. Rising e
    └──────────┘
 ```
 
-| Box | Figure | Label (always visible) | Disclosure (hover/focus) |
-|---|---|---|---|
-| 1 | €3.7M | avoided spend | Design decisions that removed cost before it was committed |
-| 2 | 18% | drop-off reduction | Fewer people abandoning the transaction flow mid-way |
-| 3 | 41% → 59% | weekly active users | Measured over the platform's core employee base |
-| 4 | +130% | in-platform messaging | People actually talking to each other inside the product |
+| Box | Icon | Figure | Label | Note |
+|---|---|---|---|---|
+| 1 | currency | €3.7M | avoided spend | Design decisions that removed cost before it was committed |
+| 2 | clock | 18% | drop-off reduction | Fewer people abandoning the transaction flow mid-way |
+| 3 | rising chart | 41% → 59% | weekly active users | Measured over the platform's core employee base |
+| 4 | speech bubble | +130% | in-platform messaging | People actually talking to each other inside the product |
+
+Every part of the box is **always visible**, at every width.
 
 - The 4.2 → 2.5 min figure is deliberately **not** here — it already carries a rotator line. Don't duplicate it.
+- **Section eyebrow: "By the numbers."** §3.9.
 - Numerals `--font-display`, `--accent`. Labels `--ink-muted`, mono, small.
-- **Disclosure must not be hover-only.** Each box is a `<button type="button">`. Reveal on `:hover`, `:focus-visible`, and click/tap — a button takes focus when it is tapped, so that covers pointer, keyboard and touch with no script. Below 768px the disclosure text is **always visible** and the staircase flattens to a stacked 1-up list with no offset.
-- **No `aria-expanded` and no `aria-controls`, and they must not come back.** This section describes a *reveal*, not a toggle: clicking a second time does not close the note, so the buttons are not a disclosure widget and the attribute could only ever report `false` while the note was on screen. The notes are permanently in the DOM and in the accessibility tree — the reveal is `opacity` alone, never `display` or `visibility` — so a screen reader has all four regardless of state and nothing is hidden from anyone. The note `id`s stay in the markup: they cost nothing, and a real toggle would want them back.
+- Notes take `margin-top: auto` so the four share a baseline at the bottom of their boxes — the stair's rhythm comes from the `translateY`, not from ragged box interiors.
+- **There is no disclosure. The note is always on screen** — David's call, and it ends a long thread: the hover reveal, the `aria-expanded` that could never be truthful, and the argument about which JS file should own the toggle all go with it. §0's "no hover-only content" is now satisfied by there being no hover state that carries content at all.
+- **The box is plain markup — no `<button>`, no `aria-expanded`, no `aria-controls`, and none of them come back.** Nothing in the box is interactive, so nothing in it should be a tab stop; four dead tab stops is what the `<button>` had become. The note `id`s stay: they cost nothing, and a real toggle would want them back.
+- **Hover still washes the box `--accent-dim`**, because the box acknowledging the pointer is worth keeping. The text moves to `--ink` at the same time — `--ink-muted` on `--accent-dim` is 4.34:1, under §6's floor, where `--ink` is 15.5:1. There is no `:focus-within` any more; nothing inside can take focus.
+- **Each box carries one of v1's icons**, matched to what it measures: a currency mark on avoided spend, a clock on the completion-time drop-off, a rising chart on weekly actives, a speech bubble on messaging. `--accent`, `1.5rem`, above the figure. Decorative — the figure and the label carry the meaning — so every `svg` is `aria-hidden`.
+- Below 768px the staircase flattens to a stacked 1-up list with no offset.
 - Staircase offsets via `transform: translateY()` on `nth-child`, in `--s-3` steps: box 1 = `+4.5rem`, box 2 = `+3rem`, box 3 = `+1.5rem`, box 4 = `0`. Parent needs matching bottom padding so the offset doesn't collide with the next section.
 - Count-up on first intersect, 900ms `ease-out`. Under reduced motion, render the final value immediately.
 - Section sits on `--paper-alt`.
@@ -258,7 +345,9 @@ Sticky year column left, chapter content right, revealed on scroll. Replaces the
 └────────────┴─────────────────────────────────┘
 ```
 
-**Section title:** "Design and tooling for B2B platforms, with AI where it truly helps"
+**Section eyebrow:** "About me" (§3.9). **Section title:** "AI tooling & Design for B2B" — shortened from "Design and tooling for B2B platforms, with AI where it truly helps", which ran to two lines and was too long for a section head.
+
+**This section is where the page goes dark, and it carries two more blocks after the chapters.** In order: eyebrow, title, three chapters, Education & Experience, Software I work with. Then the footer, on the same ground.
 
 Three named chapters. The titles carry the narrative; the year column carries the timeline. Together they close the 1997 → 2018 gap without needing a fourth entry — "The Beginning" reads as a deliberate framing device rather than a missing chapter.
 
@@ -283,30 +372,76 @@ Word counts: 52 / 57 / 56. All inside the cap. Do not pad them.
 - Each chapter renders in this order: year marker (mono, large, muted, sticky) / chapter title (Inter Tight 600, `1.25rem`) / one paragraph (Inter Tight 400, capped at `--measure`).
 - Chapter titles are `<h3>`. The section heading is the `<h2>`. Don't skip levels.
 - Year markers are typed exactly as above, including the en dash in `2018–2020` and the trailing em dash in `2024 —`. They are text, not generated.
-- **Every chapter carries its own image, one each, not one portrait for the section.** Square or 4:5; above the title on mobile, beside the text from 1024 up (768 does not fit — see the note below). Max 360px wide.
+- **Every chapter carries its own image, one each, not one portrait for the section.** Square or 4:5; above the title on mobile, beside the text from 1024 up (768 does not fit — see the note below). Max **400px** wide.
+- **From 1024 the chapter is a two-column grid, not a float — and the difference is not cosmetic.** `.chapter-body` becomes `grid-template-columns: min(400px, 34%) minmax(0, 1fr)`, with the copy wrapped in `.chapter-text`.
+  - **Why the float had to go.** A float shortens the *line boxes* inside a paragraph but does not move the paragraph's own box. So base.css's `p { max-width: var(--measure) }` capped the box at 564px and the floated image consumed 343px of that from the left, leaving about **28ch** for text — four or five words a line. Widening the chapter column could not fix it, because the cap, not the column, was the binding constraint. This was diagnosed only after a first attempt that widened the column and changed nothing.
+  - As a grid column the text gets its own box, so `--measure` caps the text and nothing else: **62ch at 1440, ~51ch at 1024, ~60ch at 768.**
+  - `align-items: start` keeps the image at the top rather than stretching it down the chapter.
+- **The year track keeps its `clamp(8rem, 16vw, 12rem)`. Do not narrow it.** "2018–2020" is nine mono glyphs and needs ~130px at 768 and ~194px at 1440 against a track of 128px and 192px — the couple-of-pixels-spare fit that has always been flagged. Narrowing it to buy copy width was tried and breaks the date at every width. The gutter gave instead: `--s-5` to `--s-4`.
   - *This replaces the earlier single-portrait rule and the `--radius` and `--paper-alt` that came with it. Do not put them back.* The first image, `the-beginning.png`, is a **composited cut-out on a transparent ground**, not a photograph: the Sony Walkman, the football and the PlayStation deliberately break outside the photo's rectangle. A filled, rounded container frames precisely the parts that are meant to escape a frame, and a fixed `aspect-ratio` with `object-fit: cover` crops them off — at 4:5 it removed 183px from each side, which was the music and the videogames the copy is about.
   - **No cropping, and no `aspect-ratio` on the image.** Each `<img>` carries its real `width` and `height` attributes and is sized `width: 100%; height: auto`. The browser reserves the intrinsic ratio, so there is no layout shift, and square and 4:5 both fit without anything choosing what to lose.
   - Chapters two and three have no image yet. They keep a placeholder box — `aspect-ratio: 1 / 1`, `--paper-alt`, `--radius`, mono label — because an unfilled empty slot is an invisible one. The placeholder is deleted along with its markup when the real file lands; the real image never inherits its fill or its radius.
   - **Format: AVIF, with the PNG as a `<picture>` fallback.** The source PNG is 898 KB — 1.2 bytes per pixel, because PNG is a lossless compressor being handed a photograph. AVIF does alpha *and* photographs: the same 878 × 846 image at quality 85 is **121 KB**, an 87% saving, visually indistinguishable including the baked-in caption. `macOS sips` writes AVIF; it cannot write WebP (read-only in its format list), which is why this is not the more obvious WebP. Safari below 16.4 is the only engine that falls back to the PNG. Chapter images are below the fold, so they also carry `loading="lazy"` and `decoding="async"` and cost nothing on initial load.
   - Real `alt` text is required, and it must carry any text baked into the image — text in pixels is unreadable to assistive tech and cannot be resized (WCAG 1.4.5). `the-beginning.png` has *"Always passionate about music"* baked in, and its `alt` says so.
-- **CV download link sits at the end of "Where I am now"**, not in the hero. Mono, accent on hover, with file type and size in the label.
+- **CV download link sits at the end of "Where I am now"**, not in the hero. Mono, accent on hover. The label is **"Download Resume"** — no file type, no size. It said "Download CV — PDF, 194 KB" until David changed it: "resume" is the word people actually use, and a byte count in a label is developer furniture. The `download` attribute still does the work.
 - Reveal: `IntersectionObserver`, `threshold: 0.25`, adds `.is-visible` → opacity `0→1`, `translateY(16px)→0`, 500ms. Each chapter animates on its own entry, no stagger.
 - **Fallback:** `.is-visible` is applied by default in CSS; JS removes it on load before observing. Fully readable without JS.
 - Sticky year collapses to an inline label below 768px.
+
+#### The dark passage
+
+The section fades out of `--paper` into `--void` and stays there. The footer picks `--void` up as its first stop, so About through the bottom of the page is one continuous dark run.
+
+- **The fade lives entirely inside the section's own top padding**, and its length is **absolute (200px desktop, 120px mobile), not a percentage**, so it cannot stretch or compress as the content grows. Content starts well below it — nothing is ever read against a mid-grey. This is why `.about` is §1.4's one rhythm exception: it needs `calc(var(--s-8) + var(--s-6))` on top, which is also the "more separation from Impact" the change was asked for.
+- **No hairline on the impact→About seam.** The gradient is the transition. `layout.css` draws a rule between every pair of sections and here it landed as a dark line across the `--paper` end of the fade, because the section repoints `--rule` for its own interior and the border read that. Removed, for the same reason the footer has never had one.
+- **Everything inside is repointed through custom properties, not restated.** `.about` sets `--ink: var(--paper)`, `--ink-muted: var(--paper-muted)`, `--rule: var(--void-rule)`, `--accent: var(--accent-lift)`, `--paper-alt: #141414`, `--eyebrow-fg: var(--paper-muted)`. Every existing chapter, CV-button and media rule then works unchanged. **Add dark-mode styling this way, not with a second rule per element.**
+- `.is-dark` on the section flips the background grid to `--grid-line-dark`. §1.4.
+
+#### Education & Experience
+
+Ported from v1's `about.html`, same copy. Two columns from 768 — Education left, Experience right.
+
+- **A list, not a run of headings.** Five entries in a CV block are items in a timeline, not document sections; five more heading levels would clutter the outline for no navigational gain. `<ol class="resume-list">`, each item carrying date (mono, muted), role, place (mono, muted) and description.
+- Block title takes §1.3's "Block title" row. Column titles are `<h4>` eyebrows.
+
+#### Software I work with
+
+Ported from v1's `about.html`. Ten tools, **5 across in two even rows** from 768 (3 at 480, 2 below).
+
+- **Fixed column count, not `auto-fill`.** Auto-fill packed as many as fitted, which at a wide shell was eight on the first row and two orphaned on the second. Two even rows is what makes it read as a set.
+- **Every icon sits on a `--paper` tile, and this is not decoration.** Four of the ten — Affinity, Cursor, Miro, Notion — are drawn in near-black and would vanish on `--void`; the other six are brand-coloured and must not be inverted to rescue them. A light tile gives all ten the ground they were drawn for.
+- Icons are centred with flex, `line-height: 0` and an explicit `object-position`. The ten have wildly different intrinsic shapes — Figma is 120×90, Affinity 249×283, Adobe 240×234 with no `viewBox` at all — and several are Illustrator exports with whitespace baked into the `viewBox`. Centring the box alone was not enough.
+- `alt=""` on every icon: the name is written beside it.
+- **Two of the ten ship as AVIF with the SVG as fallback.** DaVinci is a 145 KB gradient mesh and Adobe a 56 KB embedded PNG, both for something drawn at 32px. At 192px AVIF they are 4.7 KB and 6.7 KB — the toolkit went from 218 KB to 27 KB. The other eight are real vectors and stay as they are.
 
 ### 3.6 Get in touch — footer
 
 ```css
 footer {
   background: linear-gradient(180deg,
-    var(--paper) 0%,
-    var(--accent-dim) 55%,
+    var(--void) 0%,
     var(--accent) 100%);
 }
 ```
 
+**The gradient starts at `--void`, not `--paper`, and that change deleted a whole class of problem rather than moving it.** On the old `--paper → --accent-dim → --accent` run every token had a depth past which it stopped clearing AA, and this section used to carry a measured table of those depths that every rule below depended on.
+
+On `--void → --accent` there is exactly one legible colour and it is legible everywhere:
+
+| | top | 25% | 50% | 75% | bottom |
+|---|---|---|---|---|---|
+| `--paper` | 20.44 | 17.74 | 13.45 | 9.51 | **6.54** |
+
+So **everything in this footer is `--paper`** — text, field underlines, the submit button's rule, focus rings, all of it. Nothing here depends on how far down it sits any more.
+
+What that retires, and none of it should come back: the per-depth table; the `--s-3` bottom padding that existed only to push the colophon past 90%; the paint-your-own-ground focus trick; and the `--s-8 + --s-6` colophon margin that was structural rather than spacing. **The rhythm is symmetric again, so §1.4's "one rule" holds here.** `--paper-muted` is banned — see §1.2.
+
+The focus ring is `--paper` with `outline-offset: 3px`, not base.css's `--accent`: over a gradient ending in `--accent`, an `--accent` ring is 1:1 against its own ground at the bottom of the run, invisible exactly where the submit button sits. §3.6's "no boxes" is now literally true, at rest and on focus.
+
 - Oversized mono headline sitting in the gradient: **"Let's talk."**
-- Contact block: email, LinkedIn, Madrid, current status. Mono, one per line, generous leading. **No GitHub link** — removed at David's instruction; he does not publish there, so the row was a placeholder for something that is never coming. Do not add it back.
+- **A lead line under the headline**, before the two columns: *"If you want to know more about me send me an email and I'll get back as soon as possible."* Body face, not mono — it is a sentence, where everything else in this footer is a label or a field. Capped at `--measure` so it does not run the full shell under a 96px headline.
+- **Section eyebrow: "Where to find me."** §3.9.
+- Contact block: email, LinkedIn, Madrid, current status. Mono, one per line, generous leading. The status line reads **"Open to work"**, the same wording as the hero corner. **No GitHub link** — removed at David's instruction; he does not publish there, so the row was a placeholder for something that is never coming. Do not add it back.
 - **Formspree form stays — do not rebuild it.** Restyle only: bottom-border inputs, no boxes, mono labels, accent focus ring. Preserve the existing action URL and field names exactly.
 - **It confirms inline, and `form.js` is what does it.** v1 intercepted the submit with `fetch` and swapped in a success message; without that the form posts natively and hands the visitor to formspree.io, which is the last thing a contact form should do. `form.js` restores v1's behaviour and nothing else — it never touches the action URL or the three field names.
   - **Both result states are markup, not strings in the script.** `.form-success` (with v1's copy: *"Done!"* / *"Thanks for your message. I'll get back as soon as possible."*) and `.form-error` (v1's *"Something went wrong…"*, now an inline message with a `mailto:` rather than v1's `alert()`). Both ship `hidden`. §0 forbids JS supplying content, and this is why.
@@ -315,8 +450,8 @@ footer {
   - **On failure the form stays put, re-enabled, with the error above the button** — a failed message must be retryable without retyping. Resubmitting clears the error first.
   - `.contact-form[hidden]` needs an explicit `display: none`. The UA sheet's `[hidden]` rule loses to `.contact-form { display: grid }`, so without it the form stays visible under the confirmation. That is a specificity fix, not a place for `!important`.
 - Two markup additions are allowed against "restyle only", both from step 14 and neither touching the action URL or the field names: `autocomplete="name"` and `autocomplete="email"` on the two inputs (WCAG 1.3.5, AA), and `class="eyebrow"` on the three labels so they take §1.3's mono label role rather than a duplicated type block.
-- **"No boxes" describes the form at rest.** On `:focus-visible` every control in the footer paints `background: var(--paper)` with `outline-offset: 0`. That is not decoration: the submit button sits ~73% down the gradient at 1440 and ~76% at 375, where `--accent` is 2.6:1 against the ground and misses the 3:1 a focus indicator needs. Painting `--paper` under the ring puts a 6.54:1 edge on its inner side and holds at any depth the footer grows to — the ground is a gradient, so no fixed ring colour can be checked once and trusted. Same mechanism as the nav in §3.1.
-- Text over the accent end must be `--paper`, never `--ink`. Verify `#FCFCFA` on `#1F3BFF` clears AA.
+- **~~"No boxes" describes the form at rest.~~ Retired with the old gradient.** Controls no longer paint a `--paper` ground on focus; the ring is simply `--paper` at `outline-offset: 3px`, which clears at every depth. "No boxes" is now true at rest *and* on focus. The nav dropped the same mechanism at the same time, for a different reason — see §3.1. **Nothing on the site paints a ground under a focus ring any more.**
+- **All text here is `--paper`**, not only the text over the accent end. See the table above.
 - Bottom bar: `© 2026 · Built by hand · Madrid`, caption size.
 
 ### 3.7 Case study — `work/<slug>/index.html`
@@ -324,8 +459,8 @@ footer {
 The v1 SACEM page ported onto the v2 system. Everything below is the shape every future case study takes.
 
 ```
-┌──────────────────────────────────────────────┐  full bleed
-│              hero image                       │
+   ┌──────────────────────────────────────────┐   --shell, padded from the top
+   │              hero image                   │
 ├──────────────────────────────────────────────┤
 │  CASE STUDY                                   │
 │  SACEM — Messaging App Redesign               │   ┌──────────┐
@@ -353,11 +488,45 @@ The v1 SACEM page ported onto the v2 system. Everything below is the shape every
 - **Footer:** the §3.6 footer, unchanged — same markup, same Formspree action and field names.
 - **`.kw`** — v1 marked phrases inside its prose. Carried over as an `--accent-dim` wash, not a colour swap: `--ink` on `--accent-dim` is 15.5:1, and recolouring the text would put a second meaning on the one colour §1.2 reserves for interaction. A wash also survives forced-colours mode, where a colour change vanishes.
 - **Subheads inside a prose section (`.cs-sub`) are mono**, on §1.3's "mono is the display face" rule — the same call `.card-title` makes. The `<h4>`s inside Target Users are body face, because they are leads, not labels.
-- **Images get `--shell`, wider than the reading column but not full bleed.** They are screenshots and they earn the extra width. The hero is the exception and runs edge to edge.
+- **Images get `--shell`, wider than the reading column but not full bleed.** They are screenshots and they earn the extra width.
+- **The hero image is on the grid too, and no longer full bleed.** `--shell` wide, so its left and right edges land on the same two background hairlines everything else sits on, with `--s-7` of top padding (`--s-6` below 768). It is the only element on either page that needs its own top clearance, because it is the only one that is the first thing in the document — it has to clear the fixed nav, whose underside sits at 48px, and then leave enough air to read as placed rather than jammed under the chrome.
 - **v1's closing "Other Projects" block is not ported.** Both its cards were placeholders pointing back at the same page, with thumbnails loaded from `dummyimage.com` — an external host, which §0 rules out. A link back to the work section replaces it until there is a second case study.
 - **v1's two Final Outcome images do not exist in this repo** (`img/sacem/outcome-1.jpg`, `outcome-2.jpg` — the directory is absent). They are placeholder boxes carrying v1's captions, on the §3.5 rule: a placeholder is a box, the real image is not.
 
 ---
+
+---
+
+### 3.8 Cursor
+
+A ring that **replaces** the native pointer. David chose the full replacement over a ring that trails alongside the native cursor, after the usability cost was put to him.
+
+- **28px hollow circle**, easing toward the pointer at 0.2 per frame in a `requestAnimationFrame` loop — not driven from the pointer event, so a burst of `pointermove` cannot queue a write each.
+- **`mix-blend-mode: difference`.** One ring works on `--paper`, `--paper-alt`, `--void` and cobalt without ever being told which it is over: it inverts whatever is beneath, so it is dark on light grounds and light on dark ones by construction.
+- **Over anything interactive it grows to 44px and fills.** Filled rather than merely larger, so the state is legible at a glance and not a size the eye has to compare.
+- **Over a text field it becomes a 2px bar.** This is the one affordance lost by hiding the native I-beam, and it is given back explicitly rather than accepted as a cost.
+- `pointer-events: none`, always. It must never intercept what it is pointing at.
+
+**Three guards decide whether it runs at all, and the native cursor is only hidden once they pass. None of them is optional.**
+
+1. **A fine pointer that can hover.** Touch has no cursor to replace. The `matchMedia` listener is live, not a one-time read, so a hybrid device that picks up a mouse mid-session gets the ring and one that switches to touch gets its cursor back.
+2. **Reduced motion off.** The ring eases toward the pointer, which is exactly the unrequested movement the query is about.
+3. **This script running at all.** `cursor: none` lives under `.has-cursor-ring`, a class `ui.js` adds. A parse error, a blocked script or JS off leaves the native pointer exactly where it was. **Never hide the cursor from CSS alone** — the page must not be able to reach a state where there is no pointer and no way to get one back.
+
+It is also hidden when the pointer leaves the window and on `blur`, so it cannot sit frozen over the page.
+
+### 3.9 Section eyebrows
+
+A mono label above every section title, taking §1.3's eyebrow role, muted, so the `h2` under it stays the loudest thing in the section.
+
+| Section | Eyebrow |
+|---|---|
+| Selected work | See the process |
+| Impact | By the numbers |
+| About | About me |
+| Get in touch | Where to find me |
+
+The colour comes from `--eyebrow-fg`, which defaults to `--ink-muted` and is repointed by the dark blocks — `--paper-muted` in About, `--paper` in the footer — rather than from a second rule per section. §3.5 uses the same class again for its "Background" and "Toolkit" sub-blocks.
 
 ---
 
@@ -380,6 +549,7 @@ v2/
 │   │   ├── reveal.js
 │   │   ├── counters.js
 │   │   ├── form.js           ← every page with the footer form
+│   │   ├── ui.js             ← every page: nav visibility + cursor ring
 │   │   └── casestudy.js      ← case-study pages only
 │   ├── fonts/                ← geist-mono 400/500, inter-tight 400/600, syne 700
 │   └── img/
@@ -388,7 +558,8 @@ v2/
 
 - Four `<link>` tags in order on `index.html`. No `@import` — it blocks rendering.
 - **A case study loads a fifth, `casestudy.css`, after `components.css`.** It is the only page-scoped sheet, and it exists so the index pays nothing for a page it never shows. It restates nothing: `.shell`, `.band-alt`, the section rhythm, `.eyebrow`, `.meta`, `.cv-button`, the nav and the footer all come from the four above.
-- Likewise `casestudy.js` loads on case-study pages only, and the index's three scripts do not load on a case study. `form.js` loads on **both**, because both carry the §3.6 footer.
+- Likewise `casestudy.js` loads on case-study pages only, and the index's three scripts do not load on a case study. `form.js` and `ui.js` load on **both**: both pages carry the §3.6 footer and the §3.1 nav.
+- **`ui.js` owns page chrome — things that belong to the viewport rather than to any one section.** Today that is the nav's visibility (§3.1) and the cursor ring (§3.8). New chrome goes here rather than into a fifth and sixth file.
 - JS with `defer`. Each file a plain IIFE — no ES modules, so local `file://` preview works.
 - **Every image on the site is a `<picture>`: an AVIF `<source>` with a JPEG or PNG `<img>` fallback.** §3.5 has the reasoning and the numbers. Everything below the fold carries `loading="lazy"` and `decoding="async"`; the one image above it — a case study's hero — carries `fetchpriority="high"` instead.
 
@@ -396,7 +567,9 @@ v2/
 
 ## 5. Build order
 
-Each step independently reviewable. Stop after each and wait for review.
+**Steps 1–15 are done.** This list is kept as the record of how the page was built and in what order, not as work remaining. Everything after step 15 came from David directly and is specified in §3, not here.
+
+Each step was independently reviewable, with a stop for review after each.
 
 1. `tokens.css` + `base.css` — `@font-face` blocks, type scale, color, focus styles. Verify on a throwaway page.
 2. `index.html` semantic skeleton — all five sections, real structure, zero styling. Confirm it reads top to bottom as a document with CSS disabled.
@@ -405,27 +578,32 @@ Each step independently reviewable. Stop after each and wait for review.
 5. Hero, static (no rotation).
 6. `rotator.js` + caret.
 7. Work cards, including empty media containers and WIP states.
-8. Impact staircase, static values, disclosure working on hover **and** focus **and** tap.
+8. Impact staircase, static values, disclosure working on hover **and** focus **and** tap. *(The disclosure was later removed entirely — §3.4.)*
 9. `counters.js`.
-10. About chapters, static, with photo slot.
+10. About chapters, static, with photo slot. *(Later: one image per chapter, a two-column grid instead of a float, and the dark passage — §3.5.)*
 11. `reveal.js`.
-12. Footer gradient + Formspree restyle.
+12. Footer gradient + Formspree restyle. *(The gradient later changed to `--void → --accent`, and the form gained `form.js` — §3.6.)*
 13. Responsive pass: 375 / 768 / 1024 / 1440.
 14. Accessibility pass: tab order, focus visibility, contrast, reduced motion, `noscript`.
 15. Performance pass: font subsetting, image compression, Lighthouse.
+
+**After step 15**, in order: the SACEM case study (§3.7); per-chapter images and AVIF everywhere (§3.5, §4); `form.js` (§3.6); then David's two rounds of changes — the nav, the hero corners, the background grid, the section eyebrows, the impact rebuild, the dark passage with Education & Experience and the toolkit, and the cursor.
 
 ---
 
 ## 6. Acceptance criteria
 
 - [ ] Renders complete and usable with JavaScript disabled.
-- [ ] `prefers-reduced-motion: reduce` kills rotation, caret blink, count-up, reveals, and video autoplay. All content still visible.
-- [ ] Every metric box disclosure reachable by keyboard and by tap, not hover alone.
-- [ ] Visible focus state on every interactive element, using `--accent`.
+- [ ] `prefers-reduced-motion: reduce` kills rotation, caret blink, count-up, reveals, the spinning star, the cursor ring, and video autoplay. All content still visible. **Every animated selector must have a stand-down** — there is no blanket override, because one would need `!important`.
+- [ ] ~~Every metric box disclosure reachable by keyboard and by tap.~~ Retired: there is no disclosure. §3.4.
+- [ ] Visible focus state on every interactive element. Four grounds, four answers, each recorded where it lives: `--accent` on the light half; `--accent-lift` in About (`--accent` is 3.13:1 on `--void`); `--paper` in the footer (`--accent` is 1:1 against the footer's own bottom stop); and `--nav-active` through the blend mode on the nav, which is the only one that clears every point of the page.
+- [ ] **Hiding the native cursor is never reachable without JS.** §3.8.
+- [ ] No text anywhere under 4.5:1, and no border or focus indicator under 3:1 — checked on `--paper`, `--paper-alt`, `--void`, and at five points down the footer gradient. **One known exception, recorded rather than waived:** the nav links over the bottom half of the footer. §3.1 has the numbers, why no colour choice fixes it, and the remaining lever.
 - [ ] No paragraph exceeds `--measure`.
 - [ ] No About chapter exceeds 60 words.
 - [ ] Every metric matches the CV exactly.
 - [ ] Work card media containers hold their 16:10 box while empty — no layout shift when assets arrive.
+- [ ] Every image is a `<picture>` with an AVIF source, carries real `width`/`height`, and is `loading="lazy"` unless it is above the fold. §4.
 - [ ] Zero external network requests.
 - [ ] Lighthouse: performance ≥ 95, accessibility 100.
 - [ ] Total page weight under 800KB.
@@ -435,12 +613,17 @@ Each step independently reviewable. Stop after each and wait for review.
 
 ## 7. Explicit non-goals
 
-- No dark mode in v1.
+- No dark mode **as a toggle**. The dark passage of §3.5/§3.6 is a fixed part of the page's composition, not a user preference, and there is no light/dark switch.
 - No page transition or scroll library. No Lenis, Locomotive, GSAP, Framer Motion.
-- No cursor follower, no magnetic buttons, no scroll-jacking.
+- No magnetic buttons, no scroll-jacking.
 - No blog section.
 - No CMS.
-- No "Beyond the screen" or interests section — the rotator already carries the personal register, and a second pass at it would dilute both.
+- No "Beyond the screen" or interests section — the rotator already carries the personal register.
+
+**Two entries were removed from this list rather than being broken quietly.**
+
+- **"No cursor follower"** — David asked for one and chose the full native-cursor replacement over a trailing ring, after the usability cost was put to him. §3.8 is the spec, and its three guards are what keep it from being the thing this non-goal was guarding against.
+- **"No software/tools section"** — the old wording bundled the toolkit in with "Beyond the screen". They are not the same thing: a tools list is professional evidence, an interests section is personal register. The toolkit is now in §3.5; the interests section is still ruled out.
 
 ---
 

@@ -29,6 +29,12 @@
 </head>
 <body>
 
+  <!-- Replaces the native pointer. Inert markup: ui.js only shows it
+       after checking for a fine hovering pointer and for reduced
+       motion, and `cursor: none` is scoped to a class the script
+       adds — so JS off keeps the browser's own cursor. -->
+  <div class="cursor-ring" aria-hidden="true"></div>
+
   <!-- Scroll progress. Presentational only — the same fact is available to
        assistive tech from the document itself, so it is aria-hidden rather
        than a progressbar role that would announce on every scroll tick. -->
@@ -401,16 +407,19 @@
   <!-- ====================================================== footer
        The index's footer, unchanged: same markup, same Formspree action
        and field names, same gradient rules. Paths climb two levels. -->
-  <footer id="contact" class="site-footer" aria-labelledby="contact-title">
+  <footer id="contact" class="site-footer is-dark" aria-labelledby="contact-title">
     <div class="shell">
+      <p class="section-eyebrow eyebrow">Where to find me</p>
       <h2 id="contact-title" class="footer-headline">Let's talk.</h2>
+
+      <p class="contact-lead">If you want to know more about me send me an email and<br> I'll get back as soon as possible.</p>
 
       <div class="footer-cols">
         <ul class="contact-list" role="list">
           <li><a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a></li>
           <li><a href="https://www.linkedin.com/in/davidprietozurita/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
           <li>Madrid, Spain</li>
-          <li>Available for senior product roles</li>
+          <li>Open to work</li>
         </ul>
 
         <!-- The form and its two result states share one grid cell. The
@@ -449,6 +458,7 @@
 
   <script src="../../assets/js/casestudy.js" defer></script>
   <script src="../../assets/js/form.js" defer></script>
+  <script src="../../assets/js/ui.js" defer></script>
 
 </body>
 </html>

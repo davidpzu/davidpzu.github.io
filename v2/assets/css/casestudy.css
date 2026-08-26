@@ -59,12 +59,31 @@
 }
 
 /* ------------------------------------------------------------ hero image */
-/* Full bleed, edge to edge, sitting above the first section. It is a
-   figure with no caption — the h1 immediately below names it. */
+/* On the grid, not full bleed: --shell wide, so its left and right edges land
+   on the same two background hairlines the section titles and the figures
+   below it sit on. It is a figure with no caption — the h1 names it.
+
+   The top padding is what stops it hitting the top of the window. It has to
+   clear the fixed nav, whose underside sits at 48px, and then leave enough
+   air that the image reads as placed rather than jammed under the chrome.
+   This is the only element on either page that needs its own top clearance,
+   because it is the only one that is the first thing in the document. */
+
+.cs-hero-media {
+  width: var(--shell);
+  margin-inline: auto;
+  padding-top: var(--s-6);
+}
+
+@media (min-width: 768px) {
+  .cs-hero-media {
+    padding-top: var(--s-7);
+  }
+}
 
 .cs-hero-media img {
   width: 100%;
-  height: clamp(200px, 34vw, 420px);
+  height: clamp(200px, 30vw, 400px);
   object-fit: cover;
 }
 

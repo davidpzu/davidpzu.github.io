@@ -6,6 +6,8 @@
    The shell inside them holds the content to --shell. design.md §1.4 */
 
 .shell {
+  position: relative;
+  z-index: 1;          /* above the background grid — see below */
   width: var(--shell);
   margin-inline: auto;
 }
@@ -57,4 +59,64 @@ main > section + section {
 
 .band-alt {
   background: var(--paper-alt);
+}
+
+/* --------------------------------------------------------- background grid */
+/* Three hairlines running the height of every section: the shell's own left
+   and right edges, and its centre. They are the shell's edges, not decoration
+   near them, so the h1, every section title, the card grid and the chapter
+   column all sit on a line that is actually drawn.
+
+   Drawn per section rather than as one fixed layer behind the page, for one
+   reason: the About section and the footer are painted --void, and a layer
+   behind them would be covered by their own background. A pseudo-element is
+   inside the section, so it paints on top of that background — and each
+   section can therefore set its own line colour, which is what lets the grid
+   survive the dark passage.
+
+   Stacking is explicit rather than inherited: the section is the positioning
+   parent, ::before takes z-index 0 (above the section background), and .shell
+   takes z-index 1 above that. Nothing here relies on the subtleties of
+   negative z-index against a parent's background. */
+
+main > section,
+.site-footer {
+  position: relative;
+}
+
+main > section::before,
+.site-footer::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--shell);
+  pointer-events: none;
+
+  /* Three 1px columns: left edge, centre, right edge. One element, three
+     background layers, no extra markup. */
+  background-image:
+    linear-gradient(var(--grid-line), var(--grid-line)),
+    linear-gradient(var(--grid-line), var(--grid-line)),
+    linear-gradient(var(--grid-line), var(--grid-line));
+  background-size: 1px 100%, 1px 100%, 1px 100%;
+  background-position: left top, center top, right top;
+  background-repeat: no-repeat;
+}
+
+/* On the dark ground the light hairline disappears, so the token flips.
+   Set on the section, read by the rule above. */
+.is-dark::before {
+  --grid-line: var(--grid-line-dark);
+}
+
+/* Full-bleed media sits above the grid: a hairline crossing a screenshot
+   reads as an artefact rather than as structure. */
+.cs-hero-media,
+.cs-figure {
+  position: relative;
+  z-index: 1;
 }

@@ -31,6 +31,12 @@
 </head>
 <body>
 
+  <!-- Replaces the native pointer. Inert markup: ui.js only shows it
+       after checking for a fine hovering pointer and for reduced
+       motion, and `cursor: none` is scoped to a class the script
+       adds — so JS off keeps the browser's own cursor. -->
+  <div class="cursor-ring" aria-hidden="true"></div>
+
   <!-- ============================================================ nav
        §3.1 — brackets are real characters in the DOM, present on every
        item. Which one is lit is a CSS state; aria-current carries the
@@ -67,8 +73,23 @@
          hides the rest until JS starts cycling them. -->
     <section class="hero" aria-labelledby="hero-name">
       <div class="shell">
+
+        <!-- The hero's own two corners, not the viewport's: these scroll
+             away with the hero rather than sitting fixed over the page.
+             The star is decorative and spins; the text carries the meaning,
+             so the svg is aria-hidden. -->
+        <div class="hero-corners">
+          <p class="hero-status eyebrow">
+            <span class="status-star" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c.6 6.1 5.9 11.4 12 12-6.1.6-11.4 5.9-12 12-.6-6.1-5.9-11.4-12-12C6.1 11.4 11.4 6.1 12 0z"/>
+              </svg>
+            </span>Open to work</p>
+          <p class="hero-place eyebrow">Madrid, ES · Remote CET/EST-friendly</p>
+        </div>
+
         <h1 id="hero-name">David Prieto Zurita</h1>
-        <p class="hero-role meta">Senior Product Designer · Madrid</p>
+        <p class="hero-role">Senior Product Designer · Shipping B2B SaaS that gets measured</p>
 
         <p class="rotator">
           <span class="rotator-stem">currently &gt;</span>
@@ -83,10 +104,6 @@
         </p>
 
         <p class="hero-cta"><a href="#work">See the work →</a></p>
-
-        <hr class="hero-rule">
-
-        <p class="hero-status eyebrow"><span class="status-dot" aria-hidden="true">●</span> Available for senior product roles</p>
       </div>
     </section>
 
@@ -102,6 +119,7 @@
          reaches everyone without it. design.md §3.3 needs amending. -->
     <section id="work" class="work" aria-labelledby="work-title">
       <div class="shell">
+        <p class="section-eyebrow eyebrow">See the process</p>
         <h2 id="work-title">Selected work</h2>
 
         <ul class="card-grid" role="list">
@@ -171,39 +189,44 @@
          real toggle would want them back. Band ground per §3.4. -->
     <section id="impact" class="impact band-alt" aria-labelledby="impact-title">
       <div class="shell">
+        <p class="section-eyebrow eyebrow">By the numbers</p>
         <h2 id="impact-title">Impact</h2>
 
         <ul class="staircase" role="list">
 
           <li class="metric">
-            <button class="metric-toggle" type="button">
-              <span class="figure">€3.7M</span>
-              <span class="metric-label eyebrow">avoided spend</span>
-            </button>
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </span>
+            <span class="figure">€3.7M</span>
+            <span class="metric-label eyebrow">avoided spend</span>
             <p class="metric-note meta" id="metric-note-1">Design decisions that removed cost before it was committed</p>
           </li>
 
           <li class="metric">
-            <button class="metric-toggle" type="button">
-              <span class="figure">18%</span>
-              <span class="metric-label eyebrow">drop-off reduction</span>
-            </button>
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            <span class="figure">18%</span>
+            <span class="metric-label eyebrow">drop-off reduction</span>
             <p class="metric-note meta" id="metric-note-2">Fewer people abandoning the transaction flow mid-way</p>
           </li>
 
           <li class="metric">
-            <button class="metric-toggle" type="button">
-              <span class="figure">41% → 59%</span>
-              <span class="metric-label eyebrow">weekly active users</span>
-            </button>
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </span>
+            <span class="figure">41% → 59%</span>
+            <span class="metric-label eyebrow">weekly active users</span>
             <p class="metric-note meta" id="metric-note-3">Measured over the platform's core employee base</p>
           </li>
 
           <li class="metric">
-            <button class="metric-toggle" type="button">
-              <span class="figure">+130%</span>
-              <span class="metric-label eyebrow">in-platform messaging</span>
-            </button>
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <span class="figure">+130%</span>
+            <span class="metric-label eyebrow">in-platform messaging</span>
             <p class="metric-note meta" id="metric-note-4">People actually talking to each other inside the product</p>
           </li>
 
@@ -219,9 +242,10 @@
          is-visible is written here on purpose: CSS treats a bare .chapter
          as the hidden state, so reveal.js has to take the class away
          before it can give it back. JS off and every chapter stays. -->
-    <section id="about" class="about" aria-labelledby="about-title">
+    <section id="about" class="about is-dark" aria-labelledby="about-title">
       <div class="shell">
-        <h2 id="about-title">Design and tooling for B2B platforms, with AI where it truly helps</h2>
+        <p class="section-eyebrow eyebrow">About me</p>
+        <h2 id="about-title">AI tooling &amp; Design for B2B</h2>
 
         <article class="chapter is-visible">
           <p class="year">1997</p>
@@ -239,8 +263,10 @@
                      alt="A childhood photo of me at about three, wearing oversized headphones, with cut-outs of a Sony CD Walkman, a Nike football and a PlayStation 2 arranged around it. Caption in the image: Always passionate about music.">
               </picture>
             </figure>
-            <h3 class="chapter-title">The Beginning</h3>
-            <p>Born in 1997 in Marbella, on Spain's Mediterranean coast. Futsal took most of my afternoons; music took the rest — I've been chasing a good song since before I could talk. Design found me on internet forums, where I made signatures in Photoshop CS6 between long stretches of videogames. That was the hook.</p>
+            <div class="chapter-text">
+              <h3 class="chapter-title">The Beginning</h3>
+              <p>Born in 1997 in Marbella, on Spain's Mediterranean coast. Futsal took most of my afternoons; music took the rest — I've been chasing a good song since before I could talk. Design found me on internet forums, where I made signatures in Photoshop CS6 between long stretches of videogames. That was the hook.</p>
+            </div>
           </div>
         </article>
 
@@ -252,8 +278,10 @@
                 <span class="chapter-media-label meta">Image pending</span>
               </div>
             </figure>
-            <h3 class="chapter-title">Where it all started</h3>
-            <p>After graduating I learned graphic design, then UI, in Málaga — a coast kid finally in a real city. Madrid came next, and with it my first job, as a visual designer. In 2020 I was promoted to product designer and took two new client platforms from the first discovery call to launch, working with PMs and engineers.</p>
+            <div class="chapter-text">
+              <h3 class="chapter-title">Where it all started</h3>
+              <p>After graduating I learned graphic design, then UI, in Málaga — a coast kid finally in a real city. Madrid came next, and with it my first job, as a visual designer. In 2020 I was promoted to product designer and took two new client platforms from the first discovery call to launch, working with PMs and engineers.</p>
+            </div>
           </div>
         </article>
 
@@ -265,11 +293,122 @@
                 <span class="chapter-media-label meta">Image pending</span>
               </div>
             </figure>
-            <h3 class="chapter-title">Where I am now</h3>
-            <p>Half a year working remotely from China taught me how design reads in a mobile-first, gamified, pro-AI culture. Back in Madrid — eight years and counting — I'm still leading those same two platforms six years on, studying the Google UX Design certificate, building AI tooling, and turning up at design events to meet people whose work I admire.</p>
-            <p class="cv-link"><a class="cv-button" href="assets/CV_DavidPrietoZurita-EN.pdf" download>Download CV — PDF, 194 KB<span class="cv-arrow" aria-hidden="true">↓</span></a></p>
+            <div class="chapter-text">
+              <h3 class="chapter-title">Where I am now</h3>
+              <p>Half a year working remotely from China taught me how design reads in a mobile-first, gamified, pro-AI culture. Back in Madrid — eight years and counting — I'm still leading those same two platforms six years on, studying the Google UX Design certificate, building AI tooling, and turning up at design events to meet people whose work I admire.</p>
+              <p class="cv-link"><a class="cv-button" href="assets/CV_DavidPrietoZurita-EN.pdf" download>Download Resume<span class="cv-arrow" aria-hidden="true">↓</span></a></p>
+            </div>
           </div>
         </article>
+
+        <!-- ------------------------------------------- education & experience
+             Ported from v1's about.html, same copy. A list rather than a run
+             of headings: five entries in a CV block are items in a timeline,
+             not document sections, and five more heading levels would clutter
+             the outline for no navigational gain. -->
+        <div class="resume">
+          <p class="section-eyebrow eyebrow">Background</p>
+          <h3 class="block-title">Education &amp; Experience</h3>
+
+          <div class="resume-grid">
+            <div class="resume-col">
+              <h4 class="resume-col-title eyebrow">Education</h4>
+              <ol class="resume-list" role="list">
+                <li class="resume-item">
+                  <p class="resume-date meta">2023</p>
+                  <p class="resume-role">Google UX Design</p>
+                  <p class="resume-place meta">Coursera</p>
+                  <p class="resume-desc">User-centered design, usability, prototyping, and UX workflows.</p>
+                </li>
+                <li class="resume-item">
+                  <p class="resume-date meta">2016 – 2017</p>
+                  <p class="resume-role">Web Design &amp; Development</p>
+                  <p class="resume-place meta">Gauss Multimedia</p>
+                  <p class="resume-desc">Front-end development with HTML, CSS, JavaScript, CMS, and responsive UI design using Bootstrap.</p>
+                </li>
+                <li class="resume-item">
+                  <p class="resume-date meta">2015 – 2016</p>
+                  <p class="resume-role">Graphic Design &amp; Prepress</p>
+                  <p class="resume-place meta">Gauss Multimedia</p>
+                  <p class="resume-desc">Fundamentals of design, layout, color theory, and Adobe Creative Suite.</p>
+                </li>
+              </ol>
+            </div>
+
+            <div class="resume-col">
+              <h4 class="resume-col-title eyebrow">Experience</h4>
+              <ol class="resume-list" role="list">
+                <li class="resume-item">
+                  <p class="resume-date meta">2020 – Present</p>
+                  <p class="resume-role">Product Designer</p>
+                  <p class="resume-place meta"><a href="https://collaborativeperks.com" target="_blank" rel="noopener noreferrer">Collaborative Perks</a></p>
+                  <p class="resume-desc">Promoted from Visual Designer in 2020. Own two long-running client platforms end-to-end, from discovery calls with clients and 2 PMs through handoff and delivery alongside 3 engineers across two teams. Key outcomes: €3.7M in equipment purchases avoided, weekly users up from 41% to 59%, and monthly messages up 130%.</p>
+                </li>
+                <li class="resume-item">
+                  <p class="resume-date meta">2018 – 2020</p>
+                  <p class="resume-role">Visual Designer</p>
+                  <p class="resume-place meta"><a href="https://collaborativeperks.com" target="_blank" rel="noopener noreferrer">Collaborative Perks</a></p>
+                  <p class="resume-desc">Delivered print and digital assets for clients, from campaign posters and landing pages to banners and motion graphics, handling production with external printers. Progressively took ownership of larger projects, leading to a promotion into product design.</p>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------- toolkit
+             Ported from v1's about.html. Every icon sits on a --paper tile:
+             four of the ten (Affinity, Cursor, Miro, Notion) are drawn in
+             near-black and would vanish on --void, and the six that are
+             brand-coloured must not be inverted to rescue them. A light tile
+             gives all ten the ground they were drawn for. alt="" because the
+             name is written beside each one. -->
+        <div class="toolkit">
+          <p class="section-eyebrow eyebrow">Toolkit</p>
+          <h3 class="block-title">Software I work with</h3>
+          <ul class="tools-grid" role="list">
+            <li class="tool">
+              <span class="tool-icon"><img src="assets/img/icons/icon-figma.svg" alt="" width="48" height="48" loading="lazy"></span>
+              <span class="tool-name meta">Figma</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><picture><source srcset="assets/img/icons/icon-adobecc.avif" type="image/avif"><img src="assets/img/icons/icon-adobecc.svg" alt="" width="48" height="48" loading="lazy"></picture></span>
+              <span class="tool-name meta">Adobe Suite</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><img src="assets/img/icons/icon-affinity.svg" alt="" width="48" height="48" loading="lazy"></span>
+              <span class="tool-name meta">Affinity</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><picture><source srcset="assets/img/icons/icon-davinci.avif" type="image/avif"><img src="assets/img/icons/icon-davinci.svg" alt="" width="48" height="48" loading="lazy"></picture></span>
+              <span class="tool-name meta">DaVinci Resolve</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><img src="assets/img/icons/icon-cursor.svg" alt="" width="48" height="48" loading="lazy"></span>
+              <span class="tool-name meta">Cursor</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><img src="assets/img/icons/icon-claude.svg" alt="" width="48" height="48" loading="lazy"></span>
+              <span class="tool-name meta">Claude</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><img src="assets/img/icons/icon-notion.svg" alt="" width="48" height="48" loading="lazy"></span>
+              <span class="tool-name meta">Notion</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><img src="assets/img/icons/icon-miro.svg" alt="" width="48" height="48" loading="lazy"></span>
+              <span class="tool-name meta">Miro</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><img src="assets/img/icons/icon-uxpilot.svg" alt="" width="48" height="48" loading="lazy"></span>
+              <span class="tool-name meta">UX Pilot</span>
+            </li>
+            <li class="tool">
+              <span class="tool-icon"><img src="assets/img/icons/icon-lovable.svg" alt="" width="48" height="48" loading="lazy"></span>
+              <span class="tool-name meta">Lovable</span>
+            </li>
+          </ul>
+        </div>
+
       </div>
     </section>
 
@@ -285,16 +424,19 @@
        to 86% of the footer, --paper only from 90%. The colophon is the
        one thing that sits past that line, which is why it is the only
        thing §3.6 asks to be --paper. -->
-  <footer id="contact" class="site-footer" aria-labelledby="contact-title">
+  <footer id="contact" class="site-footer is-dark" aria-labelledby="contact-title">
     <div class="shell">
+      <p class="section-eyebrow eyebrow">Where to find me</p>
       <h2 id="contact-title" class="footer-headline">Let's talk.</h2>
+
+      <p class="contact-lead">If you want to know more about me send me an email and<br> I'll get back as soon as possible.</p>
 
       <div class="footer-cols">
         <ul class="contact-list" role="list">
           <li><a href="mailto:davidprietozurita@gmail.com">davidprietozurita@gmail.com</a></li>
           <li><a href="https://www.linkedin.com/in/davidprietozurita/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
           <li>Madrid, Spain</li>
-          <li>Available for senior product roles</li>
+          <li>Open to work</li>
         </ul>
 
         <!-- The form and its two result states share one grid cell. The
@@ -335,6 +477,7 @@
   <script src="assets/js/reveal.js" defer></script>
   <script src="assets/js/counters.js" defer></script>
   <script src="assets/js/form.js" defer></script>
+  <script src="assets/js/ui.js" defer></script>
 
 </body>
 </html>
