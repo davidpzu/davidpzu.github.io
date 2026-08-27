@@ -1,0 +1,22 @@
+# davidpzu.github.io
+#
+# Only a robots.txt at the site root is ever read — one in a subdirectory is
+# ignored — so this file does nothing at /v2/robots.txt and starts working at
+# promotion, when it moves to the root with everything else. design.md §3.12
+
+User-agent: *
+Allow: /
+
+# /v1/ is deliberately NOT disallowed.
+#
+# The archived v1 pages carry <meta name="robots" content="noindex">, and a
+# crawler has to fetch a page to see that tag. Blocking the path here would
+# hide the noindex and leave the old URLs eligible to show up as bare,
+# untitled links — the opposite of what is wanted. Crawl is allowed so the
+# noindex can be read and obeyed.
+#
+# The three unfinished case studies under /work/ are handled the same way:
+# noindex on the page, no link to them from anywhere, and no entry in the
+# sitemap. Nothing is hidden here either.
+
+Sitemap: https://davidpzu.github.io/sitemap.xml

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Two URLs, and that is not an oversight.
+
+  The three case studies at /work/thalesgu/, /work/sacem-collab/ and
+  /work/sconnect/ still carry SACEM's copy under their own titles. They are
+  noindex, unlinked from the work section, and must stay out of here until
+  each has content of its own — listing a page in a sitemap while telling
+  crawlers not to index it is a contradiction, and the copy is the reason
+  the noindex is there. Add a <url> block per page as each one is written.
+
+  /404.html is never listed: it is served with a 404 status.
+  /v1/ is never listed: it is an archive, and it is noindex.
+
+  Like robots.txt, only a sitemap at the site root is useful — this does
+  nothing at /v2/sitemap.xml and starts working at promotion. design.md §3.12
+
+  changefreq and priority are deliberately absent. Google has ignored both
+  for years, and the only honest lastmod is the day the page last changed.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://davidpzu.github.io/</loc>
+    <lastmod>2026-08-27</lastmod>
+  </url>
+
+  <url>
+    <loc>https://davidpzu.github.io/work/sacem/</loc>
+    <lastmod>2026-08-27</lastmod>
+  </url>
+
+</urlset>

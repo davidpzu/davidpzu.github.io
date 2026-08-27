@@ -8,10 +8,33 @@
   <title>SACEM — Messaging App Redesign · David Prieto Zurita</title>
   <meta name="description" content="Redesigning a legacy messaging system for SACEM's member platform: +130% monthly messages, shipped in two months on a decade-old stack.">
 
+  <link rel="canonical" href="https://davidpzu.github.io/work/sacem/">
+
+  <!-- Link preview. The index's block explains the two deliberate breaks
+       with §0 and §4 (a PNG, and absolute URLs); this page inherits both.
+       It shares the site's card rather than carrying one of its own: the
+       hero image is AVIF, which no scraper reads, and there is no PNG of
+       it. A per-page card is worth making once this page has final
+       screens — until then a correct site card beats a broken page one. -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="David Prieto Zurita">
+  <meta property="og:url" content="https://davidpzu.github.io/work/sacem/">
+  <meta property="og:title" content="SACEM — Messaging App Redesign · David Prieto Zurita">
+  <meta property="og:description" content="Redesigning a legacy messaging system for SACEM's member platform: +130% monthly messages, shipped in two months on a decade-old stack.">
+  <meta property="og:image" content="https://davidpzu.github.io/assets/img/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The site's opening screen: David Prieto Zurita set large in monospace, above the line Senior Product Designer · Shipping B2B SaaS that gets measured.">
+  <meta name="twitter:card" content="summary_large_image">
+
   <!-- Two levels down, so every path is ../../ — never root-relative. §0 -->
   <link rel="icon" href="../../assets/img/favicon/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="../../assets/img/favicon/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="../../assets/img/favicon/apple-touch-icon.png">
+
+  <!-- Root-level manifest; the index's block explains why it sits there. -->
+  <link rel="manifest" href="../../site.webmanifest">
+  <meta name="theme-color" content="#FCFCFA">
 
   <!-- Same three faces above the fold as the index: the h1 and eyebrows are
        Geist Mono 500, meta is Geist Mono 400, body copy is Inter Tight 400.
@@ -71,12 +94,9 @@
          the one thing above the fold; every other image on the page is
          lazy. AVIF first, JPEG fallback — 37 KB against 270 KB. -->
     <figure class="cs-hero-media">
-      <picture>
-        <source srcset="../../assets/img/projects/sacem-mensajeria/sacem-hero.avif" type="image/avif">
-        <img src="../../assets/img/projects/sacem-mensajeria/sacem-hero.jpg"
-             width="1400" height="600" fetchpriority="high" decoding="async"
-             alt="The redesigned SACEM messaging interface, shown as a wide banner.">
-      </picture>
+      <img src="../../assets/img/projects/sacem-mensajeria/sacem-hero.avif"
+           width="2280" height="960" fetchpriority="high" decoding="async"
+           alt="Messages in context — screens from the redesigned SACEM messaging system: a member inbox of conversations and a single thread with a reply box.">
     </figure>
 
     <!-- ======================================================== overview -->
@@ -133,7 +153,7 @@
           <div class="cs-fact">
             <dt class="eyebrow">Timeline</dt>
             <dd>
-              <strong>2025</strong>
+              <strong>2024</strong>
               Approximately 2 months end-to-end, from the first draft session with the client to final staging test
             </dd>
           </div>
@@ -249,12 +269,9 @@
       </div>
 
       <figure class="cs-figure">
-        <picture>
-          <source srcset="../../assets/img/projects/sacem-mensajeria/sacem-challenge.avif" type="image/avif">
-          <img src="../../assets/img/projects/sacem-mensajeria/sacem-challenge.jpg"
-               width="1920" height="620" loading="lazy" decoding="async"
-               alt="Two screenshots of the legacy SACEM messaging system: a plain inbox table on the left, and a single conversation with a reply box on the right.">
-        </picture>
+        <img src="../../assets/img/projects/sacem-mensajeria/sacem-challenge.avif"
+             width="1920" height="620" loading="lazy" decoding="async"
+             alt="Two screenshots of the legacy SACEM messaging system: a plain inbox table on the left, and a single conversation with a reply box on the right.">
         <figcaption class="meta">Screenshots of the old messaging system</figcaption>
       </figure>
     </section>

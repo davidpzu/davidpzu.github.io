@@ -442,18 +442,13 @@
 }
 
 /* The two shapes the slot must accept without any other change:
-   <img> (AVIF source + JPEG fallback in a <picture>), or
+   a bare <img> pointing at an AVIF, or
    <video autoplay muted loop playsinline poster="…">.
 
-   display:contents on the <picture> is what lets the first shape work: the
-   img is sized 100%/100% against the slot, and an inline <picture> box in
-   between would give it an auto height to resolve against instead. The
-   element carries no semantics of its own, so removing its box costs
-   nothing in the accessibility tree. */
-.card-media picture {
-  display: contents;
-}
-
+   Both are direct children of the slot. The <picture> wrapper and its
+   display:contents rule are gone with the fallbacks — the wrapper existed
+   only so the img would size against the slot rather than against an
+   inline <picture> box, and with no <source> there is nothing to wrap. */
 .card-media img,
 .card-media video {
   width: 100%;
@@ -795,9 +790,9 @@
 
 /* ----------------------------------------------------- the chapter media */
 /* One image per chapter, not one portrait for the section. Square or 4:5,
-   supplied by David; only chapter one's has arrived.
+   supplied by David; all three have arrived.
 
-   Two things this deliberately does NOT do, both because the-beginning.png
+   Two things this deliberately does NOT do, both because the-beginning.avif
    is a cut-out on a transparent ground rather than a photograph. It carries
    no --paper-alt fill and no --radius: the Walkman, the football and the
    PlayStation are composited so they break outside the photo's own
@@ -820,7 +815,6 @@
   margin-bottom: var(--s-3);
 }
 
-.chapter-media picture,
 .chapter-media img {
   display: block;
   width: 100%;
@@ -1114,15 +1108,13 @@
   background: var(--paper);
 }
 
-/* Two of the ten — DaVinci and Adobe — are effectively raster: DaVinci is a
-   145 KB gradient mesh and Adobe is a 56 KB embedded PNG, both for something
-   drawn at 32px. They ship as 192px AVIF (4.7 KB and 6.7 KB) with the SVG
-   kept as the <picture> fallback. The other eight are real vectors and stay
-   as they are. display:contents so the img sizes against the tile. */
-.tool-icon picture {
-  display: contents;
-}
-
+/* Two of the ten — DaVinci and Adobe — were never really vectors: DaVinci
+   was a 145 KB gradient mesh and Adobe a 56 KB embedded PNG, both for
+   something drawn at 32px. They ship as 192px AVIF (4.7 KB and 6.7 KB),
+   4x the 48px slot. The SVGs were the <picture> fallback and went with the
+   rest of them. The other eight are real vectors and stay as they are.
+   object-fit: contain is what absorbs Adobe's 192x187 against a square
+   box. */
 .tool-icon img {
   display: block;
   width: 2rem;

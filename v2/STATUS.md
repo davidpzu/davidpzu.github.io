@@ -4,11 +4,17 @@ Handoff notes. Companion to `design.md`, which stays the spec — this file
 only records where the build actually is and what is still undecided.
 Delete at promotion.
 
-**Last updated:** 2026-08-27, at the end of the session that added the
-fourth card, the three duplicated case studies, the About images, the 1240
-breakpoint and the Contact link — and that settled the commit-identity
-question for good. `design.md` was audited against the build in the same
-pass, not just edited. Everything described here is committed.
+**Last updated:** 2026-08-27, at the end of the **promotion-prep session**.
+That session did seven things: reverted cards 2–4 to `.card-wip`, dropped
+every raster fallback for AVIF-only, added the link preview (§3.10), built
+`404.html` (§3.11), fixed and linked the manifest and added `robots.txt` and
+`sitemap.xml` (§3.12), wired David's eight new thumbnails and heroes, and
+rewrote §8's promotion recipe — the old one-liner left v1 debris serving at
+the root. `design.md` was amended alongside every one of them.
+
+**All of it is committed and none of it is pushed.** `main` is 16 ahead of
+`origin/main`. When you do promote, use the five-step sequence in
+`design.md` §8, not the one-liner it replaced.
 
 **If you are picking this up cold, read three things in this order:**
 `design.md` (what the site is), the Git section below (there is a trap in
@@ -26,20 +32,36 @@ for something to do. These are the ones that need action:
 
 | what | spec |
 |---|---|
-| thumbnails for work cards 2, 3, 4 | **1120 × 700**, exactly 16:10 (item 38) |
+| ~~thumbnails for work cards 2, 3, 4~~ | **delivered 2026-08-27**, all four at 1120 × 700 |
+| ~~hero images, all four case studies~~ | **delivered 2026-08-27**, all four at 2280 × 960 |
 | Final Outcome screens, each case study | 16:9 slots, two per page (item 1) |
 | real content for the three copied case studies | they are SACEM's words today (item 37) |
 
-Hero exports, whenever one is reshot: **2280 × 960**, exactly 2.375:1.
-Ratios matter more than pixels — `object-fit: cover` crops the difference.
+**Every image David owed except the Final Outcome screens has landed**, each
+one exactly to spec, SACEM's two re-exported along with the rest. Ratios
+matter more than pixels — `object-fit: cover` crops the difference.
 
-**Decisions deferred to promotion:** item 28 (443 KB of dead
-`img-david.jpg`), item 31 (AVIF fallbacks shipping beside their sources —
-`me-now.png` alone is 4.5 MB), item 8 (video autoplay under reduced motion,
-moot until a video exists).
+**Still to do before the site goes live**, none of it waiting on David:
+
+| | |
+|---|---|
+| push, and verify on the deployed `/v2/` URL | §6's last criterion |
+| the smoke test | see the test-harness note in `## State of play` — the contact form is the one that matters |
+| the five-step promotion sequence | `design.md` §8 |
+
+**~~Decisions deferred to promotion.~~ Settled 2026-08-27.** Item 28's dead
+`img-david.jpg` is deleted, and item 31's fallback question was answered by
+dropping them entirely — AVIF-only, David's call, knowing it strands Safari
+below 16.4. Between them and the eight PNG masters, **`v2/` went from about
+10 MB to 1.9 MB**. Item 8 (video autoplay under reduced motion) is still
+moot until a video exists.
 
 **Judgement calls David has seen and left alone:** items 15 and 35. Not
 problems, just noted.
+
+**One number to respect:** the index is at **787.6 KB against §6's 800**.
+Twelve KB of headroom. Measure, do not estimate, before adding anything to
+that page. Item 38 has the arithmetic.
 
 **Nothing is broken and nothing is failing.** Every WCAG issue this rebuild
 found is closed; §6 reads "no exceptions" on contrast. There is no known
@@ -125,11 +147,19 @@ were updated. **Read the spec, not this file, for what the site is.**
 Measured 2026-08-27. §6's budget is 800 KB **total page weight**, not just
 initial load.
 
+Re-measured 2026-08-27 after the thumbnails and heroes landed, the AVIF
+fallbacks were dropped and the link-preview block was added.
+
 | | index | case study |
 |---|---|---|
-| html + css + js + fonts + favicon | 171.6 KB | 180.4 KB |
-| **initial load** | **171.6 KB** | **217.7 KB** |
-| everything, after scrolling | **658.5 KB** | **254.7 KB** |
+| **initial load** | **173.5 KB** | **269.0 KB** (hero is `fetchpriority=high`) |
+| everything, after scrolling | **787.6 KB** | **306.0 KB** |
+| headroom against §6's 800 | **12.4 KB** | 494.0 KB |
+
+The index is now genuinely close to the ceiling. Its 17 images are 614.1 KB
+of the total, of which the four thumbnails are 138.3 KB and the three About
+chapter images are 456 KB — that last figure is where any future saving has
+to come from.
 
 Four CSS sheets are 60.7 KB; the index's five scripts 19.6 KB; four fonts
 (Syne is gone) 63.1 KB; the ten tool icons 27.5 KB.
@@ -164,6 +194,42 @@ v2/
 promotion. They live in the session scratchpad, so they are gone now:
 **rebuild them if you change any of those three files.** `counters.js` and
 `reveal.js` were tested the same way earlier.
+
+**Not rebuilding them before promotion is a decision, not an oversight.**
+David asked on 2026-08-27 whether it had to happen before the push and the
+swap. It does not, for three reasons:
+
+- **The harnesses never ship.** They live outside `v2/` by design, so
+  whether they exist changes nothing a visitor ever touches.
+- **The code they approved has not moved.** `form.js` was last committed in
+  `016238d`, `ui.js` and `casestudy.js` in `4675529`, all on 2026-08-26 and
+  all before the runs that passed. Everything since has been HTML, CSS,
+  images and docs — `git status v2/assets/js/` was clean when this was
+  checked.
+- **A suite is a net for future edits, not a verdict on current state.**
+  Nothing left before promotion touches JavaScript: the Final Outcome
+  screens are markup, the case study copy is words, and the swap is moving
+  files.
+
+The trigger above is unchanged and is the right one: **rebuild them the next
+time one of those three files is edited**, not on a calendar.
+
+**What replaces them before going live is a manual smoke test, and it is
+worth more here than the unit tests are.** §6 already requires verification
+on the deployed `/v2/` URL rather than locally, so this belongs to a step
+that has to happen regardless:
+
+- **Submit the contact form for real and confirm the email arrives.** This
+  is the one check the harnesses cannot make. They prove `form.js` handles
+  a rejection correctly; they cannot prove the Formspree endpoint is still
+  live, still pointed at David's inbox, and inside its plan limits. **A
+  silently broken contact form is the worst failure mode on this site**,
+  because nobody reports it — they simply never email him, and he never
+  learns why.
+- Click through all four case study links.
+- Check the cursor ring and the nav's hide-and-return on a real machine.
+  Headless Chrome was used for layout checks during the build and cannot
+  exercise either.
 
 ### Git — read this before committing anything
 
@@ -208,7 +274,7 @@ would have caught the 2026-05-25 wipe.
 |---|---|---|
 | 57 pushed | `davidpzu <88293615+davidpzu@users.noreply.github.com>` | correct already |
 | 13 pushed | `David <david@MacBook-Pro-de-David.local>` | **no** — needs a force-push, David declined |
-| 14 unpushed | `davidpzu <88293615+…>` | correct |
+| 16 unpushed | `davidpzu <88293615+…>` | correct |
 
 The 13 will never attribute to David's profile. Leaving them is deliberate:
 fixing them rewrites public history, changes every SHA from May onward and
@@ -228,7 +294,7 @@ commits and was the last thing keeping the 920 KB `my-origins.png` blob
 alive. David reviewed the pages first. Recoverable from the reflog for ~90
 days if it is ever wanted.
 
-**Nothing is pushed.** `main` is 14 ahead of `origin/main`. Pushing
+**Nothing is pushed.** `main` is 16 ahead of `origin/main`. Pushing
 publishes the preview to `davidpzu.github.io/v2/` — the `noindex` tag on
 every page is in place for exactly that, and comes off at promotion.
 
@@ -389,7 +455,7 @@ One typography note rather than a question: the titles use a spaced hyphen
 ("SACEM - Messaging app") where the year markers use an en dash. That is how
 David wrote them and it is the same form v1 used. Left alone.
 
-**7. Cards 2, 3 and 4 have no media yet; card 1 does.** David asked for v1's
+**7. ~~Cards 2, 3 and 4 have no media yet.~~ Closed 2026-08-27 — all four thumbnails landed.** Read this for the history. David asked for v1's
 SACEM thumbnail back, so `sacem-thumb.jpg`/`.avif` is wired again and is no
 longer parked. §3.3's `1.02` media hover therefore works on card 1 and
 scales nothing on the other three — and those three carry `.card-wip`, which
@@ -795,8 +861,12 @@ for scaffolding. What it costs, until the content diverges:
   be applied four times is *structural*: a template change, a new section, a
   markup fix, an accessibility correction.
   While they remain untouched scaffolding, `diff work/sacem/index.html
-  work/<slug>/index.html` returning 8 lines is a cheap sanity check. That
-  check stops being meaningful the moment David starts writing them.
+  work/<slug>/index.html` returning **20 changed lines** is a cheap sanity
+  check. It was 8, then 16 when the §3.10 link-preview block gave each page
+  its own `canonical`, `og:url`, `og:title` and `og:description`, and 20 now
+  that each carries its own hero image and alt. All of that is identity, not
+  structure. That check stops being
+  meaningful the moment David starts writing them.
 - **The four pages currently claim the same work.** A visitor clicking
   "Green Up" lands on a page whose body describes the SACEM messaging
   redesign. The badge says "in progress", the site is `noindex` and nothing
@@ -805,6 +875,24 @@ for scaffolding. What it costs, until the content diverges:
 - **`.card-wip` is now dormant.** All four cards are links, so nothing uses
   the WIP treatment. It is kept, not deleted: the next announced-but-unbuilt
   project needs it back.
+
+**38. ~~The card thumbnail source is smaller than the box it is displayed in.~~
+Closed 2026-08-27. David delivered all four at 1120 × 700 and all four heroes
+at 2280 × 960 — the exact numbers this item derived — and the budget collision
+it predicted resolved the way it said it would, through encode quality.**
+
+| | predicted here | actual |
+|---|---|---|
+| four thumbnails | 741–819 KB page | **787.6 KB** at AVIF q65 |
+| the lever | encode quality | q65 chosen over q75 (804 KB, over) |
+
+q65 was checked at 526px — the slot's real display width — before being
+chosen, not after: headlines crisp, no visible artefacts. The index now has
+**12.4 KB of headroom against §6's 800**, which is thin. Anything added to
+that page from here needs measuring, not estimating. The case study is not
+tight: 306 KB with its hero, 494 KB spare.
+
+The original analysis follows.
 
 **38. The card thumbnail source is smaller than the box it is displayed in.**
 `sacem-thumb` is 475 × 300 against a slot that reaches **526 × 329** CSS px

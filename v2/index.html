@@ -8,11 +8,51 @@
   <title>David Prieto Zurita — Senior Product Designer</title>
   <meta name="description" content="Design and tooling for B2B platforms, with AI where it truly helps. Senior product designer in Madrid.">
 
+  <link rel="canonical" href="https://davidpzu.github.io/">
+
+  <!-- Link preview, for LinkedIn / Slack / iMessage / X. Two things here
+       run against rules stated elsewhere, both deliberately.
+
+       1. social-card.png is a PNG, and §4 says every image is an AVIF.
+          Scrapers are not browsers: none of the big ones read AVIF, so
+          converting this file would silently blank every share. It is the
+          one raster left in the repo, and it is never fetched during a
+          page view, so it costs nothing against §6's budget.
+
+       2. The URLs are absolute, and §0 says relative everywhere. og:image
+          has to be absolute — a scraper has no base to resolve against.
+          They are written as the post-promotion URLs so that nothing in
+          this block changes at promotion; the cost is that while the
+          preview sits at /v2/ the card points at a page that is not up
+          yet. The site is noindex until promotion and should not be
+          shared from there anyway. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="David Prieto Zurita">
+  <meta property="og:url" content="https://davidpzu.github.io/">
+  <meta property="og:title" content="David Prieto Zurita — Senior Product Designer">
+  <meta property="og:description" content="Design and tooling for B2B platforms, with AI where it truly helps. Senior product designer in Madrid.">
+  <meta property="og:image" content="https://davidpzu.github.io/assets/img/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The site's opening screen: David Prieto Zurita set large in monospace, above the line Senior Product Designer · Shipping B2B SaaS that gets measured.">
+  <meta name="twitter:card" content="summary_large_image">
+
   <!-- Reusing the v1 icon set. site.webmanifest is deliberately not linked:
        its icon paths are root-relative and would break §0. -->
   <link rel="icon" href="assets/img/favicon/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/img/favicon/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="assets/img/favicon/apple-touch-icon.png">
+
+  <!-- The manifest lives at the site root, not in the favicon folder where
+       the generator left it: every URL inside a manifest resolves against
+       the manifest's own location, so from the root `start_url: "./"` and
+       `assets/img/favicon/…` are correct both at /v2/ today and at the root
+       after promotion. The generator's copy was unlinked and broken — its
+       icon paths were root-relative to files that do not sit at the root.
+       Its "maskable" purpose was wrong too: the monogram fills ~88% of its
+       canvas, well outside the safe zone a circular mask leaves. §3.12 -->
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#FCFCFA">
 
   <!-- The three faces that render above the fold: the h1 and eyebrows are
        Geist Mono 500, the rotator and meta are Geist Mono 400, body copy is
@@ -111,15 +151,18 @@
     </section>
 
     <!-- ================================================ selected work
-         §3.3 — card 01 is one <a> wrapping the whole card. Cards 02 and
-         03 are not links at all: honest label, no dead href. Media slots
-         are empty containers today, sized to hold their 16:10 box.
+         §3.3 — card 01 is one <a> wrapping the whole card. Cards 02, 03
+         and 04 are not links at all: honest label, no dead href. Their
+         pages exist but still carry SACEM's copy, and a card that opens
+         another project's words is worse than one that says "in progress".
+         Re-link each the moment its page has content of its own — swap the
+         .card-wip <li> for card 01's shape and drop .card-status.
 
-         §3.3 also asks for aria-disabled on the WIP cards. Step 14 removed
-         it: aria-disabled is not allowed on role=listitem and fails
-         validation, and there is nothing interactive on those cards to
-         disable. "In progress" is real text in the DOM, so the state
-         reaches everyone without it. design.md §3.3 needs amending. -->
+         No aria-disabled on the WIP cards. It is not allowed on
+         role=listitem, which is what a <li> is, so it fails validation and
+         costs §6's accessibility 100 — and it was doing nothing anyway:
+         with no interactive element on the card there is nothing to
+         disable, and "In progress" is real text in the DOM. -->
     <section id="work" class="work" aria-labelledby="work-title">
       <div class="shell">
         <p class="section-eyebrow eyebrow">See the process</p>
@@ -130,12 +173,9 @@
           <li class="card">
             <a class="card-link" href="work/sacem/index.html">
               <span class="card-media">
-                <picture>
-                  <source srcset="assets/img/projects/sacem-mensajeria/sacem-thumb.avif" type="image/avif">
-                  <img src="assets/img/projects/sacem-mensajeria/sacem-thumb.jpg"
-                       width="475" height="300" loading="lazy" decoding="async"
-                       alt="">
-                </picture>
+                <img src="assets/img/projects/sacem-mensajeria/sacem-thumb.avif"
+                     width="1120" height="700" loading="lazy" decoding="async"
+                     alt="Messages in context — screens from the redesigned SACEM messaging system: a member inbox and a single conversation thread.">
               </span>
               <h3 class="card-title">SACEM - Messaging app</h3>
               <p class="card-desc">Redesigning the messaging app for music creators</p>
@@ -144,40 +184,40 @@
             </a>
           </li>
 
-          <li class="card">
-            <a class="card-link" href="work/thalesgu/index.html">
-              <span class="card-media">
-                <span class="card-media-label meta">Media pending</span>
-              </span>
-              <h3 class="card-title">Green Up - Transaction Analysis</h3>
-              <p class="card-desc">Designed the interactions and entire transaction process for an internal reuse industrial material platform</p>
-              <span class="card-rule"></span>
-              <span class="card-cta">Read case study →</span>
-            </a>
+          <li class="card card-wip">
+            <span class="card-media">
+              <img src="assets/img/projects/thalesgu/thalesgu-thumb.avif"
+                   width="1120" height="700" loading="lazy" decoding="async"
+                   alt="From listing to signature — screens from Green Up: an equipment listing with search filters, and a four-step transaction tracker.">
+            </span>
+            <h3 class="card-title">Green Up - Transaction Analysis</h3>
+            <p class="card-desc">Designed the interactions and entire transaction process for an internal reuse industrial material platform</p>
+            <span class="card-rule"></span>
+            <p class="card-status eyebrow">In progress</p>
           </li>
 
-          <li class="card">
-            <a class="card-link" href="work/sacem-collab/index.html">
-              <span class="card-media">
-                <span class="card-media-label meta">Media pending</span>
-              </span>
-              <h3 class="card-title">SACEM - Collab+</h3>
-              <p class="card-desc">A new collaboration module built for musicians across France</p>
-              <span class="card-rule"></span>
-              <span class="card-cta">Read case study →</span>
-            </a>
+          <li class="card card-wip">
+            <span class="card-media">
+              <img src="assets/img/projects/sacem-collab/sacem-collab-thumb.avif"
+                   width="1120" height="700" loading="lazy" decoding="async"
+                   alt="Find a collaborator — screens from SACEM Collab+: a listing of collaboration calls and a member's project brief.">
+            </span>
+            <h3 class="card-title">SACEM - Collab+</h3>
+            <p class="card-desc">A new collaboration module built for musicians across France</p>
+            <span class="card-rule"></span>
+            <p class="card-status eyebrow">In progress</p>
           </li>
 
-          <li class="card">
-            <a class="card-link" href="work/sconnect/index.html">
-              <span class="card-media">
-                <span class="card-media-label meta">Media pending</span>
-              </span>
-              <h3 class="card-title">Sanofi Connect - Referral functionality</h3>
-              <p class="card-desc">Referral system to grow platform audience for a company's benefit platform</p>
-              <span class="card-rule"></span>
-              <span class="card-cta">Read case study →</span>
-            </a>
+          <li class="card card-wip">
+            <span class="card-media">
+              <img src="assets/img/projects/sconnect/sconnect-thumb.avif"
+                   width="1120" height="700" loading="lazy" decoding="async"
+                   alt="Invite colleagues — screens from Sanofi Connect: an invite form with email chips and a panel showing who has joined.">
+            </span>
+            <h3 class="card-title">Sanofi Connect - Referral functionality</h3>
+            <p class="card-desc">Referral system to grow platform audience for a company's benefit platform</p>
+            <span class="card-rule"></span>
+            <p class="card-status eyebrow">In progress</p>
           </li>
 
         </ul>
@@ -265,12 +305,9 @@
                  loading=lazy because About is the fourth section — this
                  costs nothing on initial load. §3.5 -->
             <figure class="chapter-media">
-              <picture>
-                <source srcset="assets/img/the-beginning.avif" type="image/avif">
-                <img src="assets/img/the-beginning.png" width="878" height="846"
-                     loading="lazy" decoding="async"
-                     alt="A childhood photo of me at about three, wearing oversized headphones, with cut-outs of a Sony CD Walkman, a Nike football and a PlayStation 2 arranged around it. Caption in the image: Always passionate about music.">
-              </picture>
+              <img src="assets/img/the-beginning.avif" width="878" height="846"
+                   loading="lazy" decoding="async"
+                   alt="A childhood photo of me at about three, wearing oversized headphones, with cut-outs of a Sony CD Walkman, a Nike football and a PlayStation 2 arranged around it. Caption in the image: Always passionate about music.">
             </figure>
             <div class="chapter-text">
               <h3 class="chapter-title">The Beginning</h3>
@@ -283,12 +320,9 @@
           <p class="year">2018–2020</p>
           <div class="chapter-body">
             <figure class="chapter-media">
-              <picture>
-                <source srcset="assets/img/where-it-started.avif" type="image/avif">
-                <img src="assets/img/where-it-started.png" width="878" height="846"
-                     loading="lazy" decoding="async"
-                     alt="A collage from my design studies: me looking at a Chat Noir poster in a gallery, an aerial view of Madrid's Gran V&#237;a labelled MADRID, the Muelle Uno promenade in M&#225;laga labelled M&#193;LAGA, a portrait of me at the time, the Adobe InDesign, Photoshop and Illustrator icons beside the Gauss Multimedia design-school mark, a notebook and pen, and a tray of letterpress type.">
-              </picture>
+              <img src="assets/img/where-it-started.avif" width="878" height="846"
+                   loading="lazy" decoding="async"
+                   alt="A collage from my design studies: me looking at a Chat Noir poster in a gallery, an aerial view of Madrid's Gran V&#237;a labelled MADRID, the Muelle Uno promenade in M&#225;laga labelled M&#193;LAGA, a portrait of me at the time, the Adobe InDesign, Photoshop and Illustrator icons beside the Gauss Multimedia design-school mark, a notebook and pen, and a tray of letterpress type.">
             </figure>
             <div class="chapter-text">
               <h3 class="chapter-title">Where it all started</h3>
@@ -301,12 +335,9 @@
           <p class="year">2024–2026</p>
           <div class="chapter-body">
             <figure class="chapter-media">
-              <picture>
-                <source srcset="assets/img/me-now.avif" type="image/avif">
-                <img src="assets/img/me-now.png" width="878" height="846"
-                     loading="lazy" decoding="async"
-                     alt="A collage from now: a design talk with a slide reading &#8220;No perder&#225;s tu trabajo por culpa de la IA, sino por culpa de alguien que la use mejor que t&#250;&#8221;, the book Dise&#241;o desde Marte by Cris Busquets, the Lovable, Figma and Claude icons, a portrait of me, me at the Alhambra, me beside a &#20320;&#22909;&#37325;&#24198; (Hello Chongqing) sign, a giant panda, and Chongqing's Hongya Cave lit up at night.">
-              </picture>
+              <img src="assets/img/me-now.avif" width="878" height="846"
+                   loading="lazy" decoding="async"
+                   alt="A collage from now: a design talk with a slide reading &#8220;No perder&#225;s tu trabajo por culpa de la IA, sino por culpa de alguien que la use mejor que t&#250;&#8221;, the book Dise&#241;o desde Marte by Cris Busquets, the Lovable, Figma and Claude icons, a portrait of me, me at the Alhambra, me beside a &#20320;&#22909;&#37325;&#24198; (Hello Chongqing) sign, a giant panda, and Chongqing's Hongya Cave lit up at night.">
             </figure>
             <div class="chapter-text">
               <h3 class="chapter-title">Where I am now</h3>
@@ -386,7 +417,7 @@
               <span class="tool-name meta">Figma</span>
             </li>
             <li class="tool">
-              <span class="tool-icon"><picture><source srcset="assets/img/icons/icon-adobecc.avif" type="image/avif"><img src="assets/img/icons/icon-adobecc.svg" alt="" width="48" height="48" loading="lazy"></picture></span>
+              <span class="tool-icon"><img src="assets/img/icons/icon-adobecc.avif" alt="" width="48" height="48" loading="lazy"></span>
               <span class="tool-name meta">Adobe Suite</span>
             </li>
             <li class="tool">
@@ -394,7 +425,7 @@
               <span class="tool-name meta">Affinity</span>
             </li>
             <li class="tool">
-              <span class="tool-icon"><picture><source srcset="assets/img/icons/icon-davinci.avif" type="image/avif"><img src="assets/img/icons/icon-davinci.svg" alt="" width="48" height="48" loading="lazy"></picture></span>
+              <span class="tool-icon"><img src="assets/img/icons/icon-davinci.avif" alt="" width="48" height="48" loading="lazy"></span>
               <span class="tool-name meta">DaVinci Resolve</span>
             </li>
             <li class="tool">
@@ -484,7 +515,7 @@
         </div>
       </div>
 
-      <p class="colophon meta">© 2026 · Built by hand · Madrid</p>
+      <p class="colophon meta">© 2026 · Built by long hours smashing keyboard · Madrid</p>
     </div>
   </footer>
 

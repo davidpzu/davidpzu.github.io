@@ -15,7 +15,7 @@ Non-negotiable. Do not propose alternatives.
 - **No framework.** Vanilla HTML, CSS, JavaScript in separate files. No React, Next, Vue, Svelte.
 - **No build step.** No npm, no bundler, no PostCSS, no Tailwind. What's in the repo is what ships.
 - **No CSS framework.** Hand-written CSS with custom properties.
-- **Relative paths everywhere.** `assets/css/tokens.css`, `../../assets/js/rotator.js`. Never root-relative (`/assets/…`) — those break the moment `/v2` is promoted to root.
+- **Relative paths everywhere.** `assets/css/tokens.css`, `../../assets/js/rotator.js`. Never root-relative (`/assets/…`) — those break the moment `/v2` is promoted to root. **Two exceptions, both forced and both documented where they live.** The `og:`/`canonical` URLs in every `<head>` are absolute, because a scraper has no base to resolve a relative one against (§3.10). And **every path in `404.html` is root-relative**, because that page is served for URLs at unpredictable depths and a relative path would resolve against whatever was asked for (§3.11). Both are written in their post-promotion form, so neither needs an edit at promotion.
 - **Fonts self-hosted** as `.woff2` in `v2/assets/fonts/`. No external requests of any kind.
 - **`<meta name="robots" content="noindex">`** on every `/v2` page until promotion. Remove at promotion.
 - **JS is progressive enhancement.** Every section readable and navigable with JavaScript disabled. JS adds motion, never content.
@@ -282,14 +282,14 @@ There is also a collision no contrast ratio describes: the links pass directly o
 
 ```
 ┌───────────────────────┐  ┌───────────────────────┐
-│ [16:10 placeholder]   │  │ [16:10 placeholder]   │
+│ [16:10 thumbnail]     │  │ [16:10 thumbnail]     │
 │ SACEM - Messaging app │  │ Green Up - Transacti… │
 │ Redesigning the mess… │  │ Designed the interac… │
 │ ───────────────────── │  │ ───────────────────── │
 │ Read case study →     │  │ IN PROGRESS           │
 └───────────────────────┘  └───────────────────────┘
 ┌───────────────────────┐  ┌───────────────────────┐
-│ [16:10 placeholder]   │  │ [16:10 placeholder]   │
+│ [16:10 thumbnail]     │  │ [16:10 thumbnail]     │
 │ SACEM - Collab+       │  │ Sanofi Connect - Ref… │
 │ A new collaboration … │  │ Referral system to g… │
 │ ───────────────────── │  │ ───────────────────── │
@@ -307,18 +307,20 @@ There is also a collision no contrast ratio describes: the links pass directly o
 | 3 | SACEM - Collab+ | A new collaboration module built for musicians across France | `work/sacem-collab/` |
 | 4 | Sanofi Connect - Referral functionality | Referral system to grow platform audience for a company's benefit platform | `work/sconnect/` |
 
-  **All four cards are live links now; there are no `.card-wip` cards left.** Folder names are deliberately abbreviated so a client's full name is not spelled out in a URL. Cards 2–4 point at pages that are scaffolding — a duplicate of the SACEM case study with only their identity changed — so their badge reads "Case Study — in progress" until the real copy lands.
+  **Card 1 is a link; cards 2–4 are `.card-wip` and carry no `<a>`.** They were briefly all links, and that was reverted before promotion: their pages are scaffolding — a duplicate of the SACEM case study with only title, description, `h1` and badge changed — so a visitor clicking "Green Up" would read the SACEM messaging redesign under a Green Up headline. The pages stay in the repo, unlinked and `noindex`, and each is re-linked the moment it has content of its own. Folder names are deliberately abbreviated so a client's full name is not spelled out in a URL.
 - **No metrics on the cards.** The numbers live in section 3.4 only, so they aren't diluted across two places.
-- **Media slot must work empty today.** Build a fixed 16:10 container with `--paper-alt` fill and a mono placeholder label. Thumbnails and Cursorful navigation videos arrive later, so the container must accept, without any layout change:
-  - `<picture>` with an AVIF `<source>` and a JPEG `<img>` fallback (§4), wrapped in `display: contents` so the img sizes against the slot rather than against an inline `<picture>` box, or
+- **All four slots are filled.** David's thumbnails landed 2026-08-27, all four exactly **1120 × 700** — 2x the 526 × 329 the slot reaches at `--shell`, which is the number item 38 derived. `.card-media-label` and its "Media pending" text are gone from the markup but kept in the CSS, because the next announced-but-unshot project needs the empty state back. The container still accepts, without any layout change:
+  - a bare `<img>` at an AVIF (§4), a direct child of the slot so it sizes 100%/100% against it, or
   - `<video autoplay muted loop playsinline>` with a `poster`.
   - Under `prefers-reduced-motion`, video must not autoplay — show the poster.
-- **The WIP card treatment is currently unused, and the rule it rests on is why.** `.card-wip` gives `--ink-muted` text, an `IN PROGRESS` eyebrow, `cursor: default`, and **no `<a>`** — because a dead link is worse than an honest label. That was the right state while cards 2–4 pointed nowhere. Now that all four have real pages the class is dormant, not deleted: the moment a fifth project is announced before its page exists, it goes back.
+- **The WIP card treatment, and the rule it rests on.** `.card-wip` gives `--ink-muted` text, an `IN PROGRESS` eyebrow, `cursor: default`, and **no `<a>`** — because a link to the wrong content is worse than an honest label. `.card-wip` takes the padding directly, since there is no `.card-link` to carry it, so a live card and a WIP card in the same row line up rule for rule. `--ink-muted` on `--paper` is 4.99:1, the same pairing `.card-desc` already uses. **Turning a card live is one edit:** wrap its contents in `<a class="card-link" href="work/<slug>/index.html">`, drop `card-wip` and `.card-status`, and end with `<span class="card-cta">Read case study →</span>`.
 - **No `aria-disabled`** (this section asked for it until step 14). It is not an allowed attribute on `role=listitem`, which is what a `<li>` is, so axe flags it under `aria-allowed-attr` and it costs §6's "accessibility 100". It was also doing nothing: with no interactive element on the card there is nothing to disable, and `IN PROGRESS` is real text in the DOM, so the state already reaches everyone. Do not add it back.
 - Live card: entire card is one `<a>`, no nested interactive elements. Hover: media scales `1.02`, border → `--accent`, 200ms ease.
 - 2-up desktop, 1-up below 768px. Four cards make an even 2 × 2, so the old "third card starts a second row, do not stretch it" caveat no longer applies.
 - **No numbering, and no `·` separator.** They were there on the argument that the order is by significance and the reader uses it. David removed them. `.card-head` went with them: it was a flex row whose only job was sitting the index and the title on one baseline, and a flex wrapper around a single `h3` is not a wrapper — the title carries the top margin instead.
-- **Card 1 carries v1's SACEM thumbnail; cards 2–4 are still placeholders.** `alt=""` on the thumbnail: the card is a single `<a>` whose title already names the project, so the image is decorative and a description would be read twice. At 475 × 300 it is 1.583 against the slot's 16:10, so `object-fit: cover` trims about 3px of height — close enough that nothing is lost.
+- **All four thumbnails are David's, 1120 × 700, AVIF at quality 65.** They replace v1's 475 × 300 SACEM shot, which was the one genuinely under-resolved image on the site — upscaled 1.11x on any desktop before device pixel ratio was even considered. A thumbnail on a WIP card is expected and changes nothing else: the media slot is identical on both shapes, only the link and the CTA differ.
+  **`alt` carries each thumbnail's headline, and is not empty.** The old `alt=""` was right when the image was a bare screenshot the card title already named. These are designed cards with a headline baked in — "From listing to signature", "Find a collaborator" — and that phrase appears nowhere else in the page, so an empty `alt` would drop it. The alt does *not* repeat the card's own description, which a screen reader has just read.
+  **Quality 65 is the budget, not a preference.** §6 allows 800 KB and the index without thumbnails is 649 KB, so four of them have ~150 KB to live in. Measured: q65 is 138.3 KB and lands the page at **787.6 KB**; q75 would be 158 KB and overshoot. Checked at 526px, the slot's real display width, before choosing — headlines crisp, no visible artefacts. This is the collision item 38 predicted, resolved by encode quality exactly as it said it would be.
 - Card heights are equal by the grid, and `.card-rule { margin-top: auto }` inside a flex column pins the rule and the CTA to the bottom of each one — so the four descriptions can be different lengths without the rules going ragged. That matters more now than it did with three short descriptors.
 
 ### 3.4 Impact — the staircase
@@ -429,7 +431,7 @@ Word counts: **53 / 69 / 63**. Chapters two and three are over §6's 60-word cap
   - *This replaces the earlier single-portrait rule and the `--radius` and `--paper-alt` that came with it. Do not put them back.* The first image, `the-beginning.png`, is a **composited cut-out on a transparent ground**, not a photograph: the Sony Walkman, the football and the PlayStation deliberately break outside the photo's rectangle. A filled, rounded container frames precisely the parts that are meant to escape a frame, and a fixed `aspect-ratio` with `object-fit: cover` crops them off — at 4:5 it removed 183px from each side, which was the music and the videogames the copy is about.
   - **No cropping, and no `aspect-ratio` on the image.** Each `<img>` carries its real `width` and `height` attributes and is sized `width: 100%; height: auto`. The browser reserves the intrinsic ratio, so there is no layout shift, and square and 4:5 both fit without anything choosing what to lose.
   - **All three images have landed** — `the-beginning.png`, `where-it-started.png`, `me-now.png` — and they are a set: the same composited-cut-out treatment at the same 1.037 ratio, all served at 878 × 846. The chapter placeholder rules were deleted with the last of them, since nothing used them any more. The pattern is still documented here and still live in `.card-media-label` and `.cs-figure-slot`: a placeholder is a box (`--paper-alt`, `--radius`, mono label), because an unfilled empty slot is an invisible one, and the real image never inherits that fill or radius.
-  - **Format: AVIF, with the PNG as a `<picture>` fallback.** The source PNG is 898 KB — 1.2 bytes per pixel, because PNG is a lossless compressor being handed a photograph. AVIF does alpha *and* photographs: the same 878 × 846 image at quality 85 is **121 KB**, an 87% saving, visually indistinguishable including the baked-in caption. `macOS sips` writes AVIF; it cannot write WebP (read-only in its format list), which is why this is not the more obvious WebP. Safari below 16.4 is the only engine that falls back to the PNG. Chapter images are below the fold, so they also carry `loading="lazy"` and `decoding="async"` and cost nothing on initial load.
+  - **Format: AVIF, and only AVIF.** The source PNG was 898 KB — 1.2 bytes per pixel, because PNG is a lossless compressor being handed a photograph. AVIF does alpha *and* photographs: the same 878 × 846 image at quality 85 is **121 KB**, an 87% saving, visually indistinguishable including the baked-in caption. `macOS sips` writes AVIF; it cannot write WebP (read-only in its format list), which is why this is not the more obvious WebP. **The PNG shipped alongside as a fallback until promotion, and no longer does** — §4 has that decision and what it strands. Chapter images are below the fold, so they also carry `loading="lazy"` and `decoding="async"` and cost nothing on initial load.
   - Real `alt` text is required, and it must carry any text baked into the image — text in pixels is unreadable to assistive tech and cannot be resized (WCAG 1.4.5). `the-beginning.png` has *"Always passionate about music"* baked in, and its `alt` says so.
 - **CV download link sits at the end of "Where I am now"**, not in the hero. Mono, accent on hover. The label is **"Download Resume"** — no file type, no size. It said "Download CV — PDF, 194 KB" until David changed it: "resume" is the word people actually use, and a byte count in a label is developer furniture. The `download` attribute still does the work.
 - Reveal: `IntersectionObserver`, `threshold: 0.25`, adds `.is-visible` → opacity `0→1`, `translateY(16px)→0`, 500ms. Each chapter animates on its own entry, no stagger.
@@ -460,7 +462,7 @@ Ported from v1's `about.html`. Ten tools, **5 across in two even rows** from 768
 - **Every icon sits on a `--paper` tile, and this is not decoration.** Four of the ten — Affinity, Cursor, Miro, Notion — are drawn in near-black and would vanish on `--void`; the other six are brand-coloured and must not be inverted to rescue them. A light tile gives all ten the ground they were drawn for.
 - Icons are centred with flex, `line-height: 0` and an explicit `object-position`. The ten have wildly different intrinsic shapes — Figma is 120×90, Affinity 249×283, Adobe 240×234 with no `viewBox` at all — and several are Illustrator exports with whitespace baked into the `viewBox`. Centring the box alone was not enough.
 - `alt=""` on every icon: the name is written beside it.
-- **Two of the ten ship as AVIF with the SVG as fallback.** DaVinci is a 145 KB gradient mesh and Adobe a 56 KB embedded PNG, both for something drawn at 32px. At 192px AVIF they are 4.7 KB and 6.7 KB — the toolkit went from 218 KB to 27 KB. The other eight are real vectors and stay as they are.
+- **Two of the ten ship as AVIF instead of SVG.** DaVinci was a 145 KB gradient mesh and Adobe a 56 KB embedded PNG — neither was really a vector, and both were drawn at 32px. At 192px AVIF they are 4.7 KB and 6.7 KB, 4x the 48px slot. The SVGs were their `<picture>` fallback and went with the rest of them (§4), taking another 202 KB. `object-fit: contain` absorbs Adobe's 192 × 187 against a square box. The other eight are real vectors and stay as they are.
 
 ### 3.6 Get in touch — footer
 
@@ -546,7 +548,7 @@ The v1 SACEM page ported onto the v2 system. Everything below is the shape every
 - **Subheads inside a prose section (`.cs-sub`) are mono**, on §1.3's "mono is the display face" rule — the same call `.card-title` makes. The `<h4>`s inside Target Users are body face, because they are leads, not labels.
 - **Images get `--shell`, wider than the reading column but not full bleed.** They are screenshots and they earn the extra width.
 - **The hero image is on the grid too, and no longer full bleed.** `--shell` wide, so its left and right edges land on the same two background hairlines everything else sits on, with `--s-7` of top padding (`--s-6` below 768).
-  - **Its height tracks 40vw, and that number is derived rather than chosen.** The figure is `--shell` wide, `--shell` is `92vw` below its cap, and the source is 1400 × 600 — so the banner's natural height at this width is `92 / 2.333 = 39.4vw`. Tracking 40vw renders it at within 1–2% of its true proportions from 768 up, instead of cropping a fifth of the picture away to a letterbox. `clamp(240px, 40vw, 480px)`: the 480 ceiling sits 9px under the 489px it would be at a capped 1140px shell, and the 240 floor is the deliberate exception — at 375 the true height is 148px, a strip rather than a hero, so it stays taller and lets `object-fit` take the sides. It is the only element on either page that needs its own top clearance, because it is the only one that is the first thing in the document — it has to clear the fixed nav, whose underside sits at 48px, and then leave enough air to read as placed rather than jammed under the chrome.
+  - **Its height tracks 40vw, and that number is derived rather than chosen.** The figure is `--shell` wide, `--shell` is `92vw` below its cap, and the source is 2280 × 960 — so the banner's natural height at this width is `92 / 2.375 = 38.7vw`. Tracking 40vw renders it at within about 3% of its true proportions from 768 up, instead of cropping a fifth of the picture away to a letterbox. `clamp(240px, 40vw, 480px)`: the 480 ceiling sits 9px under the 489px it would be at a capped 1140px shell, and the 240 floor is the deliberate exception — at 375 the true height is 148px, a strip rather than a hero, so it stays taller and lets `object-fit` take the sides. It is the only element on either page that needs its own top clearance, because it is the only one that is the first thing in the document — it has to clear the fixed nav, whose underside sits at 48px, and then leave enough air to read as placed rather than jammed under the chrome.
 - **v1's closing "Other Projects" block is not ported.** Both its cards were placeholders pointing back at the same page, with thumbnails loaded from `dummyimage.com` — an external host, which §0 rules out. A link back to the work section replaces it until there is a second case study.
 - **v1's two Final Outcome images do not exist in this repo** (`img/sacem/outcome-1.jpg`, `outcome-2.jpg` — the directory is absent). They are placeholder boxes carrying v1's captions, on the §3.5 rule: a placeholder is a box, the real image is not.
 
@@ -587,11 +589,63 @@ The colour comes from `--eyebrow-fg`, which defaults to `--ink-muted` and is rep
 
 ---
 
+### 3.10 Link preview
+
+Every page carries an Open Graph block and a `canonical`. Without one, a URL pasted into LinkedIn renders as a bare title on a grey rectangle — which is how most people will first meet this site.
+
+- **The card is `assets/img/social-card.png`, 1200 × 630.** It is a real screenshot of the hero at that size, cropped from 1250 × 630 so the shell's two hairlines sit 30px and 31px from the edges rather than the original 42 and 69. It is not a composed graphic: the page's own opening screen is the strongest thing it could show.
+- **It is a PNG, and that is deliberate — see §4.** Do not convert it to AVIF.
+- **The URLs are absolute, and that is deliberate — see §0.** They are the post-promotion ones, so nothing in the block changes at promotion. The cost is that while the preview lives at `/v2/` the card resolves to a page that is not up yet; the site is `noindex` until promotion and should not be shared from there.
+- **`og:title` and `og:description` are each page's own**; the image is shared by all five. A case study will want its own card once it has final screens, and the reason it cannot have one today is that its hero is AVIF and there is no PNG of it.
+- `twitter:card` is `summary_large_image`. No `twitter:title` or `twitter:description` — X falls back to the `og:` pair, and duplicating them is two more lines to keep in sync.
+- `og:image:alt` is required by the same rule as every other image (§3.5): it carries the text baked into the card.
+
+### 3.11 Not found — `404.html`
+
+Playful, in David's words, and the one page on the site that is a single self-contained file.
+
+- **The copy is his: `哎呀` over "Looks like you went too far"**, with an `ERROR 404` eyebrow above and one button back. `哎呀` (*āiyā*) is roughly "oops" — the page's whole warmth is carried by it, so it is set at `clamp(4rem, 13vw, 8.5rem)` and everything else stays quiet.
+- **Both halves live in one `<h1>`**, the Chinese in a block-level `<span lang="zh-Hans">`. A heading reading only `哎呀` would announce as two characters and nothing else; this way the whole message is the heading, and the `lang` attribute gets a screen reader to switch voice rather than spell it.
+- **No CJK glyph exists in a latin-subset `.woff2`, so `哎呀` was always going to come from the system.** `--font-hans` names the stack — PingFang, Hiragino Sans GB, Microsoft YaHei, Noto Sans CJK — so it reads as a deliberate second voice against Geist Mono instead of a font that failed. Adding a CJK webfont for two characters is not on the table: the smallest usable subset dwarfs the entire rest of the page.
+- **`哎呀` is not `--accent`.** §1.2 gives the cobalt to interaction and measurement, never decoration. The accent on this page is the button's hover and the focus ring; the heading carries its weight in size alone.
+- **The background is the site's own grid, plus the horizontals David asked for.** Three vertical hairlines on the shell's left edge, centre and right edge — the same three-layer background trick `layout.css` uses — but `position: fixed` and full height, because this page has no sections for them to be drawn per. The horizontals are the panel's own `border-top`/`border-bottom`, full bleed, which is exactly the line `layout.css` draws between two sections.
+- **Everything is root-relative, and that is not optional.** GitHub Pages serves `404.html` for any unmatched URL while leaving the address bar at what was requested, so a request for `/work/typo/deep` makes `assets/…` resolve against `/work/typo/` and 404 inside the 404. The CSS is inline for the same reason — a 404 page should have no dependency that can itself fail — leaving two font requests, each with a real fallback stack behind it.
+- **Only the repo root's `404.html` is ever used.** Pages ignores one in a subdirectory, so this file does nothing at `/v2/404.html` beyond being directly viewable. It starts working at promotion.
+- **It keeps its `noindex` when the other five pages lose theirs.** A 404 is served with a 404 status and should never be indexed.
+- `justify-content: safe center`, not `center`. Verified at 320px tall: the panel overflows the bottom, which scrolls, rather than the top, which would not.
+
+### 3.12 Root metadata — manifest, robots, sitemap
+
+Three small files that all share one property: **only the site root's copy is ever read.** A `robots.txt`, a `sitemap.xml` or a `404.html` in a subdirectory is ignored, so none of these do anything at `/v2/` — they are written now, in their final form, and start working at promotion when they move to the root with everything else. That is also why they sit at `v2/`'s top level rather than under `assets/`.
+
+**`site.webmanifest`** — rewritten, moved, and now actually linked.
+
+- The favicon generator left a copy in `assets/img/favicon/` that was **unlinked and broken**: its icon paths were root-relative (`/web-app-manifest-192x192.png`) to files that do not sit at the root, and its name was `MyWebSite`. That file is gone.
+- **It lives at the site root now, and that is what makes the paths work.** Every URL inside a manifest resolves against *the manifest's own location*, not the page's — so from the root, `"start_url": "./"` and `assets/img/favicon/…` are correct both at `/v2/` today and at the root after promotion, with no edit in between.
+- **`purpose` is `any`, not `maskable`.** The generator declared the icons maskable; they are not. The monogram fills roughly 88% of its canvas, well outside the central safe zone a circular Android mask leaves, so a maskable declaration would have cropped the mark's edges. A true maskable variant would need a padded re-export — worth doing, not worth faking.
+- `theme_color` and `background_color` are `--paper`, matching the top of the page. Each page also carries `<meta name="theme-color" content="#FCFCFA">`, which is what actually tints the browser chrome.
+
+**`robots.txt`** — permissive, and deliberately so.
+
+- **`/v1/` is not disallowed, and must not be.** The archived pages carry `noindex`, and a crawler has to *fetch* a page to see that tag. Blocking the path would hide the `noindex` and leave the old URLs eligible to appear as bare, untitled links — the opposite of the intent. The same reasoning covers the three unfinished case studies: `noindex` on the page, no inbound link, no sitemap entry, and nothing blocked.
+- It points at the sitemap by absolute URL, which is the only form the file accepts.
+
+**`sitemap.xml`** — two URLs: the index and `/work/sacem/`.
+
+- **The three scaffolded case studies are excluded on purpose.** Listing a page while telling crawlers not to index it is a contradiction, and their copy is still SACEM's. Each gets a `<url>` block as it is written.
+- No `changefreq`, no `priority` — Google has ignored both for years.
+
+---
+
 ## 4. File structure
 
 ```
 v2/
 ├── index.html
+├── 404.html                      ← self-contained; root-relative by necessity, §3.11
+├── site.webmanifest              ┐
+├── robots.txt                    │ root-only files: inert at /v2/, live at promotion, §3.12
+├── sitemap.xml                   ┘
 ├── work/
 │   ├── sacem/index.html
 │   ├── thalesgu/index.html
@@ -621,7 +675,9 @@ v2/
 - Likewise `casestudy.js` loads on case-study pages only, and the index's three scripts do not load on a case study. `form.js` and `ui.js` load on **both**: both pages carry the §3.6 footer and the §3.1 nav.
 - **`ui.js` owns page chrome — things that belong to the viewport rather than to any one section.** Today that is the nav's visibility (§3.1) and the cursor ring (§3.8). New chrome goes here rather than into a fifth and sixth file.
 - JS with `defer`. Each file a plain IIFE — no ES modules, so local `file://` preview works.
-- **Every image on the site is a `<picture>`: an AVIF `<source>` with a JPEG or PNG `<img>` fallback.** §3.5 has the reasoning and the numbers. Everything below the fold carries `loading="lazy"` and `decoding="async"`; the one image above it — a case study's hero — carries `fetchpriority="high"` instead.
+- **Every image on the site is a bare `<img>` pointing at an AVIF.** There are no `<picture>` elements and no raster fallbacks — they were dropped before promotion, David's call, knowing the cost: **Safari below 16.4 (pre-March 2023) sees no images at all.** Everything newer does, and AVIF has been in every current engine since Firefox 93 / Chrome 85. What it bought: fourteen `<picture>` blocks became fourteen `<img>` tags, three `display: contents` rules left the CSS, and **8.7 MB of fallbacks and dead files left the repo** — `me-now.png` alone was 4.4 MB against its 220 KB AVIF. It costs nothing at load time either way, since a supporting browser never fetched a fallback; it was repo weight, and after promotion it is repo weight at the live root. The files are recoverable from git if the decision is ever reversed. §3.5 has the encode numbers.
+- **One file is exempt and must stay exempt: `assets/img/social-card.png`.** Link-preview scrapers are not browsers and none of the major ones read AVIF, so converting it would silently blank every share on LinkedIn, Slack, iMessage and X. No browser fetches it during a page view, so it costs nothing against §6's budget. §3.10.
+- Everything below the fold carries `loading="lazy"` and `decoding="async"`; the one image above it — a case study's hero — carries `fetchpriority="high"` instead.
 
 ---
 
@@ -662,8 +718,8 @@ Each step was independently reviewable, with a stop for review after each.
 - [ ] No paragraph exceeds `--measure`.
 - [ ] ~~No About chapter exceeds 60 words.~~ **Waived by David, knowingly.** The chapters run 53 / 69 / 63 after his rewrite. The cap was there to stop the section becoming the wall of text it replaced; at ~63 words average it still is not one. Kept struck rather than deleted so the change is visible.
 - [ ] Every metric matches the CV exactly.
-- [ ] Work card media containers hold their 16:10 box while empty — no layout shift when assets arrive.
-- [ ] Every image is a `<picture>` with an AVIF source, carries real `width`/`height`, and is `loading="lazy"` unless it is above the fold. §4.
+- [x] ~~Work card media containers hold their 16:10 box while empty~~ — **assets arrived 2026-08-27 and there was no layout shift**, which is what the criterion was for. The empty state stays in the CSS for the next unshot project.
+- [ ] ~~Every image is a `<picture>` with an AVIF source~~ — **the fallbacks were dropped; every image is a bare `<img>` at an AVIF.** §4 has the reasoning and what it strands. Still required: real `width`/`height` on every one, and `loading="lazy"` unless it is above the fold.
 - [ ] Zero external network requests.
 - [ ] Lighthouse: performance ≥ 95, accessibility 100.
 - [ ] Total page weight under 800KB.
@@ -691,7 +747,15 @@ Each step was independently reviewable, with a stop for review after each.
 
 - **Stay inside `/v2`.** Never touch the repo root.
 - Ask before deleting anything. The SACEM case study and the Formspree config are load-bearing.
-- **Assets pending, containers built now:** the chapter two and chapter three images and all three work card thumbnails. Build fixed-ratio placeholders so nothing shifts when the real files arrive. Do not source, generate, or substitute images. Chapter one's image (`the-beginning.png`) has landed and is wired in; see §3.5 for why it takes no fill, no radius and no crop.
+- **Every image David owed has landed.** The three chapter images, all four card thumbnails and all four case study heroes are in and wired. What is still outstanding is the **Final Outcome screens** — two 16:9 slots per case study, eight boxes across four pages, still placeholders carrying v1's captions. The rule stands for those: build the fixed-ratio slot, and **do not source, generate, or substitute images.**
 - When a behaviour is ambiguous, build the simpler version and flag it. Don't guess at complexity.
 - If a CSS rule seems to need `!important`, the specificity is wrong. Fix the selector.
-- Promotion is a manual step done by David, not by you: `rm index.html && rm -rf assets work && mv v2/* . && rmdir v2`, then remove the `noindex` tags. Rollback point is the `v1-live` tag.
+- **Promotion is a manual step done by David, not by you**, and it is no longer the one-liner this line used to carry. That command (`rm index.html && rm -rf assets work && mv v2/* .`) leaves v1 debris serving at the root — `about.html`, `projects.html`, `sacem.html`, `greenup-transaction.html`, `css/`, `js/`, `.htaccess` and the root CV all survive it, with v1 navigation pointing back at an index that is now v2. It also moves `design.md` and `STATUS.md` into the live root. The sequence, in three revertible commits:
+
+  1. **Push first.** The preview goes live at `davidpzu.github.io/v2/` under `noindex`, which is what those tags are for and the only way to satisfy §6's last criterion.
+  2. **Commit A — archive v1.** `git mv` the whole old site into `v1/`: the five pages *and* `css/`, `js/`, `assets/`, `.htaccess`, the root CV. All of it together, or v1's own relative paths break — and the root `assets/` has to vacate before v2's can take its place. Add `noindex` to the archived pages.
+  3. **Commit B — the swap.** `v2/*` to the root, minus `design.md` and `STATUS.md`. `404.html` lands at the root, where it starts working (§3.11).
+  4. **Commit C — go public.** Strip `noindex` from the five v2 pages; `404.html` keeps its own. Add `robots.txt` and `sitemap.xml`.
+  5. Tag `v2-live`.
+
+  Rollback point is the `v1-live` tag. Note that archiving v1 preserves its *content* but not its *URLs* — anything linking to `davidpzu.github.io/sacem.html` gets the 404 page unless redirect stubs are added in Commit A.
