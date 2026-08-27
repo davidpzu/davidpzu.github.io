@@ -52,6 +52,16 @@
   /* Type — design.md §1.3 */
   --font-display: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
   --font-body:    "Inter Tight", system-ui, -apple-system, sans-serif;
+  /* For a language's name written in its own script (§3.14). Inter Tight
+     comes first so Espanol and Francais render in the site's own face — the
+     latin subset has the accented glyphs — and Hangul and Han fall through
+     to whatever the system has, since no CJK glyph exists in a latin
+     .woff2 and adding a CJK webfont for six characters is not on the table.
+     Fallback is per-character, so one stack serves both scripts. 404.html
+     keeps its own copy of this list because it loads no stylesheet. */
+  --font-native:  "Inter Tight", "PingFang SC", "Apple SD Gothic Neo",
+                  "Hiragino Sans GB", "Malgun Gothic", "Microsoft YaHei",
+                  "Noto Sans KR", "Noto Sans SC", system-ui, sans-serif;
 
   /* Space and layout — design.md §1.4 */
   --s-1: 0.5rem;  --s-2: 1rem;   --s-3: 1.5rem;  --s-4: 2rem;

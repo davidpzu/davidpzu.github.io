@@ -47,5 +47,7 @@ any more; the site at the root *is* v2. The old site is archived under
   punctuation and leaving it ungrammatical (§3.5).
 - One step at a time. Stop and wait for review after each.
 - If a CSS rule seems to need `!important`, the selector is wrong.
-- **The index is at ~788 KB against §6's 800 KB budget.** Measure before
-  adding anything to that page; do not estimate.
+- **Budget: the index is ~794 KB raw, ~717 KB actually transferred**, against
+  §6's 800 KB. GitHub Pages gzips text, so markup and comments cost close to
+  nothing over the wire and **images are the real constraint**. Measure
+  before adding anything heavy; do not estimate. §6 has both numbers.

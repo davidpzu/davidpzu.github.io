@@ -1108,6 +1108,72 @@
   background: var(--paper);
 }
 
+/* ------------------------------------------------------------ languages */
+/* §3.14. Level in a mono track, name beside it — the same two-column shape
+   the About chapters use for their year markers, and the same clamp, so the
+   levels sit on the spine the years established. Both blocks are children of
+   the same .shell, so that alignment is real rather than approximate.
+
+   No proficiency bars. CEFR, TOPIK and HSK are external scales that already
+   carry their own meaning, and a bar would imply a precision none of them
+   has. It would also be a second measurement idiom on a page whose §1.2
+   rule reserves that reading for the impact figures. */
+
+/* Capped, so the hairline between entries stops a little past the longest
+   name instead of running the full shell into dead space. The entries are
+   short — a level and a word — and an uncapped rule under them reads as a
+   column with something missing from it. The neighbouring blocks fill their
+   width because they have two columns and a 5-across grid to fill it with;
+   this one does not, so it declares a measure instead of pretending. */
+.lang-list {
+  max-width: 32rem;
+}
+
+.lang-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-1);
+}
+
+@media (min-width: 768px) {
+  .lang-item {
+    grid-template-columns: clamp(8rem, 16vw, 12rem) minmax(0, 1fr);
+    column-gap: var(--s-4);
+    align-items: baseline;
+  }
+}
+
+/* --s-3 rather than the resume list's --s-4: these are single lines, not
+   multi-paragraph entries, and the wider rhythm leaves them floating. */
+.lang-item + .lang-item {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--void-rule);
+}
+
+.lang-level {
+  color: var(--paper-muted);
+}
+
+/* Matches .resume-role, so a language reads at the same weight as a job
+   title rather than as a caption. */
+.lang-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+/* The name in its own script, muted and a step down, so it reads as the
+   same fact restated rather than as a second fact. */
+.lang-native {
+  margin-left: 0.75ch;
+  font-family: var(--font-native);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--paper-muted);
+}
+
 /* Two of the ten — DaVinci and Adobe — were never really vectors: DaVinci
    was a 145 KB gradient mesh and Adobe a 56 KB embedded PNG, both for
    something drawn at 32px. They ship as 192px AVIF (4.7 KB and 6.7 KB),

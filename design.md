@@ -163,7 +163,7 @@ Everything else on the page stays quiet.
 | 1 | Hero | Positioning + the signature rotator |
 | 2 | Selected work | 4 cards, all linked to a `work/<slug>/` page |
 | 3 | Impact | 4 metric boxes in a rising staircase, each with an icon, figure, label and note |
-| 4 | About — chapters | Scrolled timeline, then background and toolkit. Enters the dark passage |
+| 4 | About — chapters | Scrolled timeline, then background, languages and toolkit. Enters the dark passage |
 | 5 | Get in touch | Gradient footer, contact details, Formspree |
 
 **The page has two halves, and the seam is inside the About section.** Everything from the hero through Impact sits on `--paper`/`--paper-alt`. About fades into `--void` in its own top padding and stays there; the footer picks `--void` up as its first stop and runs to `--accent`. From the top of About to the bottom of the page is one continuous dark run. §3.5 and §3.6.
@@ -384,7 +384,7 @@ Sticky year column left, chapter content right, revealed on scroll. Replaces the
 
 **Section eyebrow:** "About me" (§3.9). **Section title:** "AI tooling & Design for B2B" — shortened from "Design and tooling for B2B platforms, with AI where it truly helps", which ran to two lines and was too long for a section head.
 
-**This section is where the page goes dark, and it carries two more blocks after the chapters.** In order: eyebrow, title, three chapters, Education & Experience, Software I work with. Then the footer, on the same ground.
+**This section is where the page goes dark, and it carries three more blocks after the chapters.** In order: eyebrow, title, three chapters, Education & Experience, Languages, Software I work with. Then the footer, on the same ground.
 
 Three named chapters. The titles carry the narrative; the year column carries the timeline. Together they close the 1997 → 2018 gap without needing a fourth entry — "The Beginning" reads as a deliberate framing device rather than a missing chapter.
 
@@ -453,6 +453,27 @@ Ported from v1's `about.html`, same copy. Two columns from 768 — Education lef
 
 - **A list, not a run of headings.** Five entries in a CV block are items in a timeline, not document sections; five more heading levels would clutter the outline for no navigational gain. `<ol class="resume-list">`, each item carrying date (mono, muted), role, place (mono, muted) and description.
 - Block title takes §1.3's "Block title" row. Column titles are `<h4>` eyebrows.
+
+#### Languages
+
+Added 2026-08-27 at David's request: five languages, and for a designer whose CEO, clients and half the team are French, this is job-relevant evidence rather than a hobby list.
+
+- **It sits between Education & Experience and the toolkit**, not after it. The passage runs narrative → credentials → tools, and a language is a credential. It also leaves the icon grid as the last visual beat before the footer.
+- **Level and name only. No context lines, no explanation** — David's call: *"drop all the explanations, I don't want to spend much of the reader's time on those, it can always be discussed later or shown in action."* CEFR, TOPIK and HSK are external scales that carry their own credibility.
+
+| level | language |
+|---|---|
+| Native | Spanish · Español |
+| C2 | English |
+| B1 | French · Français |
+| TOPIK II | Korean · 한국어 |
+| HSK 3 | Mandarin · 中文 |
+
+- **The level sits in the same track the chapter years use** — `clamp(8rem, 16vw, 12rem)` with an `--s-4` gutter — and both blocks are children of the same `.shell`, so the levels land on the spine the years established rather than merely near it. Below 768 the level stacks above the name.
+- **Each name is repeated in its own script, with a `lang` attribute.** That gets a screen reader to switch voice instead of spelling the characters, and lets the browser pick a face per script. `--font-native` puts Inter Tight first so *Español* and *Français* render in the site's own face — the latin subset has the accented glyphs — and Hangul and Han fall through to the system, since no CJK glyph exists in a latin `.woff2`. Font fallback is per-character, so one stack serves both. `404.html` keeps its own copy of the list because it loads no stylesheet (§3.11).
+- **No proficiency bars.** They imply a precision none of these scales has, and §1.2 reserves the measurement reading for the impact figures — a second measurement idiom on the same page dilutes it.
+- **`.lang-list` is capped at `32rem`.** Uncapped, the hairline between entries ran the full shell while the content occupied its left third, which read as a column with something missing. The neighbouring blocks fill their width because they have two columns and a 5-across grid to fill it with; this one declares a measure instead of pretending.
+- **Cantonese is deliberately absent here and present in the hero.** The rotator already carries *"learning Mandarin and Cantonese, trying not to butcher the tones"*. David's read: basic conversation is not worth a formal claim, but it earns the playful mention. Playful up top, evidence below — do not "fix" the inconsistency by adding a row.
 
 #### Software I work with
 
@@ -743,7 +764,14 @@ Each step was independently reviewable, with a stop for review after each.
 - [ ] ~~Every image is a `<picture>` with an AVIF source~~ — **the fallbacks were dropped; every image is a bare `<img>` at an AVIF.** §4 has the reasoning and what it strands. Still required: real `width`/`height` on every one, and `loading="lazy"` unless it is above the fold.
 - [ ] Zero external network requests.
 - [x] **Lighthouse, run on the live root 2026-08-27: performance 100, accessibility 96, best practices 100, SEO 100.** Performance, best practices and SEO clear the bar with room. **Accessibility is 96 against a criterion that says 100** — David reviewed the report and accepted it. The deduction was not identified: heading order, link names, form labels, landmarks and `alt` coverage were all checked statically and are clean, which points at the `mix-blend-mode: difference` nav (§3.1), where axe cannot compute a contrast ratio through a blend mode. Left open deliberately rather than marked pass.
-- [ ] Total page weight under 800KB.
+- [x] **Total page weight under 800 KB.** Two numbers, and the difference matters:
+
+  | | index |
+  |---|---|
+  | raw bytes on disk | **793.7 KB** |
+  | **actually transferred** | **717.2 KB** |
+
+  **GitHub Pages serves text gzipped** — confirmed on the live site, where `index.html` arrives as 9,135 bytes against ~31 KB on disk. The html, css and js compress by 66%; the fonts and AVIFs are already compressed and do not shrink further. So the raw figure this project has been tracking is pessimistic by about 76 KB, and **the real constraint is images, not markup**. A verbose comment costs essentially nothing over the wire, which is why the CSS and HTML here are commented as heavily as they are. Measure the transferred number when the raw one gets close.
 - [ ] Verified on the deployed `davidpzu.github.io/v2/` URL, not just locally.
 
 ---
