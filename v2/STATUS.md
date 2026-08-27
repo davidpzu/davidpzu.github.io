@@ -41,13 +41,34 @@ for something to do. These are the ones that need action:
 one exactly to spec, SACEM's two re-exported along with the rest. Ratios
 matter more than pixels — `object-fit: cover` crops the difference.
 
-**Still to do before the site goes live**, none of it waiting on David:
+**Pushed and smoke-tested 2026-08-27.** `main` is on `origin/main`; the
+preview is live at `davidpzu.github.io/v2/` under `noindex`, and the root is
+still v1, untouched. §6's last criterion is met.
 
-| | |
+| checked on the deployed URL | result |
 |---|---|
-| push, and verify on the deployed `/v2/` URL | §6's last criterion |
-| the smoke test | see the test-harness note in `## State of play` — the contact form is the one that matters |
-| the five-step promotion sequence | `design.md` §8 |
+| **contact form, submitted for real** | **email received via Formspree** — the check no harness can make |
+| cursor ring, nav hide-and-return | **both correct on a real machine** — headless cannot exercise either |
+| AVIF served as `image/avif` | ✓ — the one that mattered, having dropped the fallbacks |
+| fonts `font/woff2`, manifest `application/manifest+json` | ✓ |
+| all five pages + `404.html` | 200 |
+| external network requests | **zero** |
+| card links | exactly one; three `.card-wip` carry no `href` |
+
+Two things behave as designed and are not faults: **`og:image` 404s from
+`/v2/`** because it names the post-promotion path (§3.10's recorded trade),
+and **`404.html`, `robots.txt` and `sitemap.xml` serve but are inert**, since
+Pages only honours them at the site root (§3.12).
+
+**One coincidence, recorded so it is never mistaken for evidence:**
+`404.html`'s root-relative font paths resolve to `/assets/fonts/…`, which
+today lands in *v1's* asset folder — and v1 happens to carry the same Geist
+Mono files. The page renders correctly at `/v2/` by accident. It becomes
+correct for real at promotion.
+
+**Still to do:** the five-step promotion sequence in `design.md` §8. Nothing
+is waiting on David except the Final Outcome screens and the three case
+studies' copy, neither of which blocks the swap.
 
 **~~Decisions deferred to promotion.~~ Settled 2026-08-27.** Item 28's dead
 `img-david.jpg` is deleted, and item 31's fallback question was answered by

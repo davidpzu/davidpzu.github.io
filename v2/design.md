@@ -304,8 +304,8 @@ There is also a collision no contrast ratio describes: the links pass directly o
 |---|---|---|---|
 | 1 | SACEM - Messaging app | Redesigning the messaging app for music creators | `work/sacem/` |
 | 2 | Green Up - Transaction Analysis | Designed the interactions and entire transaction process for an internal reuse industrial material platform | `work/thalesgu/` |
-| 3 | SACEM - Collab+ | A new collaboration module built for musicians across France | `work/sacem-collab/` |
-| 4 | Sanofi Connect - Referral functionality | Referral system to grow platform audience for a company's benefit platform | `work/sconnect/` |
+| 3 | SACEM - Collab+ | A new collaboration module built for musicians across France to promote networking and allow artists to share their creations | `work/sacem-collab/` |
+| 4 | Sanofi Connect - Referral functionality | Referral system designed to grow platform audience and enable potential reward system | `work/sconnect/` |
 
   **Card 1 is a link; cards 2–4 are `.card-wip` and carry no `<a>`.** They were briefly all links, and that was reverted before promotion: their pages are scaffolding — a duplicate of the SACEM case study with only title, description, `h1` and badge changed — so a visitor clicking "Green Up" would read the SACEM messaging redesign under a Green Up headline. The pages stay in the repo, unlinked and `noindex`, and each is re-linked the moment it has content of its own. Folder names are deliberately abbreviated so a client's full name is not spelled out in a URL.
 - **No metrics on the cards.** The numbers live in section 3.4 only, so they aren't diluted across two places.
