@@ -4,3 +4,8 @@
 # untracked in the same commit, which deletes them from the repo but
 # leaves them on disk.
 .DS_Store
+
+# Local-only handoff notes. Deliberately untracked: David keeps a local
+# copy, and it was served publicly at davidpzu.github.io/STATUS.md once the
+# site moved to the repo root.
+STATUS.md

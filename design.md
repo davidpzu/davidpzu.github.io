@@ -432,6 +432,7 @@ Word counts: **53 / 69 / 63**. Chapters two and three are over §6's 60-word cap
   - **All three images have landed** — `the-beginning.png`, `where-it-started.png`, `me-now.png` — and they are a set: the same composited-cut-out treatment at the same 1.037 ratio, all served at 878 × 846. The chapter placeholder rules were deleted with the last of them, since nothing used them any more. The pattern is still documented here and still live in `.card-media-label` and `.cs-figure-slot`: a placeholder is a box (`--paper-alt`, `--radius`, mono label), because an unfilled empty slot is an invisible one, and the real image never inherits that fill or radius.
   - **Format: AVIF, and only AVIF.** The source PNG was 898 KB — 1.2 bytes per pixel, because PNG is a lossless compressor being handed a photograph. AVIF does alpha *and* photographs: the same 878 × 846 image at quality 85 is **121 KB**, an 87% saving, visually indistinguishable including the baked-in caption. `macOS sips` writes AVIF; it cannot write WebP (read-only in its format list), which is why this is not the more obvious WebP. **The PNG shipped alongside as a fallback until promotion, and no longer does** — §4 has that decision and what it strands. Chapter images are below the fold, so they also carry `loading="lazy"` and `decoding="async"` and cost nothing on initial load.
   - Real `alt` text is required, and it must carry any text baked into the image — text in pixels is unreadable to assistive tech and cannot be resized (WCAG 1.4.5). `the-beginning.png` has *"Always passionate about music"* baked in, and its `alt` says so.
+  - **House style for `alt`, David's, applied to every one on the site: no em dashes and no closing full stop.** Where a dash was doing the work, the sentence is reflowed around a comma rather than left with the punctuation simply deleted — *"Messages in context, screens from the redesigned SACEM messaging system showing a member inbox and a single conversation thread"*. This covers `og:image:alt` too. `meta description` and `og:description` are prose and keep their stops.
 - **CV download link sits at the end of "Where I am now"**, not in the hero. Mono, accent on hover. The label is **"Download Resume"** — no file type, no size. It said "Download CV — PDF, 194 KB" until David changed it: "resume" is the word people actually use, and a byte count in a label is developer furniture. The `download` attribute still does the work.
 - Reveal: `IntersectionObserver`, `threshold: 0.25`, adds `.is-visible` → opacity `0→1`, `translateY(16px)→0`, 500ms. Each chapter animates on its own entry, no stagger.
 - **Fallback:** `.is-visible` is applied by default in CSS; JS removes it on load before observing. Fully readable without JS.
@@ -634,6 +635,23 @@ Three small files that all share one property: **only the site root's copy is ev
 - **The three scaffolded case studies are excluded on purpose.** Listing a page while telling crawlers not to index it is a contradiction, and their copy is still SACEM's. Each gets a `<url>` block as it is written.
 - No `changefreq`, no `priority` — Google has ignored both for years.
 
+### 3.13 Redirect stubs for v1's URLs
+
+Archiving v1 kept its content and lost its addresses. Four pages had public URLs at the root, and anything still pointing at them — a LinkedIn post, a message, a bookmark — would land on the 404 page. A stub sits at each.
+
+| old URL | goes to |
+|---|---|
+| `/sacem.html` | `work/sacem/index.html` |
+| `/about.html` | `index.html#about` |
+| `/projects.html` | `index.html#work` |
+| `/greenup-transaction.html` | `index.html#work` |
+
+- **`meta http-equiv="refresh"` with a `0` delay, because a static host cannot issue a 301.** GitHub Pages serves files; there is no server-side redirect available, and this is the only mechanism left.
+- **`canonical` points at the destination, not at the stub**, so a crawler following an old link credits the real page. Each stub is `noindex` so it does not appear in results itself.
+- **A visible link is the fallback**, for anyone whose browser does not act on the refresh. The styling is inline and loads no fonts — the page should not delay the redirect it exists to perform.
+- **`greenup-transaction.html` goes to the work section, not to `work/thalesgu/`.** That page is still SACEM's copy under a Green Up title; sending someone who asked for Green Up to a page describing SACEM is worse than sending them to the index. **Repoint it at `work/thalesgu/index.html` when that case study is written.** The original v1 page is still readable at `/v1/greenup-transaction.html`.
+- **There is deliberately no stub for `/CV_DavidPrietoZurita-EN.pdf`.** A stub cannot work there — Pages sets content type by extension, so HTML served at a `.pdf` URL would not render. The alternative, a second copy of the PDF at the root, was rejected: two copies drift, and **an outdated CV served from a forgotten URL is worse than a 404.** The live CV is at `assets/CV_DavidPrietoZurita-EN.pdf`, linked from the footer.
+
 ---
 
 ## 4. File structure
@@ -643,8 +661,12 @@ v2/
 ├── index.html
 ├── 404.html                      ← self-contained; root-relative by necessity, §3.11
 ├── site.webmanifest              ┐
-├── robots.txt                    │ root-only files: inert at /v2/, live at promotion, §3.12
+├── robots.txt                    │ root-only files, §3.12
 ├── sitemap.xml                   ┘
+├── sacem.html                    ┐
+├── about.html                    │ redirect stubs for v1's old URLs, §3.13
+├── projects.html                 │
+├── greenup-transaction.html      ┘
 ├── work/
 │   ├── sacem/index.html
 │   ├── thalesgu/index.html
@@ -720,7 +742,7 @@ Each step was independently reviewable, with a stop for review after each.
 - [x] ~~Work card media containers hold their 16:10 box while empty~~ — **assets arrived 2026-08-27 and there was no layout shift**, which is what the criterion was for. The empty state stays in the CSS for the next unshot project.
 - [ ] ~~Every image is a `<picture>` with an AVIF source~~ — **the fallbacks were dropped; every image is a bare `<img>` at an AVIF.** §4 has the reasoning and what it strands. Still required: real `width`/`height` on every one, and `loading="lazy"` unless it is above the fold.
 - [ ] Zero external network requests.
-- [ ] Lighthouse: performance ≥ 95, accessibility 100.
+- [x] **Lighthouse, run on the live root 2026-08-27: performance 100, accessibility 96, best practices 100, SEO 100.** Performance, best practices and SEO clear the bar with room. **Accessibility is 96 against a criterion that says 100** — David reviewed the report and accepted it. The deduction was not identified: heading order, link names, form labels, landmarks and `alt` coverage were all checked statically and are clean, which points at the `mix-blend-mode: difference` nav (§3.1), where axe cannot compute a contrast ratio through a blend mode. Left open deliberately rather than marked pass.
 - [ ] Total page weight under 800KB.
 - [ ] Verified on the deployed `davidpzu.github.io/v2/` URL, not just locally.
 
@@ -755,4 +777,4 @@ Each step was independently reviewable, with a stop for review after each.
   2. **Promote v2.** `index.html`, `404.html`, the three root metadata files, `assets/` and `work/` moved up a level; `v2/` was removed. Every relative path resolved at the new depth with no edit — verified, zero missing references. `design.md` and `STATUS.md` moved to the repo root rather than being deleted. `CLAUDE.md` was rewritten in the same commit, since its central rule was "never work outside `/v2`".
   3. **Go public.** `noindex` came off `index.html` and `work/sacem/` only. See §0 for what kept it and why.
 
-  Rollback point is the `v1-live` tag. **Archiving v1 preserved its content but not its URLs** — `davidpzu.github.io/sacem.html` now gets the 404 page. Redirect stubs at the old paths were offered and not taken; they remain a cheap option if an inbound link turns out to matter.
+  Rollback point is the `v1-live` tag. **Archiving v1 preserved its content but not its URLs**, so four redirect stubs were added at the root on David's instruction — see §3.13.
