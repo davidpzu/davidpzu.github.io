@@ -983,7 +983,13 @@
 
 /* ------------------------------------------------ education & experience */
 
+/* The three blocks that follow the chapters are separated the same way:
+   --s-7 of air, a hairline, then --s-6 before the eyebrow. Every block in
+   the dark passage belongs in this selector — .languages was missing from
+   it when that block was added and sat flush against the end of the resume
+   with no rule between them, which is what David reported. */
 .resume,
+.languages,
 .toolkit {
   margin-top: var(--s-7);
   padding-top: var(--s-6);

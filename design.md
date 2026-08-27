@@ -458,6 +458,7 @@ Ported from v1's `about.html`, same copy. Two columns from 768 — Education lef
 
 Added 2026-08-27 at David's request: five languages, and for a designer whose CEO, clients and half the team are French, this is job-relevant evidence rather than a hobby list.
 
+- **It is separated like its siblings**, by `.resume, .languages, .toolkit` — `--s-7` of air, a hairline, then `--s-6`. It was left out of that selector when first built and sat flush against the end of the resume; **any new block in the dark passage goes into that selector.**
 - **It sits between Education & Experience and the toolkit**, not after it. The passage runs narrative → credentials → tools, and a language is a credential. It also leaves the icon grid as the last visual beat before the footer.
 - **Level and name only. No context lines, no explanation** — David's call: *"drop all the explanations, I don't want to spend much of the reader's time on those, it can always be discussed later or shown in action."* CEFR, TOPIK and HSK are external scales that carry their own credibility.
 
@@ -466,7 +467,7 @@ Added 2026-08-27 at David's request: five languages, and for a designer whose CE
 | Native | Spanish · Español |
 | C2 | English |
 | B1 | French · Français |
-| TOPIK II | Korean · 한국어 |
+| TOPIK 3 | Korean · 한국어 |
 | HSK 3 | Mandarin · 中文 |
 
 - **The level sits in the same track the chapter years use** — `clamp(8rem, 16vw, 12rem)` with an `--s-4` gutter — and both blocks are children of the same `.shell`, so the levels land on the spine the years established rather than merely near it. Below 768 the level stacks above the name.
