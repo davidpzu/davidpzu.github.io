@@ -1,7 +1,7 @@
 /* base.css — @font-face, reset, typography, focus. Loaded after tokens.css. */
 
 /* ---------------------------------------------------------------- fonts */
-/* Self-hosted, latin subset, swap. Five files, no others. design.md §0/§1.3 */
+/* Self-hosted, latin subset, swap. Four files, no others. design.md §0/§1.3 */
 
 @font-face {
   font-family: "Geist Mono";
@@ -31,14 +31,6 @@
   font-family: "Inter Tight";
   src: url("../fonts/inter-tight-v9-latin-600.woff2") format("woff2");
   font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Syne";
-  src: url("../fonts/syne-v24-latin-700.woff2") format("woff2");
-  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -176,12 +168,6 @@ p {
   letter-spacing: 0.02em;
   line-height: 1.5;
   color: var(--ink-muted);
-}
-
-/* Wordmark only. */
-.wordmark {
-  font-family: var(--font-mark);
-  font-weight: 700;
 }
 
 /* ---------------------------------------------------------------- links */

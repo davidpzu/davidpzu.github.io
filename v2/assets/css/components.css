@@ -63,10 +63,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--s-3);
+  gap: var(--s-2);
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* Four items do not fit at 375 on the type this nav is set in. The brackets
+   are in the DOM on every item and always occupy their width, so the four
+   labels come to 32 glyphs; at 0.75rem with 0.12em tracking that is 276px,
+   and with the old --s-3 gaps the row needed 348px against 345px of shell.
+   The gap gave first — --s-2 brings it to 324px, which clears 375 with 21px
+   to spare — and below 375 the type steps down as well.
+
+   At 0.6875rem with --s-1 gaps the row is 277px, clearing 320 by 17px. The
+   target box is still 26.6px tall (0.35rem padding either side of an 11px
+   line at 1.4), over WCAG 2.5.8's 24px floor, so the smaller type costs
+   nothing in reach. */
+@media (max-width: 374px) {
+  .nav-list {
+    gap: var(--s-1);
+  }
+
+  .nav-link {
+    font-size: 0.6875rem;
+  }
 }
 
 /* 0.35rem of padding on 0.75rem/1.4 text makes a 28px target, over WCAG
@@ -405,12 +426,19 @@
    an <img> or a <video> dropped in later fills the same box exactly — no
    layout shift when the assets arrive. §3.3, §6 */
 
+/* The slot is inset --s-2 from the card's own edge, so its radius is not a
+   nested-corner problem — it reads as its own rounded object sitting inside
+   a rounded card, and taking --radius straight matches the card rather than
+   competing with it. overflow: hidden was already here to clip the 1.02
+   hover scale; it now clips the corners too, so the radius costs nothing
+   extra. */
 .card-media {
   position: relative;
   display: block;
   aspect-ratio: 16 / 10;
+  border-radius: var(--radius);
   background: var(--paper-alt);
-  overflow: hidden;   /* clips the 1.02 hover scale */
+  overflow: hidden;
 }
 
 /* The two shapes the slot must accept without any other change:
@@ -454,24 +482,15 @@
 
 /* ------------------------------------------------------------- the text */
 
-.card-head {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5ch;
-  margin-top: var(--s-3);
-}
-
-/* The separator of §3.3's diagram is decoration, not content, so it stays
-   out of the DOM — unlike the nav brackets, nothing is encoded in it and a
-   screen reader is better off reading "01" then "SACEM". */
-.card-index::after {
-  content: "·";
-  padding-left: 0.5ch;
-}
-
 /* Mono, because §1.3 gives headlines to the display face. The chapter h3s
-   in §3.5 are explicitly body face and keep base.css's rule. */
+   in §3.5 are explicitly body face and keep base.css's rule.
+
+   The numbering and its "·" separator are gone — David's call. .card-head
+   went with them: it was a flex row that existed only to sit the index and
+   the title on one baseline, and a flex wrapper around a single h3 is not a
+   wrapper. The title carries the top margin the wrapper used to. */
 .card-title {
+  margin-top: var(--s-3);
   font-family: var(--font-display);
   font-weight: 500;
   letter-spacing: -0.02em;
@@ -790,8 +809,14 @@
    4:5 box that was here cropped 183px off each side, which was the Walkman
    and the PlayStation — the music and the videogames the copy is about. */
 
+/* Stacked, below 1024: capped at 400px and centred. Centred because the cap
+   leaves dead space in a column that is wider than the image — at 768 the
+   chapter column is 547px, so a left-aligned 400px image sits against 147px
+   of nothing, which reads as a mistake rather than as alignment. In one
+   column there is no spine for it to align to. */
 .chapter-media {
   width: min(400px, 100%);
+  margin-inline: auto;
   margin-bottom: var(--s-3);
 }
 
@@ -802,27 +827,10 @@
   height: auto;
 }
 
-/* The placeholder is the one thing here that IS a box, because an empty
-   slot with no fill is an invisible slot. 1/1 matches the one asset that
-   exists; a 4:5 image will simply be taller when it arrives, since the
-   real img sizes itself and this slot is deleted with its markup. */
-.chapter-media-slot {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  border-radius: var(--radius);
-  background: var(--paper-alt);
-  overflow: hidden;
-}
-
-.chapter-media-label {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--s-2);
-  text-align: center;
-}
+/* The placeholder rules that lived here are gone: all three chapter images
+   have landed, so nothing used them. The pattern itself is not lost — §3.5
+   documents it, .card-media-label still holds the work cards' slots, and
+   .cs-figure-slot in casestudy.css is the live example. */
 
 /* §3.5 wants the image beside the text on desktop, but it does not fit
    beside it at 768: the chapter column is 531px there, and the image would
@@ -851,8 +859,35 @@
     align-items: start;
   }
 
+  /* In the grid the track sets the width, so the figure fills it and stops
+     centring: it is a real column now, with the year marker and the copy to
+     align against.
+
+     width: 100% is not cosmetic here. The base rule's 400px cap applies
+     inside the grid too, so at 1240 the track is 421px and the image was
+     rendering 400px — 21px of dead track that made the 1240 breakpoint
+     quietly deliver less than it measured. */
   .chapter-media {
+    width: 100%;
+    margin-inline: 0;
     margin-bottom: 0;
+  }
+}
+
+/* From 1240 the image takes a bigger share and the copy gives it up.
+   1240 is measured, not chosen: --shell is min(1140px, 92vw), so it stops
+   growing at 92vw >= 1140, i.e. vw >= 1239. Above that the chapter body is
+   a constant 916px no matter how wide the monitor, which is exactly the
+   range where a 311px image looked small against 62ch of copy.
+
+   46% puts the image at 421px and the copy at ~51ch — the same measure the
+   1024 breakpoint already produces, so the line length now holds steady
+   across the whole desktop range and the image is what grows instead of
+   the text. The 440px cap never binds at today's --shell; it is a ceiling
+   in case the shell is ever widened. */
+@media (min-width: 1240px) {
+  .chapter-body {
+    grid-template-columns: min(440px, 46%) minmax(0, 1fr);
   }
 }
 

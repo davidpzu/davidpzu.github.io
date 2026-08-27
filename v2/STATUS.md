@@ -279,24 +279,27 @@ base.css's `p { max-width: var(--measure) }` never applies and the
 terminal line is not a paragraph. Nothing changed visually, `rotator.js`
 selects `.rotator-slot` and was untouched, and §3.2 records the reasoning.
 
-**6. One piece of copy is still a placeholder.** Sanofi Connect's one-line
-descriptor (§3.3 only ever shows two cards). David has confirmed it stays a
-placeholder for now.
+**6. ~~One piece of copy is still a placeholder.~~ Closed — David wrote all
+four cards.** The work section is now four cards, not three: Green Up was
+added, and every title and description is David's verbatim copy. §3.3 has
+the table. **Nothing on either page is placeholder copy any more** — what is
+left pending is images, not words.
 
-**The GitHub row is closed and it did not get a URL — it was removed.**
-David does not publish there, so the row was a placeholder for something
-that is never coming. `design.md` §3.6 now lists the contact block without
-it and says not to add it back.
+One typography note rather than a question: the titles use a spaced hyphen
+("SACEM - Messaging app") where the year markers use an en dash. That is how
+David wrote them and it is the same form v1 used. Left alone.
 
-**7. Empty media slots have no hover response — cards 02 and 03 only.**
-Card 01 has its thumbnail and does scale on hover. The two WIP cards carry
-`.card-wip`, which excludes them from the hover rule anyway. Resolves itself
-when the remaining thumbnails land.
+**7. Cards 2, 3 and 4 have no media yet; card 1 does.** David asked for v1's
+SACEM thumbnail back, so `sacem-thumb.jpg`/`.avif` is wired again and is no
+longer parked. §3.3's `1.02` media hover therefore works on card 1 and
+scales nothing on the other three — and those three carry `.card-wip`, which
+excludes them from the hover rule regardless. Resolves itself entirely when
+the remaining thumbnails land.
 
-The wiring needed one CSS line worth knowing: `.card-media picture
+The one CSS line the wiring depends on: `.card-media picture
 { display: contents }`. The img is sized `100%/100%` against the slot, and
 an inline `<picture>` box in between would hand it an auto height to resolve
-against instead. The same line exists on `.tool-icon picture`.
+against instead. Same line exists on `.tool-icon picture`.
 
 **8. "Video must not autoplay under reduced motion" (§3.3) is not built.**
 It cannot be: no CSS selector stops an `autoplay` attribute, and §4 gives
@@ -514,15 +517,18 @@ pass the About image alone would have added 898 KB and blown the budget on
 its own.
 
 **27. Fonts could not be subsetted further, and do not need to be.** The
-five `.woff2` files are already `latin` subsets from
-google-webfonts-helper. Re-subsetting to the glyphs the page actually uses
-would need `fontTools` and `brotli`, neither of which is installed, and it
-would save perhaps 20 KB on a page with 678 KB of headroom. **Syne is the
-one thing worth knowing:** `--font-mark` and `.wordmark` exist but no
-element in `index.html` uses them, so the browser never fetches
-`syne-v24-latin-700.woff2`. It costs **0 bytes on load** and 14 KB in the
-repo. Not a performance problem — a "decide whether the wordmark is
-coming back" problem.
+four `.woff2` files are already `latin` subsets from google-webfonts-helper.
+Re-subsetting to the glyphs the page actually uses would need `fontTools`
+and `brotli`, neither of which is installed, and it would save perhaps 20 KB
+on a page with plenty of headroom.
+
+**~~Syne is the one thing worth knowing.~~ Deleted.** It was a third face
+reserved for a wordmark — `--font-mark`, a `.wordmark` class, and
+`syne-v24-latin-700.woff2` — that no element ever used, so the browser never
+fetched it: 0 bytes on load, 14 KB in the repo. David decided he is not
+going to use it, so the token, the `@font-face`, the class and the file are
+all gone. **The site is two faces and four files now**, and §1.3 says not to
+add a third without a reason.
 
 **28. Unused v1 assets in `v2/assets/`, re-counted again.** The toolkit put
 the ten tool icons into service, so the dead weight is much smaller than it
@@ -533,7 +539,8 @@ was.
 | `img-david.jpg` | 443 | **dead** — unused, and per §8 not an About image |
 | ten tool icons | 27 | **live** — §3.5's toolkit. Two converted to AVIF |
 | `the-beginning.png` | 898 | live, as the AVIF's `<picture>` fallback |
-| `sacem-*.jpg` | 556 | live, as the AVIF fallbacks |
+| `sacem-hero/-challenge.jpg` | 481 | live, as the AVIF fallbacks |
+| `sacem-thumb.jpg`/`.avif` | 86 | live — card 1's thumbnail |
 
 `my-origins.png` is gone. **`img-david.jpg` is now the only genuinely dead
 file**, and David chose to keep it for now and revisit at promotion. §7's
@@ -664,6 +671,64 @@ The one that is easy to miss: `--accent` is repointed to `--accent-lift`
 because plain `--accent` is 3.13:1 on `--void`, under the 4.5 a link hover
 needs. That single line carries `a:hover`, the CV button and the focus ring.
 
+**37. Three of the four case study pages are literal copies of the fourth,
+and that is a maintenance liability with a clock on it.** `thalesgu`,
+`sacem-collab` and `sconnect` are `work/sacem/index.html` with four lines
+changed each: `<title>`, `<meta description>`, `<h1>`, and a badge reading
+"Case Study — in progress". Everything else — every section, every word of
+copy, both images — is SACEM's.
+
+That was David's instruction ("using the same content of sacem, dont worry
+about it, we will slowly modify all its content"), and it is the right call
+for scaffolding. What it costs, until the content diverges:
+
+- **Any structural fix to the template has to be made four times.** There is
+  no include mechanism and §0 rules out the build step that could give one.
+  Before changing one of these pages structurally, check whether the change
+  belongs on all four. `diff` between them is currently 8 lines, which makes
+  that check cheap — it will not stay that way.
+  **Structure, not copy.** David edits the SACEM page's wording for the SACEM
+  case study — that is per-page content and the four pages are *supposed* to
+  diverge as each gets written. It happened once in the session that created
+  them (24 changed lines instead of 8) and the three were re-synced, but that
+  was only harmless because they are still pure scaffolding.
+  **Do not re-sync copy again.** Once a page has real content of its own,
+  re-copying `sacem/index.html` over it destroys that work. What still has to
+  be applied four times is *structural*: a template change, a new section, a
+  markup fix, an accessibility correction.
+  While they remain untouched scaffolding, `diff work/sacem/index.html
+  work/<slug>/index.html` returning 8 lines is a cheap sanity check. That
+  check stops being meaningful the moment David starts writing them.
+- **The four pages currently claim the same work.** A visitor clicking
+  "Green Up" lands on a page whose body describes the SACEM messaging
+  redesign. The badge says "in progress", the site is `noindex` and nothing
+  is pushed, so no one can encounter this yet — but it must not be pushed in
+  this state without the badge, or it reads as a copy-paste portfolio.
+- **`.card-wip` is now dormant.** All four cards are links, so nothing uses
+  the WIP treatment. It is kept, not deleted: the next announced-but-unbuilt
+  project needs it back.
+
+**38. The card thumbnail source is smaller than the box it is displayed in.**
+`sacem-thumb` is 475 × 300 against a slot that reaches **526 × 329** CSS px
+at `--shell` — so on any desktop it is being upscaled to 1.11x before the
+browser even considers device pixel ratio, and on a 2x display it is
+effectively 4x upscaled. It reads acceptably because it is a UI screenshot
+with flat areas, but it is the one image on the site that is genuinely
+under-resolved.
+
+Measured display maxima, for whenever the real assets are exported:
+
+| slot | widest CSS box | 2x source |
+|---|---|---|
+| card thumbnail | 526 × 329 (16:10) | **1120 × 700** |
+| case study hero | 1140 × 480 (2.375:1) | **2280 × 960** |
+
+The hero's number is per page, so it does not stack. The thumbnails do: four
+of them at 1120 × 700 land the index between 741 and 819 KB against §6's 800
+budget, depending on how compressible the screenshots are. **That is the one
+place where the asset decision and the budget actually collide** — encode
+quality is the lever, and it is set at conversion time.
+
 ## Known spec contradictions
 
 **All of these are now resolved in `design.md`.** Kept as the record of what
@@ -740,7 +805,10 @@ was decided and why, so none of it gets re-litigated.
   rhythm switches, the résumé and toolkit grids change. **1024**: the chapter
   becomes two columns. **1200**: the case study's contents nav becomes a
   fixed rail — measured, the gutter there is `(1200 − 820) / 2 = 190px`
-  against a 140px rail plus `--s-4`. **480**: the toolkit goes 2→3 across and
+  against a 140px rail plus `--s-4`. **1240**: the chapter image takes a
+  bigger share — measured, `--shell` is `min(1140px, 92vw)` so it stops
+  growing at `vw >= 1239`, and above that the chapter body is a constant
+  916px however wide the monitor. **480**: the toolkit goes 2→3 across and
   the positioning line steps down a size.
   Hold new breakpoints to that standard: a measured reason, in a comment,
   scoped to one component. The rotator's true wrap points are 433px and
@@ -772,13 +840,20 @@ was decided and why, so none of it gets re-litigated.
   real DOM characters so §3.1's copy-paste rationale still holds —
   `aria-hidden` affects the accessibility tree, not selection.
 - **Nav targets.** Home → `index.html`, Projects → `#work`, About →
-  `#about`. v1 had no scrollspy, so the active bracket is per-page, not
-  per-section.
-- **Images.** Landed: `the-beginning.png` (About chapter one), `sacem-thumb`
-  (work card 01), the case study's hero and challenge shots, and the ten tool
-  icons. Still placeholders: **About chapters two and three, work cards 02
-  and 03, and the case study's two Final Outcome screens.** `img-david.jpg`
-  is not one of them.
+  `#about`, Contact → `#contact`. v1 had no scrollspy, so the active bracket
+  is per-page, not per-section.
+  **Contact is a local anchor on both pages**, not a link back to the index:
+  the index and every case study carry the same §3.6 footer, so it scrolls
+  to the form where you already are. It also lands you above the band where
+  `ui.js` suppresses the nav — the failing band starts at 52% of the
+  footer's height, and the anchor puts the footer's top edge at the top of
+  the viewport, so the nav is still up when you arrive and only goes as you
+  scroll further in.
+- **Images.** Landed: all three About chapter images, `sacem-thumb` (work
+  card 01), the SACEM case study's hero and challenge shots, and the ten tool
+  icons. Still placeholders: **work cards 2, 3 and 4, and the Final Outcome
+  screens on every case study page.** `img-david.jpg` is not one of them.
+  Item 38 has the display maxima to export against.
 - **Every image is a `<picture>`: AVIF source, PNG or JPEG fallback.** Not
   WebP — `sips` is the only image tool on this machine and WebP is read-only
   in its format list, while AVIF is writable and does alpha and photographs

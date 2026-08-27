@@ -81,9 +81,20 @@
   }
 }
 
+/* 40vw is not a guess. The figure is --shell wide, --shell is 92vw below its
+   cap, and the source is 1400 x 600 — so its natural height at this width is
+   92 / 2.333 = 39.4vw. Tracking 40vw means the banner renders at very close
+   to its true proportions from 768 up (307px against a natural 303 at 768;
+   410 against 404 at 1024) instead of being cropped to a letterbox.
+
+   The 480px ceiling lands 9px under the 489px the image would be at a capped
+   1140px shell, so the widest case crops about 2% rather than a quarter of
+   the picture. The 240px floor is the deliberate exception: at 375 the true
+   height would be 148px, which is a strip rather than a hero, so it stays
+   taller and lets object-fit take the sides. */
 .cs-hero-media img {
   width: 100%;
-  height: clamp(200px, 30vw, 400px);
+  height: clamp(240px, 40vw, 480px);
   object-fit: cover;
 }
 

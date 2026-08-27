@@ -76,13 +76,14 @@ Electric cobalt reads engineered against near-white and stays clear of the warm-
 :root {
   --font-display: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
   --font-body:    "Inter Tight", system-ui, -apple-system, sans-serif;
-  --font-mark:    "Syne", var(--font-display);   /* wordmark only */
 }
 ```
 
-Weights to load: Geist Mono 400/500, Inter Tight 400/600, Syne 700. All `latin`, all `font-display: swap`. Nothing else.
+**Two faces, four files.** Geist Mono 400/500 and Inter Tight 400/600, all `latin`, all `font-display: swap`. Nothing else.
 
-Mono is the display face — headlines, section titles, nav, metrics, eyebrows. Inter Tight carries body copy so the About chapters are readable at length. Syne is demoted to the wordmark; it doesn't hold up as a body face and isn't what the direction is doing.
+Mono is the display face — headlines, section titles, nav, metrics, eyebrows. Inter Tight carries body copy so the About chapters are readable at length.
+
+**Syne is gone, and it should not come back without a reason.** It was specified as a third face reserved for a wordmark, with `--font-mark` and a `.wordmark` class to carry it. No element ever used them, so the browser never fetched the file — it cost 0 bytes on load and 14 KB in the repo for a wordmark that was never designed. David removed it rather than leave a face on the books he does not intend to use. The token, the `@font-face`, the `.wordmark` rule and `syne-v24-latin-700.woff2` are all deleted.
 
 | Role | Size | Face | Tracking | Weight |
 |---|---|---|---|---|
@@ -111,10 +112,11 @@ Whitespace is the mechanism, not an afterthought. Strict scale, used consistentl
   --s-5: 3rem;    --s-6: 4.5rem; --s-7: 7rem;    --s-8: 10rem;
   --measure: 62ch;
   --shell:   min(1140px, 92vw);
-  --radius:  10px;   /* cards and metric boxes only — everything else square */
+  --radius:  10px;   /* boxes that hold something — see below */
 }
 ```
 
+- **`--radius` has five consumers and they are all boxes that hold something:** `.card`, its `.card-media` slot, `.metric`, `.tool-icon`, `.cs-figure-slot`. Everything else is square, deliberately — the CV button and the case study's tag chips both take the card's border idiom without its corners. The media slot is inset `--s-2` from the card's own edge, so it is not a nested-corner problem: it reads as its own rounded object inside a rounded card, and takes `--radius` straight rather than a reduced value.
 - Section rhythm: `--s-8` desktop, `--s-6` mobile. **One rule, one exception**, and the exception is `.about`: it needs `calc(var(--s-8) + var(--s-6))` on top because that padding is where the fade into `--void` happens. See §3.5.
 - 12-column grid, `--s-3` gutter, `--shell` container.
 - Hairline `1px solid var(--rule)` between major sections. **Two seams deliberately have none**: About→footer, and impact→About. Both are places where a gradient is doing the transition, and a rule across a fade only cuts it in half. No shadows except card hover.
@@ -160,7 +162,7 @@ Everything else on the page stays quiet.
 | # | Section | Job |
 |---|---|---|
 | 1 | Hero | Positioning + the signature rotator |
-| 2 | Selected work | 3 cards: 1 live, 2 in progress |
+| 2 | Selected work | 4 cards, all linked to a `work/<slug>/` page |
 | 3 | Impact | 4 metric boxes in a rising staircase, each with an icon, figure, label and note |
 | 4 | About — chapters | Scrolled timeline, then background and toolkit. Enters the dark passage |
 | 5 | Get in touch | Gradient footer, contact details, Formspree |
@@ -175,10 +177,17 @@ Everything else on the page stays quiet.
 
 **Revised after step 13.** This section previously specified v1's floating pill and said not to touch its position, blur or scroll behaviour. The pill is gone — that was a deliberate decision, not drift, and the reasons are recorded below. Anything still describing a pill is out of date, not authoritative.
 
-Three bare links, fixed to the top of the page. Same three items as v1, same targets, same mono treatment. **No enclosure of any kind** — no pill, no border, no radius, no fill, no blur, no shadow.
+Four bare links, fixed to the top of the page. **No enclosure of any kind** — no pill, no border, no radius, no fill, no blur, no shadow.
+
+| item | target | notes |
+|---|---|---|
+| Home | `index.html` (`../../index.html` from a case study) | `is-active` on the index |
+| Projects | `#work` | `is-active` on every case study |
+| About | `#about` | |
+| Contact | `#contact` | **a local anchor on both pages** — they both carry the §3.6 footer, so it scrolls to the form on the page you are already on rather than sending you to the index |
 
 ```
-            [HOME]   PROJECTS   ABOUT              centred, no enclosure
+       [HOME]  PROJECTS  ABOUT  CONTACT           centred, no enclosure
    ─────────────────────────────────────────────
    DAVID PRIETO ZURITA
 ```
@@ -195,7 +204,8 @@ Three bare links, fixed to the top of the page. Same three items as v1, same tar
   - `visibility` is animated alongside `opacity` so the links cannot be tabbed to or clicked while invisible. `opacity` alone would leave three live but unreachable-looking targets floating over the content.
   - With `ui.js` absent the nav is simply always visible. Nothing about the page depends on it hiding.
 - Link target height is 28px: `0.35rem` vertical padding on `0.75rem`/1.4 text. The bare line box is 16.8px and would miss WCAG 2.5.8's 24px floor. Vertical padding only — the horizontal separation is the list's `--s-2` gap, and side padding would push the first link off the shell's left edge.
-- Do not add items. Do not re-centre them. Do not put a ground back behind them without first deciding the footer question below.
+- **Adding a fifth item is a width decision, not a markup one.** The brackets are in the DOM on every item and always occupy their width, so the four labels come to 32 glyphs; at `0.75rem` with `0.12em` tracking that is 276px, and the row needs 324px against 345px of shell at 375. Four was already enough to force the gap down from `--s-3` to `--s-2` and to add a type step below 375 (`0.6875rem`, `--s-1` gaps — 277px, clearing 320 by 17px, with the target box still 26.6px and over WCAG 2.5.8's 24px floor). A fifth would need measuring before it were written.
+- Do not put a ground back behind them without first reading the contrast section below.
 
 **Nothing is painted behind the links, so their contrast is whatever scrolls under them.** When About went `--void` that became a real failure across most of the page's height, and the fix is `mix-blend-mode: difference` on the nav.
 
@@ -272,26 +282,44 @@ There is also a collision no contrast ratio describes: the links pass directly o
 
 ```
 ┌───────────────────────┐  ┌───────────────────────┐
-│ [16:10 media slot]    │  │ [16:10 placeholder]   │
-│ 01 · SACEM            │  │ 02 · Sacem Collab+    │
-│ Rights management     │  │ Analytics platform    │
+│ [16:10 placeholder]   │  │ [16:10 placeholder]   │
+│ SACEM - Messaging app │  │ Green Up - Transacti… │
+│ Redesigning the mess… │  │ Designed the interac… │
 │ ───────────────────── │  │ ───────────────────── │
 │ Read case study →     │  │ IN PROGRESS           │
+└───────────────────────┘  └───────────────────────┘
+┌───────────────────────┐  ┌───────────────────────┐
+│ [16:10 placeholder]   │  │ [16:10 placeholder]   │
+│ SACEM - Collab+       │  │ Sanofi Connect - Ref… │
+│ A new collaboration … │  │ Referral system to g… │
+│ ───────────────────── │  │ ───────────────────── │
+│ IN PROGRESS           │  │ IN PROGRESS           │
 └───────────────────────┘  └───────────────────────┘
 ```
 
 - **Section eyebrow: "See the process."** Every section title now carries one — see §3.9.
-- **Three cards: SACEM (live), Sacem Collab+ (WIP), Sanofi Connect (WIP).** The two WIP case study pages get built after v2 ships.
+- **Four cards, one live and three WIP.** Titles and descriptions are David's, verbatim — including the spaced hyphen in each title, which is his form and not the en dash the year markers use. Do not "correct" it.
+
+| # | Title | Description | State |
+|---|---|---|---|
+| 1 | SACEM - Messaging app | Redesigning the messaging app for music creators | `work/sacem/` |
+| 2 | Green Up - Transaction Analysis | Designed the interactions and entire transaction process for an internal reuse industrial material platform | `work/thalesgu/` |
+| 3 | SACEM - Collab+ | A new collaboration module built for musicians across France | `work/sacem-collab/` |
+| 4 | Sanofi Connect - Referral functionality | Referral system to grow platform audience for a company's benefit platform | `work/sconnect/` |
+
+  **All four cards are live links now; there are no `.card-wip` cards left.** Folder names are deliberately abbreviated so a client's full name is not spelled out in a URL. Cards 2–4 point at pages that are scaffolding — a duplicate of the SACEM case study with only their identity changed — so their badge reads "Case Study — in progress" until the real copy lands.
 - **No metrics on the cards.** The numbers live in section 3.4 only, so they aren't diluted across two places.
 - **Media slot must work empty today.** Build a fixed 16:10 container with `--paper-alt` fill and a mono placeholder label. Thumbnails and Cursorful navigation videos arrive later, so the container must accept, without any layout change:
   - `<picture>` with an AVIF `<source>` and a JPEG `<img>` fallback (§4), wrapped in `display: contents` so the img sizes against the slot rather than against an inline `<picture>` box, or
   - `<video autoplay muted loop playsinline>` with a `poster`.
   - Under `prefers-reduced-motion`, video must not autoplay — show the poster.
-- WIP cards: `--ink-muted` text, `IN PROGRESS` eyebrow, `cursor: default`, **not** an `<a>`. A dead link is worse than an honest label.
+- **The WIP card treatment is currently unused, and the rule it rests on is why.** `.card-wip` gives `--ink-muted` text, an `IN PROGRESS` eyebrow, `cursor: default`, and **no `<a>`** — because a dead link is worse than an honest label. That was the right state while cards 2–4 pointed nowhere. Now that all four have real pages the class is dormant, not deleted: the moment a fifth project is announced before its page exists, it goes back.
 - **No `aria-disabled`** (this section asked for it until step 14). It is not an allowed attribute on `role=listitem`, which is what a `<li>` is, so axe flags it under `aria-allowed-attr` and it costs §6's "accessibility 100". It was also doing nothing: with no interactive element on the card there is nothing to disable, and `IN PROGRESS` is real text in the DOM, so the state already reaches everyone. Do not add it back.
 - Live card: entire card is one `<a>`, no nested interactive elements. Hover: media scales `1.02`, border → `--accent`, 200ms ease.
-- 2-up desktop (third card starts a second row, left-aligned — do not stretch it), 1-up below 768px.
-- Numbering `01 / 02 / 03` is earned: the order is by significance and the reader uses it.
+- 2-up desktop, 1-up below 768px. Four cards make an even 2 × 2, so the old "third card starts a second row, do not stretch it" caveat no longer applies.
+- **No numbering, and no `·` separator.** They were there on the argument that the order is by significance and the reader uses it. David removed them. `.card-head` went with them: it was a flex row whose only job was sitting the index and the title on one baseline, and a flex wrapper around a single `h3` is not a wrapper — the title carries the top margin instead.
+- **Card 1 carries v1's SACEM thumbnail; cards 2–4 are still placeholders.** `alt=""` on the thumbnail: the card is a single `<a>` whose title already names the project, so the image is decorative and a description would be read twice. At 475 × 300 it is 1.583 against the slot's 16:10, so `object-fit: cover` trims about 3px of height — close enough that nothing is lost.
+- Card heights are equal by the grid, and `.card-rule { margin-top: auto }` inside a flex column pins the rule and the CTA to the bottom of each one — so the four descriptions can be different lengths without the rules going ragged. That matters more now than it did with three short descriptors.
 
 ### 3.4 Impact — the staircase
 
@@ -309,10 +337,10 @@ Four boxes, offset vertically to form a rising staircase left to right. Rising e
 
 | Box | Icon | Figure | Label | Note |
 |---|---|---|---|---|
-| 1 | currency | €3.7M | avoided spend | Design decisions that removed cost before it was committed |
-| 2 | clock | 18% | drop-off reduction | Fewer people abandoning the transaction flow mid-way |
-| 3 | rising chart | 41% → 59% | weekly active users | Measured over the platform's core employee base |
-| 4 | speech bubble | +130% | in-platform messaging | People actually talking to each other inside the product |
+| 1 | currency | €3.7M | avoided spend | Designed core features of an industrial marketplace helping our client save money in new equipment purchases |
+| 2 | clock | 18% | drop-off reduction | Redesigned transaction flow transformed into fewer people abandoning mid-process |
+| 3 | rising chart | 41% → 59% | weekly active users | Led design for a new module that drove weekly user engagement within first six months of launch |
+| 4 | speech bubble | +130% | in-platform messaging | Redesigned the legacy messaging system which led monthly messages to grew from ~3k to ~7k |
 
 Every part of the box is **always visible**, at every width.
 
@@ -347,7 +375,7 @@ Sticky year column left, chapter content right, revealed on scroll. Replaces the
 │            │  promotion to product design     │
 │            ├─────────────────────────────────┤
 │            │  [chapter image]                 │
-│  2024 —    │  Where I am now                  │
+│ 2024—2026  │  Where I am now                  │
 │            │  China remote, back in Madrid,   │
 │            │  AI tooling, design events       │
 └────────────┴─────────────────────────────────┘
@@ -363,32 +391,44 @@ Three named chapters. The titles carry the narrative; the year column carries th
 
 **`1997` — The Beginning**
 
-> Born in 1997 in Marbella, on Spain's Mediterranean coast. Futsal took most of my afternoons; music took the rest — I've been chasing a good song since before I could talk. Design found me on internet forums, where I made signatures in Photoshop CS6 between long stretches of videogames. That was the hook.
+> Born in 1997 in Marbella, southern coast of Spain by the Mediterraneum sea. Playing football on the streets and futsal in a club took my afternoons. Listening to music 24/7 while playing videogames when I was at home. Found my interest for Design on internet forums, where I made signatures in Photoshop CS6
 
 **`2018–2020` — Where it all started**
 
-> After graduating I learned graphic design, then UI, in Málaga — a coast kid finally in a real city. Madrid came next, and with it my first job, as a visual designer. In 2020 I was promoted to product designer and took two new client platforms from the first discovery call to launch, working with PMs and engineers.
+> After graduating I learned first graphic design to set the basics and later UI, all of it in Málaga, fulfilling a dream of living in a real city. Madrid came next in 2018 and with it my first job, as a Visual Designer. In 2020 I was promoted to Product Designer which led to an opportunity of owning two client platforms from the beginning with clients, PMs and engineers.
 
-**`2024 —` — Where I am now**
+**`2024—2026` — Where I am now**
 
-> Half a year working remotely from China taught me how design reads in a mobile-first, gamified, pro-AI culture. Back in Madrid — eight years and counting — I'm still leading those same two platforms six years on, studying the Google UX Design certificate, building AI tooling, and turning up at design events to meet people whose work I admire.
+> Half a year working remotely from China taught me how design is done in a mobile-first, focused in gamification and pro-AI culture. Back in Madrid in 2025, I'm still leading those same two platforms, studying Google UX certificate, building AI tooling while staying up to new practices, and showing up at design events in the city to meet other designers that I admire.
 
-Word counts: 52 / 57 / 56. All inside the cap. Do not pad them.
+Word counts: **53 / 69 / 63**. Chapters two and three are over §6's 60-word cap by 9 and 3 — David rewrote them knowing that and chose to keep the length. §6 records the exception rather than pretending the cap still holds. **Do not pad them, and do not trim them back without asking.**
 
 #### Build rules
 
-- Each chapter renders in this order: year marker (mono, large, muted, sticky) / chapter title (Inter Tight 600, `1.25rem`) / one paragraph (Inter Tight 400, capped at `--measure`).
+- Each chapter renders in this order: year marker (mono, large, muted, sticky) / chapter title (Inter Tight 600, `1.25rem`) / its copy (Inter Tight 400, capped at `--measure`).
+- **Chapter three breaks its copy in two with `<br><br>` inside a single `<p>`.** That is David's edit and it is left as written, but it is worth knowing why it took that form rather than two `<p>` elements: base.css resets `p` margin to `0` and there is no `p + p` rule inside `.chapter-text`, so two paragraphs would sit flush against each other with no gap. If a second chapter ever wants a break, the cleaner fix is `.chapter-text p + p { margin-top: var(--s-3) }` and real paragraphs — the same rule `.cs-shell` already has for the case studies.
 - Chapter titles are `<h3>`. The section heading is the `<h2>`. Don't skip levels.
-- Year markers are typed exactly as above, including the en dash in `2018–2020` and the trailing em dash in `2024 —`. They are text, not generated.
+- Year markers are typed exactly as above and are text, not generated. `2018–2020` uses an **en dash** (U+2013); `2024—2026` uses an **em dash** (U+2014), which David typed that way — the two ranges therefore use different characters. Recorded rather than silently normalised; if it should be an en dash for consistency, that is a one-character change in `index.html` and here.
 - **Every chapter carries its own image, one each, not one portrait for the section.** Square or 4:5; above the title on mobile, beside the text from 1024 up (768 does not fit — see the note below). Max **400px** wide.
 - **From 1024 the chapter is a two-column grid, not a float — and the difference is not cosmetic.** `.chapter-body` becomes `grid-template-columns: min(400px, 34%) minmax(0, 1fr)`, with the copy wrapped in `.chapter-text`.
   - **Why the float had to go.** A float shortens the *line boxes* inside a paragraph but does not move the paragraph's own box. So base.css's `p { max-width: var(--measure) }` capped the box at 564px and the floated image consumed 343px of that from the left, leaving about **28ch** for text — four or five words a line. Widening the chapter column could not fix it, because the cap, not the column, was the binding constraint. This was diagnosed only after a first attempt that widened the column and changed nothing.
-  - As a grid column the text gets its own box, so `--measure` caps the text and nothing else: **62ch at 1440, ~51ch at 1024, ~60ch at 768.**
+  - As a grid column the text gets its own box, so `--measure` caps the text and nothing else.
+  - **A third breakpoint at 1240 gives the image more and the copy less.** `--shell` is `min(1140px, 92vw)`, so it stops growing at `vw >= 1239`; above that the chapter body is a constant 916px however wide the monitor, and that is the range where a 311px image read small against 62ch of copy. From 1240 the columns are `min(440px, 46%)`, which puts the image at **421 × 406** and the copy at **~51ch** — the same measure 1024 already produced, so **line length now holds steady across the whole desktop range and the image is what grows.** The 440px cap does not bind at today's `--shell`; it is a ceiling if the shell is ever widened.
+
+| width | layout | image | copy |
+|---|---|---|---|
+| 375 | 1 column | 345 × 332, centred | full width |
+| 768 | 1 column | 400 × 385, centred | ~60ch |
+| 1024 | 2 columns | 254 × 244, fills its track | ~51ch |
+| 1240 and up | 2 columns | **421 × 406**, fills its track | ~51ch |
+
+- **Stacked, the image is centred; in the grid it is not.** Below 1024 the 400px cap leaves dead space in a column that is wider than the image — at 768 that is 147px of nothing to the right of it, which reads as a mistake rather than as alignment, because in one column there is no spine to align to. In the grid it is a real column with the year marker and the copy to line up against, so it fills its track and sits left.
+- **In the grid the figure must be `width: 100%`, not the base rule's cap.** `min(400px, 100%)` applies inside the grid too, so a 421px track was rendering a 400px image and quietly giving back 21px of what the 1240 breakpoint had just bought.
   - `align-items: start` keeps the image at the top rather than stretching it down the chapter.
 - **The year track keeps its `clamp(8rem, 16vw, 12rem)`. Do not narrow it.** "2018–2020" is nine mono glyphs and needs ~130px at 768 and ~194px at 1440 against a track of 128px and 192px — the couple-of-pixels-spare fit that has always been flagged. Narrowing it to buy copy width was tried and breaks the date at every width. The gutter gave instead: `--s-5` to `--s-4`.
   - *This replaces the earlier single-portrait rule and the `--radius` and `--paper-alt` that came with it. Do not put them back.* The first image, `the-beginning.png`, is a **composited cut-out on a transparent ground**, not a photograph: the Sony Walkman, the football and the PlayStation deliberately break outside the photo's rectangle. A filled, rounded container frames precisely the parts that are meant to escape a frame, and a fixed `aspect-ratio` with `object-fit: cover` crops them off — at 4:5 it removed 183px from each side, which was the music and the videogames the copy is about.
   - **No cropping, and no `aspect-ratio` on the image.** Each `<img>` carries its real `width` and `height` attributes and is sized `width: 100%; height: auto`. The browser reserves the intrinsic ratio, so there is no layout shift, and square and 4:5 both fit without anything choosing what to lose.
-  - Chapters two and three have no image yet. They keep a placeholder box — `aspect-ratio: 1 / 1`, `--paper-alt`, `--radius`, mono label — because an unfilled empty slot is an invisible one. The placeholder is deleted along with its markup when the real file lands; the real image never inherits its fill or its radius.
+  - **All three images have landed** — `the-beginning.png`, `where-it-started.png`, `me-now.png` — and they are a set: the same composited-cut-out treatment at the same 1.037 ratio, all served at 878 × 846. The chapter placeholder rules were deleted with the last of them, since nothing used them any more. The pattern is still documented here and still live in `.card-media-label` and `.cs-figure-slot`: a placeholder is a box (`--paper-alt`, `--radius`, mono label), because an unfilled empty slot is an invisible one, and the real image never inherits that fill or radius.
   - **Format: AVIF, with the PNG as a `<picture>` fallback.** The source PNG is 898 KB — 1.2 bytes per pixel, because PNG is a lossless compressor being handed a photograph. AVIF does alpha *and* photographs: the same 878 × 846 image at quality 85 is **121 KB**, an 87% saving, visually indistinguishable including the baked-in caption. `macOS sips` writes AVIF; it cannot write WebP (read-only in its format list), which is why this is not the more obvious WebP. Safari below 16.4 is the only engine that falls back to the PNG. Chapter images are below the fold, so they also carry `loading="lazy"` and `decoding="async"` and cost nothing on initial load.
   - Real `alt` text is required, and it must carry any text baked into the image — text in pixels is unreadable to assistive tech and cannot be resized (WCAG 1.4.5). `the-beginning.png` has *"Always passionate about music"* baked in, and its `alt` says so.
 - **CV download link sits at the end of "Where I am now"**, not in the hero. Mono, accent on hover. The label is **"Download Resume"** — no file type, no size. It said "Download CV — PDF, 194 KB" until David changed it: "resume" is the word people actually use, and a byte count in a label is developer furniture. The `download` attribute still does the work.
@@ -464,6 +504,10 @@ The focus ring is `--paper` with `outline-offset: 3px`, not base.css's `--accent
 
 ### 3.7 Case study — `work/<slug>/index.html`
 
+**Four of these exist:** `sacem`, `thalesgu`, `sacem-collab`, `sconnect`. Slugs are abbreviated on purpose so a client's full name is not spelled out in a URL. Only `sacem` has real content; the other three are duplicates of it carrying their own `<title>`, `<meta description>`, `<h1>` and an "in progress" badge, and nothing else of their own yet.
+
+**They are literal copies, and that is a liability to watch — for structure, not for copy.** Each page's wording is its own and the four are meant to diverge as they get written; do not propagate copy between them. What has no include mechanism, and what §0's no-build-step rules out solving, is *structural* change: a template fix, a new section, a markup or accessibility correction. Those have to be applied four times. Before changing one of these pages structurally, check whether the change belongs on all four.
+
 The v1 SACEM page ported onto the v2 system. Everything below is the shape every future case study takes.
 
 ```
@@ -501,7 +545,8 @@ The v1 SACEM page ported onto the v2 system. Everything below is the shape every
 - **`.kw`** — v1 marked phrases inside its prose. Carried over as an `--accent-dim` wash, not a colour swap: `--ink` on `--accent-dim` is 15.5:1, and recolouring the text would put a second meaning on the one colour §1.2 reserves for interaction. A wash also survives forced-colours mode, where a colour change vanishes.
 - **Subheads inside a prose section (`.cs-sub`) are mono**, on §1.3's "mono is the display face" rule — the same call `.card-title` makes. The `<h4>`s inside Target Users are body face, because they are leads, not labels.
 - **Images get `--shell`, wider than the reading column but not full bleed.** They are screenshots and they earn the extra width.
-- **The hero image is on the grid too, and no longer full bleed.** `--shell` wide, so its left and right edges land on the same two background hairlines everything else sits on, with `--s-7` of top padding (`--s-6` below 768). It is the only element on either page that needs its own top clearance, because it is the only one that is the first thing in the document — it has to clear the fixed nav, whose underside sits at 48px, and then leave enough air to read as placed rather than jammed under the chrome.
+- **The hero image is on the grid too, and no longer full bleed.** `--shell` wide, so its left and right edges land on the same two background hairlines everything else sits on, with `--s-7` of top padding (`--s-6` below 768).
+  - **Its height tracks 40vw, and that number is derived rather than chosen.** The figure is `--shell` wide, `--shell` is `92vw` below its cap, and the source is 1400 × 600 — so the banner's natural height at this width is `92 / 2.333 = 39.4vw`. Tracking 40vw renders it at within 1–2% of its true proportions from 768 up, instead of cropping a fifth of the picture away to a letterbox. `clamp(240px, 40vw, 480px)`: the 480 ceiling sits 9px under the 489px it would be at a capped 1140px shell, and the 240 floor is the deliberate exception — at 375 the true height is 148px, a strip rather than a hero, so it stays taller and lets `object-fit` take the sides. It is the only element on either page that needs its own top clearance, because it is the only one that is the first thing in the document — it has to clear the fixed nav, whose underside sits at 48px, and then leave enough air to read as placed rather than jammed under the chrome.
 - **v1's closing "Other Projects" block is not ported.** Both its cards were placeholders pointing back at the same page, with thumbnails loaded from `dummyimage.com` — an external host, which §0 rules out. A link back to the work section replaces it until there is a second case study.
 - **v1's two Final Outcome images do not exist in this repo** (`img/sacem/outcome-1.jpg`, `outcome-2.jpg` — the directory is absent). They are placeholder boxes carrying v1's captions, on the §3.5 rule: a placeholder is a box, the real image is not.
 
@@ -548,7 +593,10 @@ The colour comes from `--eyebrow-fg`, which defaults to `--ink-muted` and is rep
 v2/
 ├── index.html
 ├── work/
-│   └── sacem/index.html
+│   ├── sacem/index.html
+│   ├── thalesgu/index.html
+│   ├── sacem-collab/index.html
+│   └── sconnect/index.html
 ├── assets/
 │   ├── css/
 │   │   ├── tokens.css        ← custom properties, loaded first
@@ -563,7 +611,7 @@ v2/
 │   │   ├── form.js           ← every page with the footer form
 │   │   ├── ui.js             ← every page: nav visibility + cursor ring
 │   │   └── casestudy.js      ← case-study pages only
-│   ├── fonts/                ← geist-mono 400/500, inter-tight 400/600, syne 700
+│   ├── fonts/                ← geist-mono 400/500, inter-tight 400/600
 │   └── img/
 └── design.md
 ```
@@ -612,7 +660,7 @@ Each step was independently reviewable, with a stop for review after each.
 - [ ] **Hiding the native cursor is never reachable without JS.** §3.8.
 - [ ] No text anywhere under 4.5:1, and no border or focus indicator under 3:1 — checked on `--paper`, `--paper-alt`, `--void`, and at five points down the footer gradient. **No exceptions.** The two grounds no colour choice could fix — the nav over the bottom of the footer, and the case study's rail over any of it — are handled by not rendering there: §3.1 and §3.7.
 - [ ] No paragraph exceeds `--measure`.
-- [ ] No About chapter exceeds 60 words.
+- [ ] ~~No About chapter exceeds 60 words.~~ **Waived by David, knowingly.** The chapters run 53 / 69 / 63 after his rewrite. The cap was there to stop the section becoming the wall of text it replaced; at ~63 words average it still is not one. Kept struck rather than deleted so the change is visible.
 - [ ] Every metric matches the CV exactly.
 - [ ] Work card media containers hold their 16:10 box while empty — no layout shift when assets arrive.
 - [ ] Every image is a `<picture>` with an AVIF source, carries real `width`/`height`, and is `loading="lazy"` unless it is above the fold. §4.
