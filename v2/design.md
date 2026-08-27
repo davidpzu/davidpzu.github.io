@@ -375,7 +375,7 @@ Sticky year column left, chapter content right, revealed on scroll. Replaces the
 │            │  promotion to product design     │
 │            ├─────────────────────────────────┤
 │            │  [chapter image]                 │
-│ 2024—2026  │  Where I am now                  │
+│ 2024–2026  │  Where I am now                  │
 │            │  China remote, back in Madrid,   │
 │            │  AI tooling, design events       │
 └────────────┴─────────────────────────────────┘
@@ -397,7 +397,7 @@ Three named chapters. The titles carry the narrative; the year column carries th
 
 > After graduating I learned first graphic design to set the basics and later UI, all of it in Málaga, fulfilling a dream of living in a real city. Madrid came next in 2018 and with it my first job, as a Visual Designer. In 2020 I was promoted to Product Designer which led to an opportunity of owning two client platforms from the beginning with clients, PMs and engineers.
 
-**`2024—2026` — Where I am now**
+**`2024–2026` — Where I am now**
 
 > Half a year working remotely from China taught me how design is done in a mobile-first, focused in gamification and pro-AI culture. Back in Madrid in 2025, I'm still leading those same two platforms, studying Google UX certificate, building AI tooling while staying up to new practices, and showing up at design events in the city to meet other designers that I admire.
 
@@ -408,7 +408,7 @@ Word counts: **53 / 69 / 63**. Chapters two and three are over §6's 60-word cap
 - Each chapter renders in this order: year marker (mono, large, muted, sticky) / chapter title (Inter Tight 600, `1.25rem`) / its copy (Inter Tight 400, capped at `--measure`).
 - **Chapter three breaks its copy in two with `<br><br>` inside a single `<p>`.** That is David's edit and it is left as written, but it is worth knowing why it took that form rather than two `<p>` elements: base.css resets `p` margin to `0` and there is no `p + p` rule inside `.chapter-text`, so two paragraphs would sit flush against each other with no gap. If a second chapter ever wants a break, the cleaner fix is `.chapter-text p + p { margin-top: var(--s-3) }` and real paragraphs — the same rule `.cs-shell` already has for the case studies.
 - Chapter titles are `<h3>`. The section heading is the `<h2>`. Don't skip levels.
-- Year markers are typed exactly as above and are text, not generated. `2018–2020` uses an **en dash** (U+2013); `2024—2026` uses an **em dash** (U+2014), which David typed that way — the two ranges therefore use different characters. Recorded rather than silently normalised; if it should be an en dash for consistency, that is a one-character change in `index.html` and here.
+- Year markers are typed exactly as above and are text, not generated. **Both ranges use an en dash** (U+2013) — `2018–2020` and `2024–2026`. A range takes an en dash; an em dash briefly appeared in the second one and was corrected. Do not let them diverge again.
 - **Every chapter carries its own image, one each, not one portrait for the section.** Square or 4:5; above the title on mobile, beside the text from 1024 up (768 does not fit — see the note below). Max **400px** wide.
 - **From 1024 the chapter is a two-column grid, not a float — and the difference is not cosmetic.** `.chapter-body` becomes `grid-template-columns: min(400px, 34%) minmax(0, 1fr)`, with the copy wrapped in `.chapter-text`.
   - **Why the float had to go.** A float shortens the *line boxes* inside a paragraph but does not move the paragraph's own box. So base.css's `p { max-width: var(--measure) }` capped the box at 564px and the floated image consumed 343px of that from the left, leaving about **28ch** for text — four or five words a line. Widening the chapter column could not fix it, because the cap, not the column, was the binding constraint. This was diagnosed only after a first attempt that widened the column and changed nothing.

@@ -567,25 +567,23 @@ table of contents out of the document. `casestudy.js` checks
 rule that hides it is scoped inside the same media query. Either guard alone
 would do; both mean a mistake in one cannot reach the in-flow version.
 
-**30. The alt text for `the-beginning.png` is drafted, not approved.** §3.5
-requires real alt text and this is the first image that has any. What is
-written:
+**30. ~~Alt text drafted, not approved.~~ Approved — David checked all three
+at the page.** That covers `the-beginning.png` and the two that landed
+later, including the descriptions of the Lovable, Figma and Claude icons on
+`me-now.png` and the Alhambra and Hongya Cave locations, which were read off
+the images rather than known.
 
-> A childhood photo of me at about three, wearing oversized headphones, with
-> cut-outs of a Sony CD Walkman, a Nike football and a PlayStation 2
-> arranged around it. Caption in the image: Always passionate about music.
+**The rule that produced them stands and is in §3.5:** alt text must carry
+any text baked into the image, because text in pixels cannot be read by
+assistive tech or resized (WCAG 1.4.5). All three chapter images have
+baked-in labels — *"Always passionate about music"*, MADRID, MÁLAGA, the
+Gauss Multimedia mark, a Spanish slide quote, a book cover — and each `alt`
+names them.
 
-Two things to check. The description is what the image plainly shows, but
-"about three" is an estimate — David knows. And the trailing sentence is
-there because the caption is **baked into the pixels**, which WCAG 1.4.5
-treats as text that cannot be resized or read by assistive tech; naming it
-in `alt` is the mitigation, not the fix.
-
-**The related open question is legibility.** At `min(360px, 38%)` the
-caption renders at roughly a third of its authored size — about 6px per
-glyph. It will be small. The real fix is a caption-free image plus a
-`<figcaption>`, which would also satisfy 1.4.5 outright. Not done, because
-it means editing David's artwork. A judgement for a human at the page.
+**What is still true and is not an alt-text problem:** that baked-in text
+renders at roughly a third of its authored size in a 421px column, which no
+`alt` fixes. The real remedy is caption-free artwork plus a `<figcaption>`,
+and that means editing the source images. Left alone deliberately.
 
 **31. The AVIF fallback means two files ship for every image.** The
 `<picture>` pattern is right — only Safari below 16.4 fetches the fallback,
