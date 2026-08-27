@@ -66,9 +66,29 @@ today lands in *v1's* asset folder — and v1 happens to carry the same Geist
 Mono files. The page renders correctly at `/v2/` by accident. It becomes
 correct for real at promotion.
 
-**Still to do:** the five-step promotion sequence in `design.md` §8. Nothing
-is waiting on David except the Final Outcome screens and the three case
-studies' copy, neither of which blocks the swap.
+**~~Still to do: the promotion sequence.~~ Done 2026-08-27.** v2 is live at
+`davidpzu.github.io`; v1 is archived at `/v1/`, `noindex` and unmaintained;
+`v2/` no longer exists. `design.md` §8 is now the record of how it went
+rather than a plan, and `CLAUDE.md` was rewritten because its central rule
+was "never work outside `/v2`".
+
+**This file no longer says "delete at promotion", and that was David's
+call to keep it.** It is the only record of *why* the build is the way it
+is. It now lives at the repo root and is served raw at
+`davidpzu.github.io/STATUS.md`, which is no more exposed than `/v2/STATUS.md`
+was — but it can be dropped or moved out of the published tree at any time.
+
+**What is left, and none of it is urgent:**
+
+| what | note |
+|---|---|
+| Final Outcome screens | eight 16:9 slots across four case studies, still placeholders (item 1) |
+| real copy for three case studies | they are SACEM's words today (item 37) |
+| the three JS harnesses | rebuild when one of those files is next edited, not on a calendar |
+| redirect stubs for old v1 URLs | offered and not taken; `/sacem.html` now gets the 404 page |
+
+David's plan as of promotion: gather feedback from friends on the live site
+first, then write the three case studies.
 
 **~~Decisions deferred to promotion.~~ Settled 2026-08-27.** Item 28's dead
 `img-david.jpg` is deleted, and item 31's fallback question was answered by

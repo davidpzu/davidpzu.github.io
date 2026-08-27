@@ -2,9 +2,8 @@
 
 **Owner:** David Prieto Zurita — Senior Product Designer, Madrid
 **Goal:** Rebuild the portfolio so it reads as senior-level evidence, not a growth story.
-**Working directory:** `/v2` only. **Do not modify, move, or delete anything outside `/v2`.** The site at the repo root is live and linked from an active CV.
-**Preview URL:** `davidpzu.github.io/v2/`
-**Final URL after promotion:** `davidpzu.github.io` (no custom domain, no CNAME file).
+**Live at:** `davidpzu.github.io` — **promoted to the root on 2026-08-27.** No custom domain, no CNAME file.
+**Working directory:** the repo root. There is no `/v2` any more and no staging directory; a push is a publish. The previous site is archived, unmaintained and `noindex`, under `/v1/`.
 
 ---
 
@@ -17,7 +16,7 @@ Non-negotiable. Do not propose alternatives.
 - **No CSS framework.** Hand-written CSS with custom properties.
 - **Relative paths everywhere.** `assets/css/tokens.css`, `../../assets/js/rotator.js`. Never root-relative (`/assets/…`) — those break the moment `/v2` is promoted to root. **Two exceptions, both forced and both documented where they live.** The `og:`/`canonical` URLs in every `<head>` are absolute, because a scraper has no base to resolve a relative one against (§3.10). And **every path in `404.html` is root-relative**, because that page is served for URLs at unpredictable depths and a relative path would resolve against whatever was asked for (§3.11). Both are written in their post-promotion form, so neither needs an edit at promotion.
 - **Fonts self-hosted** as `.woff2` in `v2/assets/fonts/`. No external requests of any kind.
-- **`<meta name="robots" content="noindex">`** on every `/v2` page until promotion. Remove at promotion.
+- **`<meta name="robots" content="noindex">`** was on every page until promotion and came off on 2026-08-27 — but only on the two that are finished, `index.html` and `work/sacem/`. **It stays on `404.html`** (served with a 404 status, never indexable) **and on the three case studies that still carry SACEM's copy**, which are also unlinked and absent from `sitemap.xml`. Those three tags come off together with the `.card-wip` and the sitemap omission, per page, as each is written — never one at a time.
 - **JS is progressive enhancement.** Every section readable and navigable with JavaScript disabled. JS adds motion, never content.
 - **Accessibility floor:** visible keyboard focus, `prefers-reduced-motion` respected, semantic landmarks, AA contrast minimum, no hover-only content.
 - **The native cursor is never hidden by CSS alone.** `cursor: none` lives under a class `ui.js` adds after its guards pass, so no failure mode — a parse error, a blocked script, JS off, a touch device, reduced motion — can leave a visitor with no pointer and no way to get one back. §3.8.
@@ -595,7 +594,7 @@ Every page carries an Open Graph block and a `canonical`. Without one, a URL pas
 
 - **The card is `assets/img/social-card.png`, 1200 × 630.** It is a real screenshot of the hero at that size, cropped from 1250 × 630 so the shell's two hairlines sit 30px and 31px from the edges rather than the original 42 and 69. It is not a composed graphic: the page's own opening screen is the strongest thing it could show.
 - **It is a PNG, and that is deliberate — see §4.** Do not convert it to AVIF.
-- **The URLs are absolute, and that is deliberate — see §0.** They are the post-promotion ones, so nothing in the block changes at promotion. The cost is that while the preview lives at `/v2/` the card resolves to a page that is not up yet; the site is `noindex` until promotion and should not be shared from there.
+- **The URLs are absolute, and that is deliberate — see §0.** They were written in their post-promotion form from the start, so the block needed no edit at the swap and does not now. They were wrong only during the `/v2/` preview, which was `noindex` and not for sharing.
 - **`og:title` and `og:description` are each page's own**; the image is shared by all five. A case study will want its own card once it has final screens, and the reason it cannot have one today is that its hero is AVIF and there is no PNG of it.
 - `twitter:card` is `summary_large_image`. No `twitter:title` or `twitter:description` — X falls back to the `og:` pair, and duplicating them is two more lines to keep in sync.
 - `og:image:alt` is required by the same rule as every other image (§3.5): it carries the text baked into the card.
@@ -750,12 +749,10 @@ Each step was independently reviewable, with a stop for review after each.
 - **Every image David owed has landed.** The three chapter images, all four card thumbnails and all four case study heroes are in and wired. What is still outstanding is the **Final Outcome screens** — two 16:9 slots per case study, eight boxes across four pages, still placeholders carrying v1's captions. The rule stands for those: build the fixed-ratio slot, and **do not source, generate, or substitute images.**
 - When a behaviour is ambiguous, build the simpler version and flag it. Don't guess at complexity.
 - If a CSS rule seems to need `!important`, the specificity is wrong. Fix the selector.
-- **Promotion is a manual step done by David, not by you**, and it is no longer the one-liner this line used to carry. That command (`rm index.html && rm -rf assets work && mv v2/* .`) leaves v1 debris serving at the root — `about.html`, `projects.html`, `sacem.html`, `greenup-transaction.html`, `css/`, `js/`, `.htaccess` and the root CV all survive it, with v1 navigation pointing back at an index that is now v2. It also moves `design.md` and `STATUS.md` into the live root. The sequence, in three revertible commits:
+- **Promotion is done.** It happened on 2026-08-27 as three commits, after the preview at `/v2/` was pushed and smoke-tested on the deployed URL. Kept as the record, because the shape of it is the rollback plan too:
 
-  1. **Push first.** The preview goes live at `davidpzu.github.io/v2/` under `noindex`, which is what those tags are for and the only way to satisfy §6's last criterion.
-  2. **Commit A — archive v1.** `git mv` the whole old site into `v1/`: the five pages *and* `css/`, `js/`, `assets/`, `.htaccess`, the root CV. All of it together, or v1's own relative paths break — and the root `assets/` has to vacate before v2's can take its place. Add `noindex` to the archived pages.
-  3. **Commit B — the swap.** `v2/*` to the root, minus `design.md` and `STATUS.md`. `404.html` lands at the root, where it starts working (§3.11).
-  4. **Commit C — go public.** Strip `noindex` from the five v2 pages; `404.html` keeps its own. Add `robots.txt` and `sitemap.xml`.
-  5. Tag `v2-live`.
+  1. **Archive v1.** The whole old site moved into `/v1/` together — five pages plus `css/`, `js/`, `assets/`, `.htaccess` and the CV — because its paths are relative and separating them breaks it, and because the root `assets/` had to vacate first. Each archived page gained `noindex`.
+  2. **Promote v2.** `index.html`, `404.html`, the three root metadata files, `assets/` and `work/` moved up a level; `v2/` was removed. Every relative path resolved at the new depth with no edit — verified, zero missing references. `design.md` and `STATUS.md` moved to the repo root rather than being deleted. `CLAUDE.md` was rewritten in the same commit, since its central rule was "never work outside `/v2`".
+  3. **Go public.** `noindex` came off `index.html` and `work/sacem/` only. See §0 for what kept it and why.
 
-  Rollback point is the `v1-live` tag. Note that archiving v1 preserves its *content* but not its *URLs* — anything linking to `davidpzu.github.io/sacem.html` gets the 404 page unless redirect stubs are added in Commit A.
+  Rollback point is the `v1-live` tag. **Archiving v1 preserved its content but not its URLs** — `davidpzu.github.io/sacem.html` now gets the 404 page. Redirect stubs at the old paths were offered and not taken; they remain a cheap option if an inbound link turns out to matter.
