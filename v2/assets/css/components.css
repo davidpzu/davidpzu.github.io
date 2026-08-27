@@ -1181,9 +1181,21 @@
 
 .contact-lead {
   margin-top: var(--s-4);
-  max-width: var(--measure);
+  /* Not --measure. That token is the cap for body copy, and at 62ch this
+     one sentence very nearly fits on a single line — leaving "possible."
+     alone on a second line at the widest viewports. 48ch is narrower than
+     a paragraph wants but right for a lead sitting under a 96px headline,
+     and it puts the break near the middle of the sentence at every width
+     rather than at its last word. */
+  max-width: 48ch;
   font-size: 1.125rem;
   line-height: 1.6;
+  /* What replaces the hand-placed <br>. The browser picks the wrap point
+     that minimises the longest line, so the two lines come out even at any
+     width and no single word is ever orphaned — including if this copy is
+     rewritten later, which a <br> could not survive. Unsupported browsers
+     simply wrap normally, which is the behaviour without this line. */
+  text-wrap: balance;
 }
 
 /* ---------------------------------------------------------- the columns */
