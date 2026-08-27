@@ -4,12 +4,46 @@ Handoff notes. Companion to `design.md`, which stays the spec — this file
 only records where the build actually is and what is still undecided.
 Delete at promotion.
 
-**Last updated:** after David's three rounds of post-build changes — the
-dark passage, the page chrome, the background grid, and the nav blend mode.
-`design.md` was brought fully current in the same pass. Everything below is
-committed together.
+**Last updated:** 2026-08-27, at the end of the session that added the
+fourth card, the three duplicated case studies, the About images, the 1240
+breakpoint and the Contact link — and that settled the commit-identity
+question for good. `design.md` was audited against the build in the same
+pass, not just edited. Everything described here is committed.
+
+**If you are picking this up cold, read three things in this order:**
+`design.md` (what the site is), the Git section below (there is a trap in
+it), and `## Needs a decision`.
 
 ---
+
+## What is actually left
+
+21 of the 39 items below are closed. Of the rest, most are **recorded
+decisions rather than open questions** — read them for the reasoning, not
+for something to do. These are the ones that need action:
+
+**Waiting on David — the only things blocking a finished v2:**
+
+| what | spec |
+|---|---|
+| thumbnails for work cards 2, 3, 4 | **1120 × 700**, exactly 16:10 (item 38) |
+| Final Outcome screens, each case study | 16:9 slots, two per page (item 1) |
+| real content for the three copied case studies | they are SACEM's words today (item 37) |
+
+Hero exports, whenever one is reshot: **2280 × 960**, exactly 2.375:1.
+Ratios matter more than pixels — `object-fit: cover` crops the difference.
+
+**Decisions deferred to promotion:** item 28 (443 KB of dead
+`img-david.jpg`), item 31 (AVIF fallbacks shipping beside their sources —
+`me-now.png` alone is 4.5 MB), item 8 (video autoplay under reduced motion,
+moot until a video exists).
+
+**Judgement calls David has seen and left alone:** items 15 and 35. Not
+problems, just noted.
+
+**Nothing is broken and nothing is failing.** Every WCAG issue this rebuild
+found is closed; §6 reads "no exceptions" on contrast. There is no known
+defect in the build.
 
 ## State of play
 
@@ -66,71 +100,137 @@ were updated. **Read the spec, not this file, for what the site is.**
 | contact | lead line added above the columns |
 | **nav contrast** | `mix-blend-mode: difference`. See item 23 |
 
+### Pass 5 — the fourth card, three more case studies, the assets
+
+| what | state |
+|---|---|
+| work section | **four cards**, all linked. Numbering and the `·` gone with `.card-head` |
+| card copy | all four titles and descriptions are David's, verbatim |
+| card 1 thumbnail | v1's SACEM shot, back in after a brief removal |
+| card media | rounded — `--radius` audit found five consumers, not two |
+| case studies | **four**: `sacem`, `thalesgu`, `sacem-collab`, `sconnect` |
+| case study hero | `clamp(240px, 40vw, 480px)` — near-true proportions from 768 up |
+| SACEM external link | dead sacem.fr URL → a LinkedIn post |
+| About images | **all three landed**; placeholder rules deleted |
+| About copy | rewritten by David; chapters 2 and 3 exceed §6's word cap, waived |
+| impact notes | rewritten by David, all four |
+| chapter layout | 1240 breakpoint; centred when stacked, fills its track in the grid |
+| nav | **fourth link, Contact → `#contact`**, local anchor on every page |
+| Syne | **deleted** — file, `@font-face`, `.wordmark`, `--font-mark`, all mentions |
+| year markers | both ranges now use an en dash |
+| alt text | **approved by David at the page** (item 30) |
+
 ### Payload
 
-Measured. §6's budget is 800 KB.
+Measured 2026-08-27. §6's budget is 800 KB **total page weight**, not just
+initial load.
 
 | | index | case study |
 |---|---|---|
-| html + css + js + fonts + favicon | 165.7 KB | 210.7 KB |
-| **initial load** | **165.7 KB** | **210.7 KB** |
-| everything, after scrolling | 324.9 KB | 247.7 KB |
+| html + css + js + fonts + favicon | 171.6 KB | 180.4 KB |
+| **initial load** | **171.6 KB** | **217.7 KB** |
+| everything, after scrolling | **658.5 KB** | **254.7 KB** |
 
-CSS is 58.6 KB across four sheets; the index's five scripts are 17.8 KB; the
-ten tool icons are 27.5 KB after two of them were converted (they were 218).
+Four CSS sheets are 60.7 KB; the index's five scripts 19.6 KB; four fonts
+(Syne is gone) 63.1 KB; the ten tool icons 27.5 KB.
 
-### Files added since step 15
+**The headroom is already spoken for.** Item 38 has the arithmetic: four
+card thumbnails at the resolution they actually need would put the index
+between 741 and 819 KB. That is the one place an asset decision collides
+with the budget, and encode quality is the only lever left.
 
-| file | what |
-|---|---|
-| `work/sacem/index.html` | the case study, nine sections, v1's copy |
-| `assets/css/casestudy.css` | fifth sheet, case-study pages only |
-| `assets/js/casestudy.js` | scroll progress + contents rail. **28 assertions** |
-| `assets/js/form.js` | inline form confirmation, both pages. **34 assertions** |
-| `assets/js/ui.js` | nav visibility + cursor ring, both pages. **39 assertions** |
-| `assets/img/the-beginning.avif` | 121 KB against the PNG's 898 |
-| `assets/img/icons/icon-{davinci,adobecc}.avif` | 4.7 + 6.7 KB against 145 + 56 |
-| `assets/img/projects/sacem-mensajeria/*.avif` | 85 KB against 556 |
-| `.gitignore` (root) | `.DS_Store`. The only file outside `v2/` this rebuild added |
+### Files and structure as they stand
 
-**101 assertions pass** across the three test harnesses, all under
-`osascript -l JavaScript`, all kept outside `v2/` — §4 gives them no place
-and they would ship at promotion.
+```
+v2/
+├── index.html
+├── work/
+│   ├── sacem/index.html          ← the only one with real content
+│   ├── thalesgu/index.html       ┐
+│   ├── sacem-collab/index.html   │ copies of sacem, 8 lines of their own
+│   └── sconnect/index.html       ┘ (title, description, h1, badge)
+├── assets/
+│   ├── css/   tokens, base, layout, components + casestudy (case-study pages only)
+│   ├── js/    rotator, reveal, counters, form, ui + casestudy (case-study pages only)
+│   ├── fonts/ geist-mono 400/500, inter-tight 400/600 — four files, no Syne
+│   └── img/
+├── design.md
+└── STATUS.md
+```
 
-### Git
+**126 assertions pass** across three harnesses — `casestudy.js` (41),
+`form.js` (34), `ui.js` (51) — all under `osascript -l JavaScript`, all kept
+**outside `v2/`** because §4 gives them no home and they would ship at
+promotion. They live in the session scratchpad, so they are gone now:
+**rebuild them if you change any of those three files.** `counters.js` and
+`reveal.js` were tested the same way earlier.
 
-`main` runs ahead of `origin/main` and **nothing is pushed.** Pushing
-publishes the preview to `davidpzu.github.io/v2/`; the `noindex` tag is in
-place for exactly that reason.
+### Git — read this before committing anything
 
-**Authorship is fixed for every unpushed commit** —
-`davidpzu <88293615+davidpzu@users.noreply.github.com>`, which is the
-identity the repo used up to 2026-05-19 before something wiped the git
-config. Two things the earlier notes got wrong, both found by looking:
-it was never five or six commits, it was twenty; and the repo already had a
-correct identity, so the gmail address David first chose would have
-fragmented the history into three.
+**The identity to use, and the trap.** Commits must be authored:
 
-**Thirteen already-pushed commits still carry the broken author**
-(`56435cf` back to `8de1006`, 2026-05-25 → 2026-08-25). Left alone
-deliberately: fixing them rewrites public history, changes every SHA from
-May onward and needs a force-push to a repo linked from an active CV. They
-will not attribute to David's GitHub profile. If it is ever worth doing, it
-is the same mechanism, run over `8de1006^..origin/main` and force-pushed.
+```
+git config user.name  "davidpzu"
+git config user.email "88293615+davidpzu@users.noreply.github.com"
+```
 
-**The rewrite used a scratch `GIT_INDEX_FILE`, not `filter-branch`**, and
-that matters if it is ever repeated: `filter-branch` and `rebase` both
-refuse to run with a dirty working tree, and this tree was permanently dirty
-with root drift the project rules put off limits. Building each tree in a
-temporary index and replaying with `git commit-tree` never touches the
-working tree, the index, or anything outside `v2/`.
+**These are repo-local settings and they have been wiped once already.**
+That is the entire cause of the 13 unfixable commits below: on 2026-05-25
+the config vanished, git fell back to guessing
+`David <david@MacBook-Pro-de-David.local>` from the username and the
+machine's hostname, and nobody noticed for three months. **If you ever see
+that address on a commit, the config is gone — set the two lines above and
+re-sign before pushing.**
 
-`my-origins.png` was dropped from history in the same pass — 920 KB, and
-David had replaced it.
+**Do not use `davidprietozurita@gmail.com`, and it was tried.** It is
+verified on David's GitHub, so it *would* attribute — but his account has
+**"Keep my email addresses private" switched ON**, and that setting only
+covers web-based Git operations. Command-line commits carry whatever git is
+configured with. Signing with the gmail publishes it permanently in a public
+commit log ("previously authored commits associated with a public email will
+remain public") and defeats a privacy setting David deliberately turned on.
+The noreply address attributes exactly as well and publishes nothing.
+GitHub's own settings page says this: *"If you want command line Git
+operations to use your private email you must set your email in Git."*
 
-**`backup-before-rewrite` still points at the pre-rewrite tip** (`ef199df`).
-It is the only thing keeping the old commits reachable. Delete it once the
-pages have been looked at in a browser: `git branch -D backup-before-rewrite`.
+The 14 unpushed commits were re-signed to gmail and then back again when the
+settings screenshot surfaced that contradiction. Both re-signs left every
+file byte-identical. **Settled: noreply. Do not revisit without David.**
+
+**One thing still worth David doing on GitHub:** switch on *"Block command
+line pushes that expose my email"* (currently Off). It rejects any push
+carrying his real address instead of publishing it — the safety net that
+would have caught the 2026-05-25 wipe.
+
+**Current state of the history:**
+
+| | signature | can it be fixed? |
+|---|---|---|
+| 57 pushed | `davidpzu <88293615+davidpzu@users.noreply.github.com>` | correct already |
+| 13 pushed | `David <david@MacBook-Pro-de-David.local>` | **no** — needs a force-push, David declined |
+| 14 unpushed | `davidpzu <88293615+…>` | correct |
+
+The 13 will never attribute to David's profile. Leaving them is deliberate:
+fixing them rewrites public history, changes every SHA from May onward and
+force-pushes a repo linked from an active CV. If it is ever worth doing, the
+mechanism is the one below run over `8de1006^..origin/main`.
+
+**How the re-signing is done here, and why not `filter-branch`.**
+`filter-branch` and `rebase` both refuse to run with a dirty working tree,
+and this tree was dirty for most of the rebuild with root drift the project
+rules put off limits. The method that works regardless: build each tree in a
+scratch `GIT_INDEX_FILE`, replay with `git commit-tree`, then a single
+`git update-ref`. It never touches the working tree, the index, or anything
+outside `v2/`. It has been used three times without incident.
+
+**`backup-before-rewrite` has been deleted.** It held the seven pre-rewrite
+commits and was the last thing keeping the 920 KB `my-origins.png` blob
+alive. David reviewed the pages first. Recoverable from the reflog for ~90
+days if it is ever wanted.
+
+**Nothing is pushed.** `main` is 14 ahead of `origin/main`. Pushing
+publishes the preview to `davidpzu.github.io/v2/` — the `noindex` tag on
+every page is in place for exactly that, and comes off at promotion.
 
 ### The repo root was cleaned — the one change outside `v2/`
 
@@ -865,12 +965,11 @@ was decided and why, so none of it gets re-litigated.
   Card 01 is the worked example. The one CSS line it did need is
   `.card-media picture { display: contents }`, which is now in place for
   every future card (item 7).
-- **`.card-head` was added to the step 2 skeleton.** §3.3's diagram shows
-  `01 · SACEM` on one line, and the index and title were loose siblings in
-  a column. They are now wrapped in a `<div class="card-head">` on all
-  three cards. The `·` is a `::after` on `.card-index`, not a DOM
-  character — unlike the nav brackets it encodes nothing, so keeping it
-  out of the accessibility tree is the better trade.
+- **~~`.card-head`.~~ Gone, with the card numbering.** It existed to sit
+  `01` and the title on one baseline. David removed the numbering and the
+  `·` separator, so a flex wrapper around a single `h3` had nothing left to
+  do — the title carries the top margin instead. `.card-index` and its
+  `::after` went with it. Nothing in the CSS or the markup refers to either.
 - **Phone number is intentionally gone** from the contact block.
 - **The build environment has no Node, npm or browser — but it does have
   a JS engine.** `osascript -l JavaScript` runs JavaScriptCore, so a file
